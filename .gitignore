@@ -1,0 +1,16 @@
+build
+cloudformation.yml
+dist
+/app/.env
+/app/cloudformation.yml
+app/build
+app/dist
+node_modules
+.env
+/deployer/cloudformation.yml
+.terraform*
+**/secrets/*.tfvars
+.idea
+tmp
+terraform.tfstate.d
+yarn.lock
