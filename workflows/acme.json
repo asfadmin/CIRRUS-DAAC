@@ -1,0 +1,256 @@
+{
+    "Comment": "ACME Dataset Ingest Workflow",
+    "StartAt": "ParseMetadata",
+    "States": {
+        "ParseMetadata": {
+            "Type": "Task",
+            "Resource": "${ParseMetadataLambdaArn}",
+            "Parameters": {
+                "cma": {
+                    "event.$": "$",
+                    "task_config": {
+                        "sfnEnd": true,
+                        "stack": "{$.meta.stack}",
+                        "bucket": "{$.meta.buckets.internal.name}",
+                        "stateMachine": "{$.cumulus_meta.state_machine}",
+                        "executionName": "{$.cumulus_meta.execution_name}",
+                        "cumulus_message": {
+                            "input": "{$}",
+                            "outputs": [
+                                {
+                                    "source": "{$.acme_metadata}",
+                                    "destination": "{$.meta.acme_metadata}"
+                                },
+                                {
+                                    "source": "{$.file_object}",
+                                    "destination": "{$.rain_metadata.file_object}"
+                                }, {
+                                    "source": "{$.acme_metadata}",
+                                    "destination": "{$.rain_metadata.acme_metadata}"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "Lambda.ServiceException",
+                        "Lambda.AWSLambdaException",
+                        "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                }
+            ],
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "ResultPath": "$.exception",
+                    "Next": "WorkflowFailed"
+                }
+            ],
+            "Next": "StageGranuleFiles"
+        },
+        "StageGranuleFiles": {
+            "Type": "Task",
+            "Resource": "${StageGranuleFilesArn}",
+            "Parameters": {
+                "cma": {
+                    "event.$": "$",
+                    "replace_config": {
+                        "fullmessage": true
+                    },
+                    "task_config": {
+                        "cumulus_message": {
+                            "input": "{$}",
+                            "outputs": [
+                                {
+                                    "source": "{$.source_granules}",
+                                    "destination": "{$.meta.source_granules}"
+                                }, {
+                                    "source": "{$.browse_image_filename}",
+                                    "destination": "{$.meta.browse_image_filename}"
+                                }, {
+                                    "source": "{$.granule_zip_filename}",
+                                    "destination": "{$.meta.granule_zip_filename}"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "Lambda.ServiceException",
+                        "Lambda.AWSLambdaException",
+                        "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                }
+            ],
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "ResultPath": "$.exception",
+                    "Next": "WorkflowFailed"
+                }
+            ],
+            "Next": "GenerateEcho10"
+        },
+        "GenerateEcho10": {
+            "Type": "Task",
+            "Resource": "${GenerateEcho10Arn}",
+            "Parameters": {
+                "cma": {
+                    "event.$": "$",
+                    "replace_config": {
+                        "fullmessage": true
+                    },
+                    "task_config": {
+                        "cumulus_message": {
+                            "input": "{$}",
+                            "outputs": [
+                                {
+                                    "source": "{$.granules}",
+                                    "destination": "{$.payload.granules}"
+                                }, {
+                                    "source": "{$.granules}",
+                                    "destination": "{$.rain_metadata.granules}"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "Lambda.ServiceException",
+                        "Lambda.AWSLambdaException",
+                        "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                }
+            ],
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "ResultPath": "$.exception",
+                    "Next": "WorkflowFailed"
+                }
+            ],
+            "Next": "PostEcho10ToCMR"
+        },
+        "PostEcho10ToCMR": {
+            "Type": "Task",
+            "Resource": "${PostToCmrArn}",
+            "Parameters": {
+                "cma": {
+                    "event.$": "$",
+                    "replace_config": {
+                        "fullmessage": true
+                    },
+                    "task_config": {
+                        "bucket": "{$.meta.buckets.internal.name}",
+                        "stack": "{$.meta.stack}",
+                        "cmr": "{$.meta.cmr}",
+                        "process": "{$.meta.collection.process}"
+                    }
+                }
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "Lambda.ServiceException",
+                        "Lambda.AWSLambdaException",
+                        "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                }
+            ],
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "ResultPath": "$.exception",
+                    "Next": "WorkflowFailed"
+                }
+            ],
+            "Next": "ReportToASF"
+        },
+        "ReportToASF": {
+            "Type": "Task",
+            "Resource": "${ReportToASFArn}",
+            "Parameters": {
+                "cma": {
+                    "event.$": "$",
+                    "replace_config": {
+                        "fullmessage": true
+                    },
+                    "task_config": {
+                        "cumulus_message": {
+                            "input": "{$}"
+                        },
+                        "rain_metadata": "{$.rain_metadata}"
+                    }
+                }
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "Lambda.ServiceException",
+                        "Lambda.AWSLambdaException",
+                        "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                }
+            ],
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "ResultPath": "$.exception",
+                    "Next": "WorkflowFailed"
+                }
+            ],
+            "Next": "RemoveGranules"
+        },
+        "RemoveGranules": {
+            "Type": "Task",
+            "Resource": "${RemoveGranulesArn}",
+            "Parameters": {
+                "cma": {
+                    "event.$": "$",
+                    "replace_config": {
+                        "fullmessage": true
+                    }
+                }
+            },
+            "End": true
+        },
+        "WorkflowFailed": {
+            "Type": "Fail",
+            "Cause": "Workflow failed"
+        }
+    }
+}

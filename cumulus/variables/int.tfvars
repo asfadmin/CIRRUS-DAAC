@@ -1,6 +1,10 @@
 urs_url          = "https://uat.urs.earthdata.nasa.gov"
 urs_client_id    = ""
 
+cmr_provider     = ""
+cmr_environment  = "UAT"
+cmr_username     = ""
+
 ems_host = ""
 ems_port = 22
 ems_path = "/"
@@ -14,7 +18,6 @@ ems_username = null
 metrics_es_host = null
 metrics_es_username = null
 
-cmr_environment  = "UAT"
-cmr_username     = ""
-
 launchpad_certificate = "launchpad.pfx"
+
+ecs_cluster_instance_image_id = ""

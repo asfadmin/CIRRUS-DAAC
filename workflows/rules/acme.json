@@ -1,0 +1,14 @@
+{
+    "name": "ACME_sqsRule",
+    "workflow": "ACMEWorkflow",
+    "state": "ENABLED",
+    "collection": {
+        "name": "ACME",
+        "version": "001"
+    },
+    "provider": "DAAC",
+    "rule": {
+        "type": "sqs",
+        "value": "https://sqs.$AWS_REGION.amazonaws.com/$AWS_ACCOUNT_ID/$DEPLOY_NAME-cumulus-$MATURITY-acme-workflow-queue"
+    }
+}

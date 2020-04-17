@@ -1,0 +1,5 @@
+cumulus-message-adapter~=1.1.0
+cumulus-message-adapter-python~=1.1.0
+remotezip~=0.9
+Jinja2~=2.11.1
+geopy

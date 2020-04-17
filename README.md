@@ -1,4 +1,4 @@
-# Cumulus Core
+# Cumulus DAAC
 
 ## Overview
 
