@@ -1,9 +1,9 @@
 urs_url          = "https://uat.urs.earthdata.nasa.gov"
-urs_client_id    = ""
+urs_client_id    = "CHANGEME"
 
-cmr_provider     = ""
+cmr_provider     = "CHANGEME"
 cmr_environment  = "UAT"
-cmr_username     = ""
+cmr_username     = "CHANGEME"
 
 ems_host = ""
 ems_port = 22
@@ -20,4 +20,4 @@ metrics_es_username = null
 
 launchpad_certificate = "launchpad.pfx"
 
-ecs_cluster_instance_image_id = ""
+ecs_cluster_instance_image_id = "ami-06591f94cb01939d3"
