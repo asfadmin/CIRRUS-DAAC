@@ -41,4 +41,4 @@ ADD requirements.txt /requirements/
 ADD dev-requirements.txt /requirements/
 RUN pip3 install -r /requirements/requirements.txt -r /requirements/dev-requirements.txt
 
-WORKDIR /CIRRUS-core
+WORKDIR /CIRRUS-DAAC
