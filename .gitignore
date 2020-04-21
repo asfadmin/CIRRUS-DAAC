@@ -1,7 +1,6 @@
 **/*.pyc
 **/secrets/**
 .terraform*
-build/python
 dist
 terraform.tfstate.d
 tmp

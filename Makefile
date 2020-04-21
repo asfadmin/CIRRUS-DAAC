@@ -30,8 +30,7 @@ clean:
 	find workflows -name __pycache__ -type d -delete
 
 # ---------------------------
-image: build/Dockerfile
-	cd build && \
+image: Dockerfile
 	docker build -f Dockerfile -t cirrus-daac .
 
 container-shell:
@@ -101,10 +100,10 @@ daac: daac-init
 		-no-color
 
 # ---------------------------
-${DIST_DIR}/lambda_dependencies_layer.zip: ${DIST_DIR} build/requirements.txt
+${DIST_DIR}/lambda_dependencies_layer.zip: ${DIST_DIR} workflows/requirements.txt
 	mkdir -p ${DIST_DIR}/python
 	cd ${DIST_DIR}/python
-	pip3 install -r ${SELF_DIR}/build/requirements.txt --target .
+	pip3 install -r ${SELF_DIR}/workflows/requirements.txt --target .
 	cd ..
 	zip -r ${DIST_DIR}/lambda_dependencies_layer.zip python/*
 
