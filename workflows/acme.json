@@ -1,8 +1,8 @@
 {
-    "Comment": "Returns Hello World",
-    "StartAt": "HelloWorld",
+    "Comment": "ACME Dataset Ingest Workflow",
+    "StartAt": "NOP",
     "States": {
-        "HelloWorld": {
+        "NOP": {
             "Parameters": {
                 "cma": {
                     "event.$": "$",

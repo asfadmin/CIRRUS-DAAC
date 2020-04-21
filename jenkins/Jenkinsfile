@@ -1,0 +1,204 @@
+pipeline {
+  parameters {
+      choice(name: 'MATURITY', choices: ['DEV', 'INT', 'TEST', 'PROD'], description: 'The MATURITY (AWS) account to deploy')
+      string(name: 'DEPLOY_NAME', defaultValue: 'daac', description: 'The name of the stack for this MATURITY')
+
+      string(name: 'DAAC_REPO', defaultValue: 'git@github.com:asfadmin/CIRRUS-DAAC', description: 'The DAAC Cumulus git repository to deploy')
+      string(name: 'DAAC_REF', defaultValue: 'master', description: 'The DAAC_REPO git ref to deploy')
+
+      choice(name: 'AWS_REGION', choices: ['us-east-1', 'us-west-2'], description: 'AWS Region to deploy to')
+
+      string(name: 'DOWNSTREAM_JOB', defaultValue: 'CIRRUS-core', description: 'Jenkins job name to invoke next')
+  }
+
+  environment {
+    AWS_CREDS_BASE = 'daac-cumulus-core-'
+    CMR_CREDS_BASE = 'daac-cumulus-core-cmr_creds_'
+    URS_CREDS_BASE = 'daac-cumulus-core-urs_creds_'
+    SECRET_TOKEN_BASE = 'daac-cumulus-core-token-'
+  }
+
+  agent { label 'docker' }
+
+  stages {
+    stage('Start Cumulus Deployment') {
+      steps {
+        sh "env"
+      }
+    }
+
+    stage('Deploy feature branch to DEV / sandbox') {
+      when {
+        branch '*-PR-*'
+      }
+      steps {
+        echo "Deploy feature branch to DEV / sandbox"
+        echo "Branch: ${env.BRANCH_NAME}"
+        script {
+          def stack_name = 'UNKNOWN'
+          def values = env.BRANCH_NAME.split('-PR-')
+          if (values == null || values.length == 0) {
+             echo "Could not find a stack name in the branch ${env.BRANCH_NAME}"
+          } else {
+             stack_name = values[0]
+          }
+          DEPLOY_NAME_LOCAL = stack_name
+          MATURITY_LOCAL = 'DEV'
+          NASA_MATURITY = 'sandbox'
+          UAT_OR_PROD = 'UAT'
+
+          AWS_CREDS_LOCAL = "${env.AWS_CREDS_BASE}${NASA_MATURITY}"
+          CMR_CREDS_LOCAL = "${env.CMR_CREDS_BASE}${UAT_OR_PROD}"
+          URS_CREDS_LOCAL = "${env.URS_CREDS_BASE}${UAT_OR_PROD}"
+          SECRET_TOKEN_LOCAL = "${env.SECRET_TOKEN_BASE}${NASA_MATURITY}"
+
+          build job: "${env.DOWNSTREAM_JOB}", parameters: [
+              [$class: 'StringParameterValue', name: 'MATURITY', value: "${MATURITY_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'DEPLOY_NAME', value: "${DEPLOY_NAME_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'DAAC_REPO', value: "${params.DAAC_REPO}"],
+              [$class: 'StringParameterValue', name: 'DAAC_REF', value: "${env.BRANCH_NAME}"],
+              [$class: 'StringParameterValue', name: 'AWS_REGION', value: "${params.AWS_REGION}"],
+              [$class: 'StringParameterValue', name: 'AWS_CREDS', value: "${AWS_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'CMR_CREDS_ID', value: "${CMR_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'URS_CREDS_ID', value: "${URS_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'SECRET_TOKEN_ID', value: "${SECRET_TOKEN_LOCAL}"],
+          ]
+        }
+      }
+    }
+
+    stage('Deploy to DEV / sandbox') {
+      when {
+        branch 'master'
+      }
+      steps {
+        echo "Deploy to DEV / sandbox"
+        script {
+          DEPLOY_NAME_LOCAL = params.DEPLOY_NAME
+          MATURITY_LOCAL = 'DEV'
+          NASA_MATURITY = 'sandbox'
+          UAT_OR_PROD = 'UAT'
+
+          AWS_CREDS_LOCAL = "${env.AWS_CREDS_BASE}${NASA_MATURITY}"
+          CMR_CREDS_LOCAL = "${env.CMR_CREDS_BASE}${UAT_OR_PROD}"
+          URS_CREDS_LOCAL = "${env.URS_CREDS_BASE}${UAT_OR_PROD}"
+          SECRET_TOKEN_LOCAL = "${env.SECRET_TOKEN_BASE}${NASA_MATURITY}"
+
+          build job: "${env.DOWNSTREAM_JOB}", parameters: [
+              [$class: 'StringParameterValue', name: 'MATURITY', value: "${MATURITY_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'DEPLOY_NAME', value: "${DEPLOY_NAME_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'DAAC_REPO', value: "${params.DAAC_REPO}"],
+              [$class: 'StringParameterValue', name: 'DAAC_REF', value: "${env.BRANCH_NAME}"],
+              [$class: 'StringParameterValue', name: 'AWS_REGION', value: "${params.AWS_REGION}"],
+              [$class: 'StringParameterValue', name: 'AWS_CREDS', value: "${AWS_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'CMR_CREDS_ID', value: "${CMR_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'URS_CREDS_ID', value: "${URS_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'SECRET_TOKEN_ID', value: "${SECRET_TOKEN_LOCAL}"],
+          ]
+        }
+      }
+    }
+
+    stage('Deploy to INT / SIT') {
+      when {
+        tag pattern: "v\\d+\\.\\d+\\.\\d+", comparator: "REGEXP";
+        not { environment name: 'MATURITY', value: "TEST" }
+        not { environment name: 'MATURITY', value: "PROD" }
+      }
+      steps {
+        echo "Deploy tag to INT / SIT"
+        script {
+          DEPLOY_NAME_LOCAL = 'daac'
+          MATURITY_LOCAL = 'INT'
+          NASA_MATURITY = 'sit'
+          UAT_OR_PROD = 'UAT'
+
+          echo "Tag name: ${env.TAG_NAME}"
+
+          AWS_CREDS_LOCAL = "${env.AWS_CREDS_BASE}${NASA_MATURITY}"
+          CMR_CREDS_LOCAL = "${env.CMR_CREDS_BASE}${UAT_OR_PROD}"
+          URS_CREDS_LOCAL = "${env.URS_CREDS_BASE}${UAT_OR_PROD}"
+          SECRET_TOKEN_LOCAL = "${env.SECRET_TOKEN_BASE}${NASA_MATURITY}"
+
+          DOWNSTREAM_JOB_LOCAL = 'rain/CIRRUS-core'
+
+          build job: "${DOWNSTREAM_JOB_LOCAL}", parameters: [
+              [$class: 'StringParameterValue', name: 'MATURITY', value: "${MATURITY_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'DEPLOY_NAME', value: "${DEPLOY_NAME_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'DAAC_REPO', value: "${params.DAAC_REPO}"],
+              [$class: 'StringParameterValue', name: 'DAAC_REF', value: "${env.TAG_NAME}"],
+              [$class: 'StringParameterValue', name: 'AWS_REGION', value: "${params.AWS_REGION}"],
+              [$class: 'StringParameterValue', name: 'AWS_CREDS', value: "${AWS_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'CMR_CREDS_ID', value: "${CMR_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'URS_CREDS_ID', value: "${URS_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'SECRET_TOKEN_ID', value: "${SECRET_TOKEN_LOCAL}"],
+          ]
+        }
+      }
+    }
+
+    stage('Deploy tag to TEST') {
+      when {
+        environment name: 'MATURITY', value: "TEST"
+      }
+      steps {
+        echo "Deploy tag to TEST"
+        script {
+          DEPLOY_NAME_LOCAL = 'daac'
+          MATURITY_LOCAL = 'TEST'
+          NASA_MATURITY = 'uat'
+          UAT_OR_PROD = 'UAT'
+
+          AWS_CREDS_LOCAL = "${env.AWS_CREDS_BASE}${NASA_MATURITY}"
+          CMR_CREDS_LOCAL = "${env.CMR_CREDS_BASE}${UAT_OR_PROD}"
+          URS_CREDS_LOCAL = "${env.URS_CREDS_BASE}${UAT_OR_PROD}"
+          SECRET_TOKEN_LOCAL = "${env.SECRET_TOKEN_BASE}${NASA_MATURITY}"
+
+          build job: "${env.DOWNSTREAM_JOB}", parameters: [
+              [$class: 'StringParameterValue', name: 'MATURITY', value: "${MATURITY_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'DEPLOY_NAME', value: "${DEPLOY_NAME_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'DAAC_REPO', value: "${params.DAAC_REPO}"],
+              [$class: 'StringParameterValue', name: 'DAAC_REF', value: "${params.DAAC_REF}"],
+              [$class: 'StringParameterValue', name: 'AWS_REGION', value: "${params.AWS_REGION}"],
+              [$class: 'StringParameterValue', name: 'AWS_CREDS', value: "${AWS_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'CMR_CREDS_ID', value: "${CMR_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'URS_CREDS_ID', value: "${URS_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'SECRET_TOKEN_ID', value: "${SECRET_TOKEN_LOCAL}"],
+          ]
+        }
+      }
+    }
+
+    stage('Deploy tag to PROD') {
+      when {
+        environment name: 'MATURITY', value: "PROD"
+      }
+      steps {
+        echo "Deploy tag to PROD"
+        script {
+          DEPLOY_NAME_LOCAL = 'daac'
+          MATURITY_LOCAL = 'PROD'
+          NASA_MATURITY = 'prod'
+          UAT_OR_PROD = 'PROD'
+
+          AWS_CREDS_LOCAL = "${env.AWS_CREDS_BASE}${NASA_MATURITY}"
+          CMR_CREDS_LOCAL = "${env.CMR_CREDS_BASE}${UAT_OR_PROD}"
+          URS_CREDS_LOCAL = "${env.URS_CREDS_BASE}${UAT_OR_PROD}"
+          SECRET_TOKEN_LOCAL = "${env.SECRET_TOKEN_BASE}${NASA_MATURITY}"
+
+          build job: "${env.DOWNSTREAM_JOB}", parameters: [
+              [$class: 'StringParameterValue', name: 'MATURITY', value: "${MATURITY_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'DEPLOY_NAME', value: "${DEPLOY_NAME_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'DAAC_REPO', value: "${params.DAAC_REPO}"],
+              [$class: 'StringParameterValue', name: 'DAAC_REF', value: "${params.DAAC_REF}"],
+              [$class: 'StringParameterValue', name: 'AWS_REGION', value: "${params.AWS_REGION}"],
+              [$class: 'StringParameterValue', name: 'AWS_CREDS', value: "${AWS_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'CMR_CREDS_ID', value: "${CMR_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'URS_CREDS_ID', value: "${URS_CREDS_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'SECRET_TOKEN_ID', value: "${SECRET_TOKEN_LOCAL}"],
+          ]
+        }
+      }
+    }
+  }
+}
