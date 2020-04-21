@@ -17,29 +17,40 @@ Cumulus.
 
 ## Prerequisites
 
-* [Terraform](https://www.terraform.io/)
-* [AWS CLI](https://aws.amazon.com/cli/)
-* [GNU Make](https://www.gnu.org/software/make/)
+* [Docker](https://www.docker.com/get-started)
 * One or more NGAP accounts (sandbox, SIT, ...)
-* AWS credentials for the account(s)
+* AWS credentials for those account(s)
+
+## Development Setup
+
+You can run tests and deploy the stack inside of a Docker container:
+
+        $ make image
+        $ CIRRUS_ROOTDIR=$HOME/projects make container-shell
+
+This assumed that both `CIRRUS-core` and `CIRRUS-DAAC` both
+reside in the `$HOME/projects/` directory, but you can change this
+to whatever you'd like.
+
+1. To run linter (flake8) & unit tests (pytest) once:
+
+        $ make test
+
+2. To run linter & tests when source files change:
+
+        $ make test-watch
 
 ## Organization
 
-The repository is organized into four Terraform modules:
+The repository is organized into three Terraform modules:
 
-* `tf`: Creates resources for managing Terraform state
 * `daac`: Creates DAAC-specific resources necessary for running Cumulus
-* `data-persistence`: Creates DynamoDB tables and Elasticsearch
-  resources necessary for running Cumulus
 * `cumulus`: Creates all runtime Cumulus resources that can then be used
   to run ingest workflows.
+* `workflows`: Creates a Cumulus workflow with a sample Python lambda.
 
 To customize the deployment for your DAAC, you will need to update
 variables and settings in a few of the modules. Specifically:
-
-### tf module
-
-There is no additional configuration necessary in this module.
 
 ### daac module
 
@@ -47,11 +58,6 @@ To change which version of the [Cumulus Message
 Adapter](https://github.com/nasa/cumulus-message-adapter) is used to
 create the Lambda layer used by all Step Function Tasks, modify the
 corresponding variable in the `terraform.tfvars` file.
-
-### data-persistence module
-
-To change whether Elasticsearch is provisioned, modify the
-corresponding variable in the `terraform.tfvars`.
 
 ### cumulus module
 
@@ -77,34 +83,29 @@ three specific things you should customize:
 *Important Note*: The secrets files will *not* (and *should not*) be
 committed to git. The `.gitignore` file will ignore them by default.
 
+### workflows module
+
+DAAC-specific workflows, lambdas, and configuration will be deployed
+by this module. Most workflow development work will be done here.
+
 ## Deploying Cumulus
 
-*Important Note*: When choosing values for MATURITY and DEPLOY_NAME:
-* The combined length cannot exceed 12 characters
-* Must consist of `a-z` (lower case characters), `0-9`, and `-` (hyphen) only
+See [CIRRUS-core README](https://github.com/asfadmin/CIRRUS-core/blob/master/README.md).
 
-1. Setup your environment with the AWS profile that has permissions to
-   deploy to the target NGAP account:
-
-        $ source env.sh <profile-name> <deploy-name> <maturity>
-
-        e.g., to deploy to the XYZ DAAC's NGAP sandbox account with the initials
-        of a developer (to make deployment unique) with maturity of 'dev':
-
-        $ source env.sh xyz-sandbox-cumulus kb dev
-
-        (This assumes we've setup AWS credentials with the name `xyz-sandbox-cumulus`)
-
-2. Deploy Cumulus:
-
-        $ make all
-
-## Deploying Cumulus Workflows
+## Developing Cumulus Workflows
 
 There is a sample Workflow Terraform module in the `workflows`
-directory. It deploys the example HelloWorldWorkflow that comes with
-Cumulus. You can use this as a base for deploying your own
-workflows. Modify the Terraform for your workflow(s) and deploy the
-workflow by:
+directory. It deploys a `NOP` (No Operation) lambda and workflow. You
+can use this as a base for deploying your own workflows. It includes a
+Python lambda with unit tests. You can run the tests by:
 
-        $ make workflows
+        $ make test
+
+You can run them continuously (automatically re-run when code changes)
+by:
+
+        $ make test-watch
+
+Modify the Terraform for your workflow(s) and follow the deployment
+instructions (basically `make workflows`) in the CIRRUS-core README,
+linked above.
