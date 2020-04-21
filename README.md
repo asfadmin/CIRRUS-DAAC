@@ -23,14 +23,10 @@ Cumulus.
 
 ## Development Setup
 
-You can run tests and deploy the stack inside of a Docker container:
+You can run tests inside of a Docker container:
 
         $ make image
-        $ CIRRUS_ROOTDIR=$HOME/projects make container-shell
-
-This assumed that both `CIRRUS-core` and `CIRRUS-DAAC` both
-reside in the `$HOME/projects/` directory, but you can change this
-to whatever you'd like.
+        $ make container-shell
 
 1. To run linter (flake8) & unit tests (pytest) once:
 

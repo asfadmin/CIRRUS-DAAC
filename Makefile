@@ -1,8 +1,3 @@
-# This makefile assumes you have the environment variable set:
-#
-#  CIRRUS_ROOTDIR: The parent directory which contains the CIRRUS-core
-#                  and CIRRUS-DAAC repositories.
-
 # ---------------------------
 SELF_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 DIST_DIR := ${SELF_DIR}/dist
@@ -41,8 +36,8 @@ image: build/Dockerfile
 
 container-shell:
 	docker run -it --rm \
-		-v ${CIRRUS_ROOTDIR}/CIRRUS-DAAC:/CIRRUS-DAAC \
-		-v ${CIRRUS_ROOTDIR}/CIRRUS-core:/CIRRUS-core \
+		--user `id -u` \
+		-v ${PWD}:/CIRRUS-DAAC \
 		-v ~/.aws:/root/.aws \
 		--name=cirrus-daac \
 		cirrus-daac
