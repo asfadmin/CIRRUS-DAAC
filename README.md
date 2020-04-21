@@ -93,15 +93,4 @@ See [CIRRUS-core README](https://github.com/asfadmin/CIRRUS-core/blob/master/REA
 There is a sample Workflow Terraform module in the `workflows`
 directory. It deploys a `NOP` (No Operation) lambda and workflow. You
 can use this as a base for deploying your own workflows. It includes a
-Python lambda with unit tests. You can run the tests by:
-
-        $ make test
-
-You can run them continuously (automatically re-run when code changes)
-by:
-
-        $ make test-watch
-
-Modify the Terraform for your workflow(s) and follow the deployment
-instructions (basically `make workflows`) in the CIRRUS-core README,
-linked above.
+Python lambda with unit tests. You can run the tests as shown above.
