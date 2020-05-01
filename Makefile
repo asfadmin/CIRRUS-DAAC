@@ -129,3 +129,50 @@ destroy-workflows: workflows-init
 pcrs: workflows/providers/* workflows/collections/* workflows/rules/*
 	if [ -z ${cumulus_id_rsa+x} ];  then echo "Env Var \$cumulus_id_rsa is not set, using ~/.ssh/id_rsa"; fi
 	scripts/deploy-pcrs.sh ${SELF_DIR}/workflows ${cumulus_id_rsa-"~/.ssh/id_rsa"}
+
+# ------ Cumulus Dashboard ------
+#
+#  Deploying the dashboard requires the environment variables:
+#
+#    CUMULUS_API_ROOT: The HTTP URL for the Cumulus instance's API, e.g.:
+#
+#      CUMULUS_API_ROOT="https://mlcjs8s9ac.execute-api.us-east-1.amazonaws.com/dev/"
+#
+#    CUMULUS_DASHBOARD_VERSION: The version number (e.g., v1.7.2) to build & deploy
+#
+#    Then call:
+#
+#      make dashboard
+#
+tmp:
+	mkdir -p tmp
+
+tmp/cumulus-dashboard: tmp
+	git clone https://github.com/nasa/cumulus-dashboard tmp/cumulus-dashboard
+	cd tmp/cumulus-dashboard
+	git fetch origin ${CUMULUS_DASHBOARD_VERSION}:refs/tags/${CUMULUS_DASHBOARD_VERSION}
+	git checkout ${CUMULUS_DASHBOARD_VERSION}
+
+tmp/cumulus-dashboard/node_modules: tmp/cumulus-dashboard
+	cd tmp/cumulus-dashboard
+
+build-dashboard: tmp/cumulus-dashboard/node_modules
+	cd tmp/cumulus-dashboard
+	SERVED_BY_CUMULUS_API=true \
+	DAAC_NAME=${DEPLOY_NAME} \
+	STAGE=${MATURITY} \
+	HIDE_PDR=false \
+	LABELS=daac \
+	APIROOT=CUMULUS_API_ROOT \
+	./bin/build_in_docker.sh
+
+deploy-dashboard: dashboard-init
+	cd dashboard
+	terraform apply \
+		-input=false \
+		-auto-approve \
+		-no-color
+	cd ../tmp/cumulus-dashboard
+	aws s3 sync dist s3://${DEPLOY_NAME}-cumulus-${MATURITY}-dashboard --acl public-read
+
+dashboard: build-dashboard deploy-dashboard
