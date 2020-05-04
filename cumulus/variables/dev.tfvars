@@ -1,9 +1,9 @@
 urs_url          = "https://uat.urs.earthdata.nasa.gov"
-urs_client_id    = "CHANGEME"
+# urs_client_id = see secrets/dev.tfvars
 
-cmr_provider     = "CHANGEME"
+cmr_provider     = "NSIDC_CDEV"
 cmr_environment  = "UAT"
-cmr_username     = "CHANGEME"
+cmr_username     = "uat_cumulus_nsidc"
 
 ems_host = ""
 ems_port = 22
@@ -20,4 +20,4 @@ metrics_es_username = null
 
 launchpad_certificate = "launchpad.pfx"
 
-ecs_cluster_instance_image_id = "ami-06591f94cb01939d3"
+ecs_cluster_instance_image_id = "ami-09f11a8ee50e72b46"

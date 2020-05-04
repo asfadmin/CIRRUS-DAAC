@@ -4,7 +4,10 @@ oauth_user_group   = ""
 
 launchpad_api      = "launchpadApi"
 
-api_users = []
+api_users = [
+  "mbrandt",
+  "schwabm3"
+]
 
 private_archive_api_gateway = true
 
