@@ -1,3 +1,7 @@
+## v1.19.0.0
+
+* Single change to pull the correct cumulus terraform version
+
 ## v1.18.0.1
 
 * Remove TF state migration targets from the Makefile since they are
