@@ -53,25 +53,25 @@ variables and settings in a few of the modules. Specifically:
 To change which version of the [Cumulus Message
 Adapter](https://github.com/nasa/cumulus-message-adapter) is used to
 create the Lambda layer used by all Step Function Tasks, modify the
-corresponding variable in the `terraform.tfvars` file.
+corresponding variable in the `daac/terraform.tfvars` file.
 
 ### cumulus module
 
 This module contains the bulk of the DAAC-specific settings. There are
 three specific things you should customize:
 
-* `terraform.tfvars`: Variables which are likely the same in all
+* `cumulus/terraform.tfvars`: Variables which are likely the same in all
   environments (SIT, UAT, PROD) _and_ which are not 'secrets'.
 
-* `variables/*.tfvars`: Each file contains variables specific to the
-  corresponding 'maturity' or environment to which you are
+* `cumulus/variables/*.tfvars`: Each file contains variables specific to
+  the corresponding 'maturity' or environment to which you are
   deploying. For example, in `dev.tfvars` you will likely use a
   pre-production `urs_url`, while in the `prod.tfvars` file you will
   specify the production url.
 
-* `secrets/*.tfvars`: Like the variables above, these files contains
-  *secrets* which are specific to the 'maturity' or environment to
-  which you are deploying. Create one file for each environment and
+* `cumulus/secrets/*.tfvars`: Like the variables above, these files
+  contains *secrets* which are specific to the 'maturity' or environment
+  to which you are deploying. Create one file for each environment and
   populate it with secrets. See the example file in this directory for
   a starting point. For example, your `dev` `urs_client_password` is
   likely (hopefully!) different than your `prod` password.
