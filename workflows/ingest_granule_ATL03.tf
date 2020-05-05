@@ -20,7 +20,7 @@ resource "aws_lambda_function" "atl03_extract_browse" {
 }
 
 module "discover_granules_workflow" {
-  source = "https://github.com/nasa/cumulus/releases/download/v1.20.0/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v1.21.0/terraform-aws-cumulus-workflow.zip"
 
   prefix          = var.prefix
   name            = "DiscoverGranules"
@@ -119,7 +119,7 @@ JSON
 }
 
 module "ingest_atl03_granule_with_browse_workflow" {
-  source = "https://github.com/nasa/cumulus/releases/download/v1.20.0/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v1.21.0/terraform-aws-cumulus-workflow.zip"
 
   prefix          = var.prefix
   name            = "IngestATL03GranuleWithBrowse"
