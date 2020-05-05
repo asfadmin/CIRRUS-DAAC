@@ -12,3 +12,5 @@ api_users = [
 private_archive_api_gateway = true
 
 deploy_distribution_s3_credentials_endpoint = false
+
+thin_egress_jwt_secret_name = "nsidc-sb_jwt_secret_for_tea"
