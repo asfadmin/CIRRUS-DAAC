@@ -1,6 +1,10 @@
+## v1.20.0.0
+
+* change `workflows/main.tf` to reference `v1.20.0` terraform module
+
 ## v1.19.0.0
 
-* Single change to pull the correct cumulus terraform version
+* change `workflows/main.tf` to reference `v1.19.0` terraform module
 
 ## v1.18.0.1
 
