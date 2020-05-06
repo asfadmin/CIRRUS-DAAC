@@ -1,3 +1,7 @@
+## v1.22.1.0
+
+* change `workflows/main.tf` to reference `v1.22.1` terraform module
+
 ## v1.21.0.0
 
 * change `workflows/main.tf` to reference `v1.21.0` terraform module
