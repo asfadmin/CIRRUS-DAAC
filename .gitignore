@@ -1,5 +1,6 @@
 **/*.pyc
 **/secrets/**
+!**/secrets/example.tfvars
 .terraform*
 dist
 terraform.tfstate.d
