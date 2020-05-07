@@ -1,0 +1,16 @@
+{
+  "name": "ATL03_granule_rule",
+  "workflow": "DiscoverGranules",
+  "provider": "nsidc_sb_test",
+  "collection": {
+    "name": "ATL03",
+    "version": "002"
+  },
+  "rule": {
+    "type": "onetime"
+  },
+  "state": "ENABLED",
+  "tags": [
+    "test"
+  ]
+}

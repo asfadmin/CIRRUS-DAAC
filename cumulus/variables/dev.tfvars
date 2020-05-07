@@ -21,3 +21,5 @@ metrics_es_username = null
 launchpad_certificate = "launchpad.pfx"
 
 ecs_cluster_instance_image_id = "ami-09f11a8ee50e72b46"
+
+key_name = "nsidc-sb"
