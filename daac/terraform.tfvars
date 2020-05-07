@@ -1,4 +1,4 @@
-cma_version = "v1.1.3"
+cma_version = "v1.2.0"
 workflow_bucket_names = [
   "acme-landing",
   "acme-products",
