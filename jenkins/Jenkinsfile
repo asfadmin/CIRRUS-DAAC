@@ -1,6 +1,6 @@
 pipeline {
   parameters {
-      choice(name: 'MATURITY', choices: ['DEV', 'INT', 'TEST', 'PROD'], description: 'The MATURITY (AWS) account to deploy')
+      choice(name: 'MATURITY', choices: ['dev', 'int', 'test', 'prod'], description: 'The MATURITY (AWS) account to deploy')
       string(name: 'DEPLOY_NAME', defaultValue: 'daac', description: 'The name of the stack for this MATURITY')
 
       string(name: 'DAAC_REPO', defaultValue: 'git@github.com:asfadmin/CIRRUS-DAAC', description: 'The DAAC Cumulus git repository to deploy')
@@ -43,7 +43,7 @@ pipeline {
              stack_name = values[0]
           }
           DEPLOY_NAME_LOCAL = stack_name
-          MATURITY_LOCAL = 'DEV'
+          MATURITY_LOCAL = 'dev'
           NASA_MATURITY = 'sandbox'
           UAT_OR_PROD = 'UAT'
 
@@ -75,7 +75,7 @@ pipeline {
         echo "Deploy to DEV / sandbox"
         script {
           DEPLOY_NAME_LOCAL = params.DEPLOY_NAME
-          MATURITY_LOCAL = 'DEV'
+          MATURITY_LOCAL = 'dev'
           NASA_MATURITY = 'sandbox'
           UAT_OR_PROD = 'UAT'
 
@@ -102,8 +102,8 @@ pipeline {
     stage('Deploy to INT / SIT') {
       when {
         tag pattern: "v\\d+\\.\\d+\\.\\d+", comparator: "REGEXP";
-        not { environment name: 'MATURITY', value: "TEST" }
-        not { environment name: 'MATURITY', value: "PROD" }
+        not { environment name: 'MATURITY', value: "test" }
+        not { environment name: 'MATURITY', value: "prod" }
       }
       steps {
         echo "Deploy tag to INT / SIT"
@@ -139,13 +139,13 @@ pipeline {
 
     stage('Deploy tag to TEST') {
       when {
-        environment name: 'MATURITY', value: "TEST"
+        environment name: 'MATURITY', value: "test"
       }
       steps {
         echo "Deploy tag to TEST"
         script {
           DEPLOY_NAME_LOCAL = 'daac'
-          MATURITY_LOCAL = 'TEST'
+          MATURITY_LOCAL = 'test'
           NASA_MATURITY = 'uat'
           UAT_OR_PROD = 'UAT'
 
@@ -171,13 +171,13 @@ pipeline {
 
     stage('Deploy tag to PROD') {
       when {
-        environment name: 'MATURITY', value: "PROD"
+        environment name: 'MATURITY', value: "prod"
       }
       steps {
         echo "Deploy tag to PROD"
         script {
           DEPLOY_NAME_LOCAL = 'daac'
-          MATURITY_LOCAL = 'PROD'
+          MATURITY_LOCAL = 'prod'
           NASA_MATURITY = 'prod'
           UAT_OR_PROD = 'PROD'
 
