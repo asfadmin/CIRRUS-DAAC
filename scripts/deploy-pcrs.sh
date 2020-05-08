@@ -34,11 +34,11 @@ echo "API is $CUMULUS_BASEURL"
 # set up SSH tunnel through bastion to allow us to talk to private API Gateway
 export BASTION=$(aws ec2 $AWSENV describe-instances --filters "Name=tag:Name,Values=NGAP SSH Bastion" --query "Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicDnsName" --output=text)
 if [ ${#BASTION} -le 20 ]; then echo "Could not determine Bastion host"; exit 1; fi
-ssh-keygen -f "/home/kbeam/.ssh/known_hosts" -R $BASTION
-ssh -i $SSH_KEY -fN -D localhost:8001 ec2-user@$BASTION
+
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY -fN -D 127.0.0.1:8001 ec2-user@$BASTION
 if [ ! $? -eq 0 ]; then echo "Could not establish proxy SSH connection"; exit 1; fi
-SSH=$(pgrep -f 'ssh -fN -D localhost:8001')
-export PROXY='--proxy socks5h://localhost:8001'
+SSH=$(pgrep -f 'ssh -o StrictHostKeyChecking=no')
+export PROXY='--proxy socks5h://127.0.0.1:8001'
 
 # Get the token URL
 ORIGIN=$(dirname $CUMULUS_BASEURL)
@@ -46,12 +46,10 @@ LOGIN_URL="$CUMULUS_BASEURL/token"
 BACKEND_URL="$CUMULUS_BASEURL/v1"
 echo "Origin: ${ORIGIN}"
 
-# create a base64 hash of your login credentials
 
 if [ -z "$EARTHDATA_USERNAME" ]; then echo "No EARTHDATA_USERNAME Provided"; exit 1; fi
 if [ -z "$EARTHDATA_PASSWORD" ]; then echo "No EARTHDATA_PASSWORD Provided"; exit 1; fi
-AUTH=$(printf "$EARTHDATA_USERNAME:$EARTHDATA_PASSWORD" | base64)
-echo "Auth: ${AUTH}"
+RAWAUTH="$EARTHDATA_USERNAME:$EARTHDATA_PASSWORD"
 
 # Request the Earthdata url with client id and redirect uri to use with Cumulus
 echo ">>> Attempting auth @ ${LOGIN_URL}"
@@ -62,13 +60,11 @@ if [ -z "$AUTHORIZE_URL" ]; then echo "Could not contact Auth API; CHECK VPN!"; 
 echo "Authorize url: ${AUTHORIZE_URL}"
 
 # Request an authorization grant code
-echo "curl $PROXY -s -i -X POST \
-  -F "credentials=${AUTH}" \
+echo "curl $PROXY -s -i --user "${RAWAUTH}" \
   -H "Origin: ${ORIGIN}" \
   ${AUTHORIZE_URL%$'\r'}"
 
-TOKEN_URL=$(curl $PROXY -s -i -X POST \
-  -F "credentials=${AUTH}" \
+TOKEN_URL=$(curl $PROXY -s -i --user "${RAWAUTH}" \
   -H "Origin: ${ORIGIN}" \
   ${AUTHORIZE_URL%$'\r'} | grep Location | sed -e "s/^Location: //")
 echo "Token url: ${TOKEN_URL}"
