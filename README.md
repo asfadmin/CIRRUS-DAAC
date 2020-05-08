@@ -94,3 +94,26 @@ There is a sample Workflow Terraform module in the `workflows`
 directory. It deploys a `NOP` (No Operation) lambda and workflow. You
 can use this as a base for deploying your own workflows. It includes a
 Python lambda with unit tests. You can run the tests as shown above.
+
+## Deploying dashboard to S3 bucket
+
+There is a `dashboard` make target which will build and deploy a version of a
+Cumulus dashboard to a bucket named `$DEPLOY_NAME-cumulus-$MATURITY-dashboard`
+assuming you created such a bucket during your deployment.
+
+You need to pass in:
+
+        CUMULUS_API_ROOT="your api root"
+        CUMULUS_DASHBOARD_VERSION="version-of-dashboar"
+        DEPLOY_NAME=your deploy name
+        MATURITY=dev
+        SERVED_BY_CUMULUS_API=true (optional defaults to true)
+
+Example
+
+        $ CUMULUS_API_ROOT="https://xxx.execute-api.us-west-2.amazonaws.com:8000/dev" \
+          CUMULUS_DASHBOARD_VERSION="v1.8.0" \
+          DEPLOY_NAME=kb \
+          MATURITY=dev \
+          SERVED_BY_CUMULUS_API=false \
+          make dashboard
