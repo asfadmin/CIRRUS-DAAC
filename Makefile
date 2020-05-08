@@ -1,6 +1,8 @@
 # ---------------------------
 SELF_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 DIST_DIR := ${SELF_DIR}/dist
+SERVED_BY_CUMULUS_API ?= "true"
+
 .SILENT:
 .ONESHELL:
 .PHONY: clean container-shell test test-watch daac workflows
@@ -140,7 +142,7 @@ tmp-cumulus-dashboard: tmp
 
 build-dashboard: tmp-cumulus-dashboard
 	cd tmp/cumulus-dashboard
-	SERVED_BY_CUMULUS_API=true \
+	SERVED_BY_CUMULUS_API=${SERVED_BY_CUMULUS_API} \
 	DAAC_NAME=${DEPLOY_NAME} \
 	STAGE=${MATURITY} \
 	HIDE_PDR=false \
