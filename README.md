@@ -99,7 +99,7 @@ Python lambda with unit tests. You can run the tests as shown above.
 
 There is a `dashboard` make target which will build and deploy a version of a
 Cumulus dashboard to a bucket named `$DEPLOY_NAME-cumulus-$MATURITY-dashboard`
-assuming you such a bucket.
+assuming you created such a bucket during your deployment.
 
 You need to pass in:
 
