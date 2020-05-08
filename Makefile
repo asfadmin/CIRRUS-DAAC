@@ -131,32 +131,25 @@ pcrs: workflows/providers/* workflows/collections/* workflows/rules/*
 tmp:
 	mkdir -p tmp
 
-tmp/cumulus-dashboard: tmp
+tmp-cumulus-dashboard: tmp
+	rm -rf tmp/cumulus-dashboard
 	git clone https://github.com/nasa/cumulus-dashboard tmp/cumulus-dashboard
 	cd tmp/cumulus-dashboard
 	git fetch origin ${CUMULUS_DASHBOARD_VERSION}:refs/tags/${CUMULUS_DASHBOARD_VERSION}
 	git checkout ${CUMULUS_DASHBOARD_VERSION}
 
-tmp/cumulus-dashboard/node_modules: tmp/cumulus-dashboard
-	cd tmp/cumulus-dashboard
-
-build-dashboard: tmp/cumulus-dashboard/node_modules
+build-dashboard: tmp-cumulus-dashboard
 	cd tmp/cumulus-dashboard
 	SERVED_BY_CUMULUS_API=true \
 	DAAC_NAME=${DEPLOY_NAME} \
 	STAGE=${MATURITY} \
 	HIDE_PDR=false \
 	LABELS=daac \
-	APIROOT=CUMULUS_API_ROOT \
+	APIROOT=${CUMULUS_API_ROOT} \
 	./bin/build_in_docker.sh
 
 deploy-dashboard: dashboard-init
-	cd dashboard
-	terraform apply \
-		-input=false \
-		-auto-approve \
-		-no-color
-	cd ../tmp/cumulus-dashboard
+	cd tmp/cumulus-dashboard
 	aws s3 sync dist s3://${DEPLOY_NAME}-cumulus-${MATURITY}-dashboard --acl public-read
 
 dashboard: build-dashboard deploy-dashboard
