@@ -1,6 +1,0 @@
-{
- "id": "nsidc_sb_test",
- "protocol": "s3",
-  "host": "s3.amazonaws.com",
-  "globalConnectionLimit": 10
-}

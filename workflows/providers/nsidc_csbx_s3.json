@@ -1,0 +1,6 @@
+{
+ "id": "NSIDC_CSBX",
+ "protocol": "s3",
+  "host": "nsidc-cumulus-dev-nsidc-csbx",
+  "globalConnectionLimit": 10
+}

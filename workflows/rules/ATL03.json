@@ -1,7 +1,7 @@
 {
   "name": "ATL03_granule_rule",
   "workflow": "DiscoverGranules",
-  "provider": "nsidc_sb_test",
+  "provider": "NSIDC_CSBX",
   "collection": {
     "name": "ATL03",
     "version": "002"
