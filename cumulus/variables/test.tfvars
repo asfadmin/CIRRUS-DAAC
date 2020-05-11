@@ -20,4 +20,4 @@ metrics_es_username = null
 
 wlaunchpad_certificate = "launchpad.pfx"
 
-ecs_cluster_instance_image_id = "ami-06591f94cb01939d3"
+ecs_cluster_instance_image_id = "ami-09f11a8ee50e72b46"

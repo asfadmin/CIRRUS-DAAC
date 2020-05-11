@@ -4,8 +4,13 @@ oauth_user_group   = ""
 
 launchpad_api      = "launchpadApi"
 
-api_users = []
+api_users = [
+  "mbrandt",
+  "schwabm3"
+]
 
 private_archive_api_gateway = true
 
 deploy_distribution_s3_credentials_endpoint = false
+
+# thin_egress_jwt_secret_name = "nsidc-sb_jwt_secret_for_tea"

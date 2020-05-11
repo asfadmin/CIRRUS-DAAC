@@ -1,6 +1,6 @@
 variable "DEPLOY_NAME" {
   type = string
-  default = "daac"
+  default = "nsidc"
 }
 
 variable "MATURITY" {
