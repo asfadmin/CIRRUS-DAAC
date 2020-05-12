@@ -32,12 +32,14 @@ echo "API is $CUMULUS_BASEURL"
 # echo SNSTOPIC is $SNSTOPIC
 
 # set up SSH tunnel through bastion to allow us to talk to private API Gateway
-export BASTION=$(aws ec2 $AWSENV describe-instances --filters "Name=tag:Name,Values=NGAP SSH Bastion" --query "Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicDnsName" --output=text)
-if [ ${#BASTION} -le 20 ]; then echo "Could not determine Bastion host"; exit 1; fi
+export SSMBASTION=$(aws ec2 describe-instances --region=$AWS_REGION --profile=$AWS_PROFILE --filters Name=tag:Name,Values="NGAP SSH Bastion*" Name=instance-state-name,Values=running  --query "Reservations[].Instances[].InstanceId" --output=text)
+echo "Queried SSM BASTION to be '$SSMBASTION'"
 
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY -fN -D 127.0.0.1:8001 ec2-user@$BASTION
+if [ ${#SSMBASTION} -le 10 ]; then echo "Could not determine Bastion host"; exit 1; fi
+
+ssh -o ProxyCommand="sh -c 'aws --profile=$AWS_PROFILE --region=$AWS_REGION ssm start-session --target %h --document-name AWS-StartSSHSession --parameters portNumber=22'" -i $SSH_KEY -fN -D 127.0.0.1:8001 ec2-user@$SSMBASTION 
 if [ ! $? -eq 0 ]; then echo "Could not establish proxy SSH connection"; exit 1; fi
-SSH=$(pgrep -f 'ssh -o StrictHostKeyChecking=no')
+SSH=$(pgrep -f 'ssh -o ProxyCommand')
 export PROXY='--proxy socks5h://127.0.0.1:8001'
 
 # Get the token URL
