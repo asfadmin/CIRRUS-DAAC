@@ -13,14 +13,26 @@ provider "aws" {
 locals {
   prefix = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
 
-  standard_bucket_names = [for n in var.standard_bucket_names : "${local.prefix}-${n}"]
-  workflow_bucket_names = [for n in var.workflow_bucket_names : "${local.prefix}-${n}"]
+  standard_bucket_names  = [for n in var.standard_bucket_names  : "${local.prefix}-${n}"]
+  protected_bucket_names = [for n in var.protected_bucket_names : "${local.prefix}-${n}"]
+  public_bucket_names    = [for n in var.public_bucket_names    : "${local.prefix}-${n}"]
+  workflow_bucket_names  = [for n in var.workflow_bucket_names  : "${local.prefix}-${n}"]
 
-  standard_bucket_map = { for n in var.standard_bucket_names : n => { name = "${local.prefix}-${n}", type = n } }
-  workflow_bucket_map = { for n in var.workflow_bucket_names : n => { name = "${local.prefix}-${n}", type = "workflow" } }
+  standard_bucket_map  = { for n in var.standard_bucket_names  : n => { name = "${local.prefix}-${n}", type = n } }
+  protected_bucket_map = { for n in var.protected_bucket_names : n => { name = "${local.prefix}-${n}", type = "protected" } }
+  public_bucket_map    = { for n in var.public_bucket_names    : n => { name = "${local.prefix}-${n}", type = "public" } }
+  workflow_bucket_map  = { for n in var.workflow_bucket_names  : n => { name = "${local.prefix}-${n}", type = "workflow" } }
+  internal_bucket_map  = {
+    internal = {
+      name = "${local.prefix}-internal"
+      type = "internal"
+    }
+  }
 
   // creates a TEA style bucket map, is outputted via outputs.tf
-  bucket_map = merge(local.standard_bucket_map, local.workflow_bucket_map)
+  bucket_map = merge(local.standard_bucket_map, local.internal_bucket_map,
+                     local.protected_bucket_map, local.public_bucket_map,
+                     local.workflow_bucket_map)
 }
 
 resource "aws_s3_bucket" "standard-bucket" {
@@ -29,6 +41,48 @@ resource "aws_s3_bucket" "standard-bucket" {
   bucket = each.key
   lifecycle {
     prevent_destroy = true
+  }
+}
+
+//For EMS reporting, buckets which are exposed by TEA need to have server access
+// logging enabled.  The Cumulus standard is for the logs to be added to the
+// "internal" bucket.  An acl is added to this bucket
+//  This is documented more fully in:
+//  https://nasa.github.io/cumulus/docs/deployment/server_access_logging
+
+resource "aws_s3_bucket" "internal-bucket" {
+  bucket = "${local.prefix}-internal"
+  lifecycle {
+    prevent_destroy = true
+  }
+  acl    = "log-delivery-write"
+}
+
+// protected buckets log to "internal"
+resource "aws_s3_bucket" "protected-bucket" {
+  // protected buckets defined in variables.tf
+  for_each = toset(local.protected_bucket_names)
+  bucket = each.key
+  lifecycle {
+    prevent_destroy = true
+  }
+  logging {
+    target_bucket = "${local.prefix}-internal"
+    target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
+  }
+}
+
+// public buckets log to "internal"
+resource "aws_s3_bucket" "public-bucket" {
+  // public buckets defined in variables.tf
+  for_each = toset(local.public_bucket_names)
+  bucket = each.key
+  lifecycle {
+    prevent_destroy = true
+  }
+  logging {
+    target_bucket = "${local.prefix}-internal"
+    target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
   }
 }
 

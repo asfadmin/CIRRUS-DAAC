@@ -13,7 +13,17 @@ variable "cma_version" {
 
 variable "standard_bucket_names" {
   type = list(string)
-  default = ["internal", "private", "protected", "public"]
+  default = ["private"]
+}
+
+variable "protected_bucket_names" {
+  type = list(string)
+  default = ["protected"]
+}
+
+variable "public_bucket_names" {
+  type = list(string)
+  default = ["public"]
 }
 
 variable "workflow_bucket_names" {
