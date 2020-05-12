@@ -4,7 +4,7 @@
   "dataType": "ATL03",
   "process": "modis",
   "provider_path": "data/ATL03_test",
-  "url_path": "{cmrMetadata.Granule.Collection.ShortName}___{cmrMetadata.Granule.Collection.VersionId}/{substring(file.name, 0, 3)}",
+  "url_path": "ATL03___002",
   "duplicateHandling": "replace",
   "granuleId": "^ATL03_[\\d]{14}_[\\d]{8}_002_01$",
   "granuleIdExtraction": "(ATL03_[\\d]{14}_[\\d]{8}_002_01)(_BRW)?(\\.h5|\\.(iso|cmr)\\.xml|\\.jpg)",
