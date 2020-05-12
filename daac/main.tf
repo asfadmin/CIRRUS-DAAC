@@ -44,6 +44,12 @@ resource "aws_s3_bucket" "standard-bucket" {
   }
 }
 
+//For EMS reporting, buckets which are exposed by TEA need to have server access
+// logging enabled.  The Cumulus standard is for the logs to be added to the
+// "internal" bucket.  An acl is added to this bucket
+//  This is documented more fully in:
+//  https://nasa.github.io/cumulus/docs/deployment/server_access_logging
+
 resource "aws_s3_bucket" "internal-bucket" {
   bucket = "${local.prefix}-internal"
   lifecycle {
@@ -52,6 +58,7 @@ resource "aws_s3_bucket" "internal-bucket" {
   acl    = "log-delivery-write"
 }
 
+// protected buckets log to "internal"
 resource "aws_s3_bucket" "protected-bucket" {
   // protected buckets defined in variables.tf
   for_each = toset(local.protected_bucket_names)
@@ -65,6 +72,7 @@ resource "aws_s3_bucket" "protected-bucket" {
   }
 }
 
+// public buckets log to "internal"
 resource "aws_s3_bucket" "public-bucket" {
   // public buckets defined in variables.tf
   for_each = toset(local.public_bucket_names)
