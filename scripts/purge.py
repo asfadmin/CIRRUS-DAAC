@@ -12,6 +12,8 @@ parser.add_argument("-t", "--tag", dest="tags", action='append', required=True,
                     help="Filter Tag in the format of 'Key=Value' and 'Key=Value1,Value2'") 
 parser.add_argument("-d", "--do", dest="do", action='append', choices=KNOWN_TYPES,
                     help="process test types of resources")
+parser.add_argument("--purge-bucket", dest="bucket_list", action='append',
+                    help="Skip everything else, just purge a bucket!")
 parser.add_argument("-r", "--region", dest="region", default="us-east-1",
                     help="aws region to inspect")
 parser.add_argument("-c", "--confirm", dest="confirm", default="true", choices=['true', 'false'],
@@ -396,7 +398,22 @@ def get_all_tagged_arns( filter_tags ):
         arns.extend( [ tagged_item['ResourceARN'] for tagged_item in tagged_items['ResourceTagMappingList'] ] )  
 
     return arns
+
+if args.dryrun:
+    log.info("##############################################################################")
+    log.info("                      THIS IS ONLY A DRY RUN!!!                               ")
+    log.info("##############################################################################")
     
+#########
+# JUST remove a specific set of buckets
+if args.bucket_list:
+    log.warning("Only purging buckets, this **IS NOT** tag filter!")
+    for bucket in args.bucket_list:
+        try:
+            delete_s3({'Class':'s3', 'Type': bucket, 'Arn': get_bucket_arn(bucket, args.region)})
+        except ClientError as e:      
+            log.error(f"Could not remove S3 Bucket {bucket}: {e}")
+    exit(0)
 
 #########
 # Get tagged resources 
@@ -412,11 +429,6 @@ resources = [ {'Class': o[2], 'Type': ':'.join(o[5:]), 'Arn': ":".join(o) } for 
 
 if args.do:
     log.info(f"Only processing types: {args.do}")
-
-if args.dryrun:
-    log.info("##############################################################################")
-    log.info("                      THIS IS ONLY A DRY RUN!!!                               ")
-    log.info("##############################################################################")
 
 for resource in resources: 
     if args.do and resource['Class'] not in args.do: 
