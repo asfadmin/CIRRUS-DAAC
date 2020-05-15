@@ -27,6 +27,10 @@ arguments:
   --no-dry-run            Dont do a dry run, ACTUALLY do the delete!
   
 examples: 
+
+  # Show what CIRRUS resources willl be deleted. This is just a dry run, so it'll JUST list.
+  ./purge.py --profile $AWS_PROFILE --region=$AWS_REGION \
+             --tag Deployment=$DEPLOY_NAME --bucket $DEPLOY_NAME --confirm=false
   
   # Purge all S3 buckets named s3://bb-terraform* and Logs resources with tags Deployment=bb-terraform & Maturity=DEV
   ./purge.py --profile dev-account \
