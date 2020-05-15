@@ -3,6 +3,46 @@ import argparse
 import logging
 from botocore.exceptions import ClientError
 
+'''
+usage: purge.py [-h] -p PROFILE -t TAGS
+                [-d {cloudformation,cloudwatch,dynamodb,ec2,ecs,es,events,lambda,logs,s3,secretsmanager,sns,sqs,states}]
+                [--purge-bucket BUCKET_LIST] [-r REGION] [-c {true,false}]
+                [-n] [-b BUCKET]
+
+arguments:
+  -h, --help              show this help message and exit
+  
+  REQUIRED Params:
+  --profile PROFILE       AWS profile to use for cleaning
+  --region  REGION        AWS Region to purge from
+  --tag     TAGS          'TagName=Value' or 'TagName=Value1,Value2' pairs to filter objects.
+                          --tag is required EVEN when doing a specific bucket purge, its just ignored
+
+  
+  OPTIONAL Params:
+  --bucket-filter BUCKET  When finding bucket, only search THIS prefix. Optional, but faster!
+  --confirm       BOOL    true/false ask to confirm deletes (Default=true)
+  --do            TYPES   Only do this type of resource ( one or more )                      
+  --purge-bucket  BUCKET  Skip everything else, just purge this bucket bucket!
+  --no-dry-run            Dont do a dry run, ACTUALLY do the delete!
+  
+examples: 
+  
+  # Purge all S3 buckets named s3://bb-terraform* and Logs resources with tags Deployment=bb-terraform & Maturity=DEV
+  ./purge.py --profile dev-account \
+             --tag Deployment=bb-terraform --tag Maturity=DEV \
+             --bucket bb-terraform \ 
+             --do s3 --do events --do logs \
+             --no-dry-run
+             
+  # Purge S3 bucket name s3://bb-terraform-state REGAURDLESS of tags
+  ./purge.py --profile dev-account \
+             --tag Maturity=DEV \
+             --purge-bucket bb-terraform-state \
+             --no-dry-run
+  
+'''
+
 KNOWN_TYPES = ['cloudformation', 'cloudwatch', 'dynamodb', 'ec2', 'ecs', 'es', 'events', 'lambda', 'logs', 's3', 'secretsmanager', 'sns', 'sqs', 'states']
 
 parser = argparse.ArgumentParser()
