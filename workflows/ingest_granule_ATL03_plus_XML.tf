@@ -23,7 +23,7 @@ module "ingest_atl03_granule_with_browse_and_xml_workflow" {
   source = "https://github.com/nasa/cumulus/releases/download/v1.22.1/terraform-aws-cumulus-workflow.zip"
 
   prefix          = local.prefix
-  name            = "IngestATL03GranuleWithBrowse"
+  name            = "IngestATL03GranuleWithBrowseAndXML"
   workflow_config = data.terraform_remote_state.cumulus.outputs.workflow_config
   system_bucket   = local.system_bucket
   // tags            = local.tags
