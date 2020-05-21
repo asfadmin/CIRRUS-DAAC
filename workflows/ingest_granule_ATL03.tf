@@ -1,10 +1,10 @@
 resource "aws_lambda_function" "atl03_extract_browse" {
   function_name    = "${local.prefix}-browse-imagery-atl03"
 
-  filename         = "${path.module}/lambdas/lambda-browse-imagery-from-hdf5/lambda.zip"
-  source_code_hash = filebase64sha256("${path.module}/lambdas/lambda-browse-imagery-from-hdf5/lambda.zip")
+  #filename         = "${path.module}/lambdas/lambda-browse-imagery-from-hdf5/lambda.zip"
+  #source_code_hash = filebase64sha256("${path.module}/lambdas/lambda-browse-imagery-from-hdf5/lambda.zip")
 
-  # source = "https://github.com/nsidc/lambda-browse-imagery-from-hdf5/releases/download/v0.1.1/lambda-hdf-brw.zip"
+  source = "https://github.com/nsidc/lambda-browse-imagery-from-hdf5/releases/download/v0.1.1/lambda-hdf-brw.zip"
 
   handler          = "ingest_granule_ATL03.lambda_handler"
   role             = data.terraform_remote_state.cumulus.outputs.lambda_processing_role_arn
