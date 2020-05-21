@@ -4,10 +4,10 @@
 resource "aws_lambda_function" "XMLTransform" {
   function_name    = "${local.prefix}-XMLTransform"
 
-  #filename         = "${path.module}/lambdas/XMLTransform/lambda.zip"
-  #source_code_hash = filebase64sha256("${path.module}/lambdas/XMLTransform/lambda.zip")
+  filename         = "${path.module}/lambdas/lambda-xml-transform-iso-cmr/lambda.zip"
+  source_code_hash = filebase64sha256("${path.module}/lambdas/lambda-xml-transform-iso-cmr/lambda.zip")
 
-  source = "https://github.com/nsidc/XMLTransform_ISO_to_CMR_Local/releases/download/0.1.0/Lambda.zip"
+  #source = "https://github.com/nsidc/XMLTransform_ISO_to_CMR_Local/releases/download/0.1.0/Lambda.zip"
 
   handler          = "XMLTransform.lambda_handler"
   role             = data.terraform_remote_state.cumulus.outputs.lambda_processing_role_arn
