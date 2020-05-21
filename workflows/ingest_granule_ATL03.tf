@@ -45,7 +45,7 @@ module "ingest_atl03_granule_with_browse_workflow" {
 
   state_machine_definition = templatefile("./ingest.json", {
     sync_task_arn = data.terraform_remote_state.cumulus.outputs.sync_granule_task.task_arn
-    processing_browse_task_arn = aws_lambda_function.atl03_extract_browse.arn
+    processing_task_arn = aws_lambda_function.atl03_extract_browse.arn
     files_to_grans_task_arn = data.terraform_remote_state.cumulus.outputs.files_to_granules_task.task_arn
     move_task_arn = data.terraform_remote_state.cumulus.outputs.move_granules_task.task_arn
   })
