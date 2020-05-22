@@ -184,7 +184,7 @@
           "MaxAttempts": 1
         }
       ],
-      "Next": "FIlesToGranulesStep2"
+      "Next": "FilesToGranulesStep2"
     },
     "FilesToGranulesStep2": {
       "Parameters": {
