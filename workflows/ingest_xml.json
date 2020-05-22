@@ -184,41 +184,6 @@
           "MaxAttempts": 1
         }
       ],
-      "Next": "FilesToGranulesStep"
-    },
-    "FilesToGranulesStep": {
-      "Parameters": {
-        "cma": {
-          "event.$": "$",
-          "task_config": {
-            "inputGranules": "{$.meta.input_granules}",
-            "granuleIdExtraction": "{$.meta.collection.granuleIdExtraction}"
-          }
-        }
-      },
-      "Type": "Task",
-      "Resource": "${files_to_grans_task_arn}",
-      "Retry": [
-        {
-          "ErrorEquals": [
-            "Lambda.ServiceException",
-            "Lambda.AWSLambdaException",
-            "Lambda.SdkClientException"
-          ],
-          "IntervalSeconds": 2,
-          "MaxAttempts": 6,
-          "BackoffRate": 2
-        }
-      ],
-      "Catch": [
-        {
-          "ErrorEquals": [
-            "States.ALL"
-          ],
-          "ResultPath": "$.exception",
-          "Next": "WorkflowFailed"
-        }
-      ],
       "Next": "MoveGranuleStep"
     },
     "MoveGranuleStep": {
