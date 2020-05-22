@@ -33,7 +33,6 @@ module "ingest_atl03_granule_with_browse_and_xml_workflow" {
     processing_browse_task_arn = aws_lambda_function.atl03_extract_browse.arn
     files_to_grans_task_arn = data.terraform_remote_state.cumulus.outputs.files_to_granules_task.task_arn
     processing_xml_task_arn = aws_lambda_function.XMLTransform.arn
-    files_to_grans_task_arn = data.terraform_remote_state.cumulus.outputs.files_to_granules_task.task_arn
     move_task_arn = data.terraform_remote_state.cumulus.outputs.move_granules_task.task_arn
   })
 }
