@@ -197,7 +197,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "${files_to_grans_task_arn}",
+      "Resource": "${files_to_grans_task2_arn}",
       "Retry": [
         {
           "ErrorEquals": [
