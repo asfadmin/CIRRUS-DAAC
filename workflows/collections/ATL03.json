@@ -50,9 +50,9 @@
   ],
   "meta" {
     "mimeTypes": {
-    "h5": "application/x-hdf5",
-    "jpg": "image/jpeg",
-    "xml": "text/xml"
+      "h5": "application/x-hdf5",
+      "jpg": "image/jpeg",
+      "xml": "text/xml"
     }
   }
 }
