@@ -244,6 +244,9 @@
             "distribution_endpoint": "{$.meta.distribution_endpoint}",
             "collection": "{$.meta.collection}",
             "duplicateHandling": "{$.meta.collection.duplicateHandling}"
+            "cumulus_message": {
+              "input": "{$.payload}",
+             }
           }
         }
       },
