@@ -236,7 +236,7 @@
             "collection": "{$.meta.collection}",
             "duplicateHandling": "{$.meta.collection.duplicateHandling}",
             "cumulus_message": {
-              "input": "{$.meta.input_granules}"
+              "input": "{$.payload.granules}"
              }
           }
         }
