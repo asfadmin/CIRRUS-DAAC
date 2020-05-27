@@ -226,7 +226,6 @@
         "cma": {
           "event.$": "$",
           "task_config": {
-            "inputGranules": "{$.meta.input_granules}",
             "bucket": "{$.meta.buckets.internal.name}",
             "buckets": "{$.meta.buckets}",
             "distribution_endpoint": "{$.meta.distribution_endpoint}",
