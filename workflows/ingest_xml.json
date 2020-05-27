@@ -245,7 +245,7 @@
             "collection": "{$.meta.collection}",
             "duplicateHandling": "{$.meta.collection.duplicateHandling}",
             "cumulus_message": {
-              "input": "{$.payload}"
+              "input": "{$.meta.input_granules}"
              }
           }
         }
