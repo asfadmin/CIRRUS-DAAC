@@ -196,11 +196,11 @@
             "cumulus_message": {
               "outputs": [
                 {
-                  "source": "{$.granules}",
+                  "source": "{$.payload}",
                   "destination": "{$.meta.input_granules}"
                 },
                 {
-                  "source": "{$.granules}",
+                  "source": "{$.payload}",
                   "destination": "{$.payload}"
                 }
               ]
