@@ -226,12 +226,19 @@
         "cma": {
           "event.$": "$",
           "task_config": {
-            "inputGranules": "{$.payload.granules}",
             "bucket": "{$.meta.buckets.internal.name}",
             "buckets": "{$.meta.buckets}",
             "distribution_endpoint": "{$.meta.distribution_endpoint}",
             "collection": "{$.meta.collection}",
-            "duplicateHandling": "{$.meta.collection.duplicateHandling}"
+            "duplicateHandling": "{$.meta.collection.duplicateHandling}",
+            "cumulus_message": {
+              "outputs": [
+                {
+                  "source": "{$.granules}",
+                  "destination": "{$.meta.input_granules}"
+                }
+              ]
+            }
           }
         }
       },
