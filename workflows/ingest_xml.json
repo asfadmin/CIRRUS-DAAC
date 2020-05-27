@@ -198,6 +198,10 @@
                 {
                   "source": "{$.granules}",
                   "destination": "{$.meta.input_granules}"
+                },
+                {
+                  "source": "{$.granules}",
+                  "destination": "{$.payload}"
                 }
               ]
             }
