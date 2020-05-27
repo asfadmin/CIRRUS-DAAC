@@ -192,18 +192,7 @@
           "event.$": "$",
           "task_config": {
             "inputGranules": "{$.meta.input_granules}",
-            "granuleIdExtraction": "{$.meta.collection.granuleIdExtraction}",
-            "cumulus_message": {
-              "outputs": [
-                {
-                  "source": "{$.granules}",
-                  "destination": "{$.meta.input_granules}"
-                },
-                {
-                  "source": "{$.files}",
-                  "destination": "{$.payload}"
-                }
-              ]
+            "granuleIdExtraction": "{$.meta.collection.granuleIdExtraction}"
             }
           }
         }
@@ -245,7 +234,7 @@
             "collection": "{$.meta.collection}",
             "duplicateHandling": "{$.meta.collection.duplicateHandling}",
             "cumulus_message": {
-              "input": "{$.meta.input_granules}"
+              "input": "{$.payload}"
              }
           }
         }
