@@ -193,6 +193,9 @@
           "task_config": {
             "inputGranules": "{$.meta.input_granules}",
             "granuleIdExtraction": "{$.meta.collection.granuleIdExtraction}"
+            "cumulus_message": {
+              "input": "{$.payload}"
+             }
           }
         }
       },
