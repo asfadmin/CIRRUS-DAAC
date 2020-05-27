@@ -193,7 +193,6 @@
           "task_config": {
             "inputGranules": "{$.meta.input_granules}",
             "granuleIdExtraction": "{$.meta.collection.granuleIdExtraction}"
-            }
           }
         }
       },
