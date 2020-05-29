@@ -34,7 +34,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "${sync_task_arn}",
+      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-SyncGranule",
       "Retry": [
         {
           "ErrorEquals": [
@@ -82,7 +82,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "${processing_browse_task_arn}",
+      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-browse-imagery-atl03",
       "Catch": [
         {
           "ErrorEquals": [
@@ -114,7 +114,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "${files_to_grans_task_arn}",
+      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-FilesToGranules",
       "Retry": [
         {
           "ErrorEquals": [
@@ -139,7 +139,7 @@
       "Next": "XMLProcessingStep"
     },
     "XMLProcessingStep": {
-      "Parameters": {
+     "Parameters": {
         "cma": {
           "event.$": "$",
           "task_config": {
@@ -165,7 +165,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "${processing_xml_task_arn}",
+      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-XMLTransform",
       "Catch": [
         {
           "ErrorEquals": [
@@ -187,29 +187,17 @@
       "Next": "FilesToGranulesStep2"
     },
     "FilesToGranulesStep2": {
-      "Parameters": {
+            "Parameters": {
         "cma": {
           "event.$": "$",
           "task_config": {
             "inputGranules": "{$.meta.input_granules}",
-            "granuleIdExtraction": "{$.meta.collection.granuleIdExtraction}",
-            "cumulus_message": {
-              "outputs": [
-                {
-                  "source": "{$.payload}",
-                  "destination": "{$.meta.input_granules}"
-                },
-                {
-                  "source": "{$.payload}",
-                  "destination": "{$.payload}"
-                }
-              ]
-            }
+            "granuleIdExtraction": "{$.meta.collection.granuleIdExtraction}"
           }
         }
       },
       "Type": "Task",
-      "Resource": "${files_to_grans_task2_arn}",
+      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-FilesToGranules",
       "Retry": [
         {
           "ErrorEquals": [
@@ -247,7 +235,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "${move_task_arn}",
+      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-MoveGranules",
       "Retry": [
         {
           "ErrorEquals": [
@@ -277,3 +265,4 @@
     }
   }
 }
+
