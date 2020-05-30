@@ -30,3 +30,13 @@ variable "workflow_bucket_names" {
   type = list(string)
   default = []
 }
+
+variable "s3_replicator_target_bucket" {
+  type = string
+  default = null
+}
+
+variable "s3_replicator_target_prefix" {
+  type = string
+  default = null
+}
