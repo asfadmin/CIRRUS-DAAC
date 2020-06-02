@@ -136,90 +136,6 @@
           "Next": "WorkflowFailed"
         }
       ],
-      "Next": "XMLProcessingStep"
-    },
-    "XMLProcessingStep": {
-     "Parameters": {
-        "cma": {
-          "event.$": "$",
-          "task_config": {
-            "bucket": "{$.meta.buckets.internal.name}",
-            "collection": "{$.meta.collection}",
-            "cmrMetadataFormat": "{$.meta.cmrMetadataFormat}",
-            "additionalUrls": "{$.meta.additionalUrls}",
-            "generateFakeBrowse": true,
-            "provider": "{$.meta.provider}",
-            "cumulus_message": {
-              "outputs": [
-                {
-                  "source": "{$.granules}",
-                  "destination": "{$.meta.input_granules}"
-                },
-                {
-                  "source": "{$.files}",
-                  "destination": "{$.payload}"
-                }
-              ]
-            }
-          }
-        }
-      },
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-XMLTransform",
-      "Catch": [
-        {
-          "ErrorEquals": [
-            "States.ALL"
-          ],
-          "ResultPath": "$.exception",
-          "Next": "WorkflowFailed"
-        }
-      ],
-      "Retry": [
-        {
-          "ErrorEquals": [
-            "States.ALL"
-          ],
-          "IntervalSeconds": 2,
-          "MaxAttempts": 1
-        }
-      ],
-      "Next": "FilesToGranulesStep2"
-    },
-    "FilesToGranulesStep2": {
-            "Parameters": {
-        "cma": {
-          "event.$": "$",
-          "task_config": {
-            "inputGranules": "{$.meta.input_granules}",
-            "granuleIdExtraction": "{$.meta.collection.granuleIdExtraction}"
-          }
-        }
-      },
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-FilesToGranules",
-      "Retry": [
-        {
-          "ErrorEquals": [
-            "Lambda.ServiceException",
-            "Lambda.AWSLambdaException",
-            "Lambda.SdkClientException"
-          ],
-          "IntervalSeconds": 2,
-          "MaxAttempts": 6,
-          "BackoffRate": 2
-        }
-      ],
-      "Catch": [
-        {
-          "ErrorEquals": [
-            "States.ALL"
-          ],
-          "ResultPath": "$.exception",
-          "Next": "WorkflowFailed"
-        }
-      ],
-      "Next": "MoveGranuleStep"
     },
     "MoveGranuleStep": {
       "Parameters": {
@@ -255,6 +171,53 @@
           ],
           "ResultPath": "$.exception",
           "Next": "WorkflowFailed"
+        }
+      "Next": "XMLProcessingStep"
+    },
+    "XMLProcessingStep": {
+     "Parameters": {
+        "cma": {
+          "event.$": "$",
+          "task_config": {
+            "bucket": "{$.meta.buckets.internal.name}",
+            "collection": "{$.meta.collection}",
+            "cmrMetadataFormat": "{$.meta.cmrMetadataFormat}",
+            "additionalUrls": "{$.meta.additionalUrls}",
+            "generateFakeBrowse": true,
+            "provider": "{$.meta.provider}",
+            "cumulus_message": {
+              "outputs": [
+                {
+                  "source": "{$.granules}",
+                  "destination": "{$.meta.input_granules}"
+                },
+                {
+                  "source": "{$.granules}",
+                  "destination": "{$.payload}"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-XMLTransform",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.exception",
+          "Next": "WorkflowFailed"
+        }
+      ],
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 1
         }
       ],
       "End": true
