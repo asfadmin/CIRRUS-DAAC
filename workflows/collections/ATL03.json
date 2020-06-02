@@ -48,11 +48,16 @@
       "sampleFileName": "ATL03_20181027045009_04360109_002_01_BRW.cmr.xml"
     }
   ],
-  "meta" {
+  "meta": {
+    "bucketExcludes": [
+      "private",
+      "other"
+    ],
     "mimeTypes": {
       "h5": "application/x-hdf5",
       "jpg": "image/jpeg",
       "xml": "text/xml"
-    }
+    },
+    "dataSetId": "ATLAS/ICESat-2 L2A Global Geolocated Photon Data V002"
   }
 }

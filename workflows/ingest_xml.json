@@ -186,19 +186,7 @@
             "cmrMetadataFormat": "{$.meta.cmrMetadataFormat}",
             "additionalUrls": "{$.meta.additionalUrls}",
             "generateFakeBrowse": true,
-            "provider": "{$.meta.provider}",
-            "cumulus_message": {
-              "outputs": [
-                {
-                  "source": "{$.granules}",
-                  "destination": "{$.meta.input_granules}"
-                },
-                {
-                  "source": "{$.granules}",
-                  "destination": "{$.payload}"
-                }
-              ]
-            }
+            "provider": "{$.meta.provider}"
           }
         }
       },
