@@ -34,7 +34,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-SyncGranule",
+      "Resource": "${sync_task_arn}",
       "Retry": [
         {
           "ErrorEquals": [
@@ -53,9 +53,9 @@
           "Next": "WorkflowFailed"
         }
       ],
-      "Next": "BRWSProcessingStep"
+      "Next": "ProcessingStep"
     },
-    "BRWSProcessingStep": {
+    "ProcessingStep": {
       "Parameters": {
         "cma": {
           "event.$": "$",
@@ -82,7 +82,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-browse-imagery-atl03",
+      "Resource": "${processing_task_arn}",
       "Catch": [
         {
           "ErrorEquals": [
@@ -114,7 +114,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-FilesToGranules",
+      "Resource": "${files_to_grans_task_arn}",
       "Retry": [
         {
           "ErrorEquals": [
@@ -152,7 +152,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-west-2:482829845746:function:nsidc-cumulus-dev-MoveGranules",
+      "Resource": "${move_task_arn}",
       "Retry": [
         {
           "ErrorEquals": [
@@ -173,6 +173,7 @@
           "ResultPath": "$.exception",
           "Next": "WorkflowFailed"
         }
+      ],
       "Next": "XMLProcessingStep"
     },
     "XMLProcessingStep": {
@@ -229,4 +230,3 @@
     }
   }
 }
-
