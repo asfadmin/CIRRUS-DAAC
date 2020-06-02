@@ -82,7 +82,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "${processing_task_arn}",
+      "Resource": "${processing_browse_task_arn}",
       "Catch": [
         {
           "ErrorEquals": [
