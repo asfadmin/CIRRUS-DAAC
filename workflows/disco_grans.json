@@ -48,7 +48,7 @@
             "provider": "{$.meta.provider}",
             "internalBucket": "{$.meta.buckets.internal.name}",
             "stackName": "{$.meta.stack}",
-            "granuleIngestWorkflow": "IngestATL03GranuleWithBrowse",
+            "granuleIngestWorkflow": "IngestATL03Granule",
             "queueUrl": "{$.meta.queues.startSF}"
           }
         }

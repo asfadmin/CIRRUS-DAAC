@@ -82,7 +82,7 @@
         }
       },
       "Type": "Task",
-      "Resource": "${processing_task_arn}",
+      "Resource": "${processing_browse_task_arn}",
       "Catch": [
         {
           "ErrorEquals": [
@@ -172,6 +172,43 @@
           ],
           "ResultPath": "$.exception",
           "Next": "WorkflowFailed"
+        }
+      ],
+      "Next": "XMLProcessingStep"
+    },
+    "XMLProcessingStep": {
+     "Parameters": {
+        "cma": {
+          "event.$": "$",
+          "task_config": {
+            "bucket": "{$.meta.buckets.internal.name}",
+            "collection": "{$.meta.collection}",
+            "cmrMetadataFormat": "{$.meta.cmrMetadataFormat}",
+            "additionalUrls": "{$.meta.additionalUrls}",
+            "generateFakeBrowse": true,
+            "provider": "{$.meta.provider}"
+            
+          }
+        }
+      },
+      "Type": "Task",
+      "Resource": "${processing_xml_task_arn}",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.exception",
+          "Next": "WorkflowFailed"
+        }
+      ],
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 1
         }
       ],
       "End": true

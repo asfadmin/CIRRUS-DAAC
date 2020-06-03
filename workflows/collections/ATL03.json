@@ -12,34 +12,52 @@
   "sampleFileName": "ATL03_20181027045009_04360109_002_01.h5",
   "files": [
     {
-      "bucket": "private",
+      "bucket": "internal",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01\\.h5$",
+      "type": "SCIENCE",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01.h5"
     },
     {
       "bucket": "private",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01\\.iso\\.xml$",
+      "type": "METADATA",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01.iso.xml"
     },
     {
       "bucket": "private",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01_BRW\\.h5$",
+      "type": "BROWSE",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01_BRW.h5"
     },
     {
-      "bucket": "private",
+      "bucket": "internal",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01_BRW.*\\.jpg$",
+      "type": "BROWSE",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01_BRW.default.default1.jpg"
     },
     {
-      "bucket": "private",
+      "bucket": "internal",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01\\.cmr\\.xml$",
+      "type": "METADATA",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01.cmr.xml"
     },
     {
-      "bucket": "private",
+      "bucket": "internal",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01_BRW\\.cmr\\.xml$",
+      "type": "METADATA",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01_BRW.cmr.xml"
     }
-  ]
+  ],
+  "meta": {
+    "bucketExcludes": [
+      "private",
+      "other"
+    ],
+    "mimeTypes": {
+      "h5": "application/x-hdf5",
+      "jpg": "image/jpeg",
+      "xml": "text/xml"
+    },
+    "dataSetId": "ATLAS/ICESat-2 L2A Global Geolocated Photon Data V002"
+  }
 }

@@ -4,7 +4,7 @@ resource "aws_lambda_function" "atl03_extract_browse" {
   filename         = "${path.module}/lambdas/lambda-browse-imagery-from-hdf5/lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/lambdas/lambda-browse-imagery-from-hdf5/lambda.zip")
 
-  # source = "https://github.com/nsidc/lambda-browse-imagery-from-hdf5/releases/download/v0.1.1/lambda-hdf-brw.zip"
+  #source = "https://github.com/nsidc/lambda-browse-imagery-from-hdf5/releases/download/v0.1.1/lambda-hdf-brw.zip"
 
   handler          = "ingest_granule_ATL03.lambda_handler"
   role             = data.terraform_remote_state.cumulus.outputs.lambda_processing_role_arn
@@ -17,6 +17,24 @@ resource "aws_lambda_function" "atl03_extract_browse" {
   //   subnet_ids         = var.subnet_ids
   //   security_group_ids = [aws_security_group.no_ingress_all_egress.id]
   // }
+}
+
+// Add XMLTransform - Transform ISO XML to CMR ISO XML
+resource "aws_lambda_function" "XMLTransform" {
+  function_name    = "${local.prefix}-XMLTransform"
+
+  filename         = "${path.module}/lambdas/lambda-xml-transform-iso-cmr/lambda.zip"
+  source_code_hash = filebase64sha256("${path.module}/lambdas/lambda-xml-transform-iso-cmr/lambda.zip")
+
+  #source = "https://github.com/nsidc/XMLTransform_ISO_to_CMR_Local/releases/download/0.1.0/Lambda.zip"
+
+  handler          = "XMLTransform.lambda_handler"
+  role             = data.terraform_remote_state.cumulus.outputs.lambda_processing_role_arn
+  runtime          = "python3.8"
+  timeout          = 60
+
+  layers = [aws_lambda_layer_version.lambda_dependencies.arn]
+
 }
 
 module "discover_granules_workflow" {
@@ -34,19 +52,21 @@ module "discover_granules_workflow" {
   })
 }
 
-module "ingest_atl03_granule_with_browse_workflow" {
+
+module "ingest_atl03_granule_workflow" {
   source = "https://github.com/nasa/cumulus/releases/download/v1.22.1/terraform-aws-cumulus-workflow.zip"
 
   prefix          = local.prefix
-  name            = "IngestATL03GranuleWithBrowse"
+  name            = "IngestATL03Granule"
   workflow_config = data.terraform_remote_state.cumulus.outputs.workflow_config
   system_bucket   = local.system_bucket
   // tags            = local.tags
 
   state_machine_definition = templatefile("./ingest.json", {
     sync_task_arn = data.terraform_remote_state.cumulus.outputs.sync_granule_task.task_arn
-    processing_task_arn = aws_lambda_function.atl03_extract_browse.arn
+    processing_browse_task_arn = aws_lambda_function.atl03_extract_browse.arn
     files_to_grans_task_arn = data.terraform_remote_state.cumulus.outputs.files_to_granules_task.task_arn
     move_task_arn = data.terraform_remote_state.cumulus.outputs.move_granules_task.task_arn
+    processing_xml_task_arn = aws_lambda_function.XMLTransform.arn
   })
 }
