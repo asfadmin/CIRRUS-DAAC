@@ -1,7 +1,7 @@
 urs_url          = "https://uat.urs.earthdata.nasa.gov"
 # urs_client_id = see secrets/dev.tfvars
 
-cmr_provider     = "NSIDC_CDEV"
+cmr_provider     = "NSIDC_CSBX"
 cmr_environment  = "UAT"
 cmr_username     = "uat_cumulus_nsidc"
 
