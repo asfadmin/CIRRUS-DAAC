@@ -14,37 +14,37 @@
     {
       "bucket": "internal",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01\\.h5$",
-      "type": "SCIENCE",
+      "dataType": "SCIENCE",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01.h5"
     },
     {
       "bucket": "private",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01\\.iso\\.xml$",
-      "type": "METADATA",
+      "dataType": "METADATA",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01.iso.xml"
     },
     {
       "bucket": "private",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01_BRW\\.h5$",
-      "type": "BROWSE",
+      "dataType": "BROWSE",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01_BRW.h5"
     },
     {
       "bucket": "internal",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01_BRW.*\\.jpg$",
-      "type": "BROWSE",
+      "dataType": "BROWSE",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01_BRW.default.default1.jpg"
     },
     {
       "bucket": "internal",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01\\.cmr\\.xml$",
-      "type": "METADATA",
+      "dataType": "METADATA",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01.cmr.xml"
     },
     {
       "bucket": "internal",
       "regex": "^ATL03_[\\d]{14}_[\\d]{8}_002_01_BRW\\.cmr\\.xml$",
-      "type": "METADATA",
+      "dataType": "METADATA",
       "sampleFileName": "ATL03_20181027045009_04360109_002_01_BRW.cmr.xml"
     }
   ],
