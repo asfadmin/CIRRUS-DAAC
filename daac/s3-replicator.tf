@@ -33,7 +33,7 @@ module "s3-replicator" {
   permissions_boundary = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/NGAPShRoleBoundary"
   tags                 = { Deployment = "${local.prefix}" }
   source_bucket        = "${local.prefix}-internal"
-  source_prefix        = "${local.prefix}/ems-distribution/s3-server-access-logs/"
+  source_prefix        = "${local.prefix}/ems-distribution/s3-server-access-logs"
   target_bucket        = local.replicator_target_bucket
   target_prefix        = local.replicator_target_prefix
 }
