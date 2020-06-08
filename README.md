@@ -101,6 +101,12 @@ There is a `dashboard` make target which will build and deploy a version of a
 Cumulus dashboard to a bucket named `$DEPLOY_NAME-cumulus-$MATURITY-dashboard`
 assuming you created such a bucket during your deployment.
 
+The dashboard build process happens within a Docker container, therefore the
+`make dashboard` target cannot be envoked within a Docker container.  Additionally,
+since the final step copies data to your dashboard bucket, you need to run
+`source env.sh <profile-name> <deploy-name> <maturity>` to set up your AWS
+environment prior to running the build process
+
 You need to pass in:
 
         CUMULUS_API_ROOT="your api root"
@@ -109,11 +115,11 @@ You need to pass in:
         MATURITY=dev
         SERVED_BY_CUMULUS_API=true (optional defaults to true)
 
-Example
+Example - to build a dashboard which is not served via the Cumulus API
 
         $ CUMULUS_API_ROOT="https://xxx.execute-api.us-west-2.amazonaws.com:8000/dev" \
           CUMULUS_DASHBOARD_VERSION="v1.8.0" \
           DEPLOY_NAME=kb \
           MATURITY=dev \
-          SERVED_BY_CUMULUS_API=false \
+          SERVED_BY_CUMULUS_API= \
           make dashboard
