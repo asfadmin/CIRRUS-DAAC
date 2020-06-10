@@ -1,3 +1,12 @@
+## v1.23.2.0
+
+* change `workflows/main.tf` to reference `v1.23.2` terraform module
+* default to cma v1.3.0
+* add s3-replication.tf for metrics replication
+* updates for bucket mapping - needed for metrics integration
+* updates for `make dashboard`
+* updates for jenkins
+
 ## v1.22.1.0
 
 * change `workflows/main.tf` to reference `v1.22.1` terraform module
