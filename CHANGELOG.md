@@ -1,3 +1,8 @@
+## v1.24.0.0
+
+* change `daac/s3-replicator.tf` to reference `v1.24.0` terraform module
+* change `workflows/main.tf` to reference `v1.24.0` terraform module
+
 ## v1.23.2.0
 
 * change `workflows/main.tf` to reference `v1.23.2` terraform module
