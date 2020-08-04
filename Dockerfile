@@ -11,7 +11,7 @@ FROM amazonlinux:2
 #   * Terraform
 #   * Application Python dependencies
 
-ENV NODE_VERSION "10.x"
+ENV NODE_VERSION "12.x"
 ENV TERRAFORM_VERSION "0.12.18"
 
 # Add NodeJS and Yarn repos & update package index
