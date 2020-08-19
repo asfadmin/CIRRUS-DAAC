@@ -9,7 +9,7 @@ A new (private) repository to mirror CIRRUS-DAAC into.
 ```bash
 cd to/your/project/directory
 git clone --bare https://github.com/asfadmin/CIRRUS-DAAC
-cd original_repo.git
+cd CIRRUS-DAAC.git
 git push --mirror https://github.com/account/new_repo
 ```
 
