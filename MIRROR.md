@@ -3,7 +3,13 @@
 Process for creating a private version of CIRRUS-DAAC, while maintaining the ability
 to pull changes from CIRRUS-DAAC.
 ## Prerequisites
-A new (private) repository to mirror CIRRUS-DAAC into. 
+A new (private) repository to mirror CIRRUS-DAAC into. Instructions to do so are below:
+
+1. Navigate to github.com
+
+2. Click the new repository button.
+
+3.  Name the repo and click `create repository`
 
 ## Mirroring a repo
 ```bash
