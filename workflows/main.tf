@@ -11,13 +11,14 @@ provider "aws" {
 }
 
 module "acme_workflow" {
+
   source = "https://github.com/nasa/cumulus/releases/download/v2.0.6/terraform-aws-cumulus-workflow.zip"
 
-  prefix                   = local.prefix
-  name                     = "ACMEWorkflow"
-  workflow_config          = data.terraform_remote_state.cumulus.outputs.workflow_config
-  system_bucket            = local.system_bucket
-  tags                     = local.default_tags
+  prefix          = local.prefix
+  name            = "ACMEWorkflow"
+  workflow_config = data.terraform_remote_state.cumulus.outputs.workflow_config
+  system_bucket   = local.system_bucket
+  tags            = local.default_tags
 
   state_machine_definition = templatefile("./acme.json", {
     task_arn = aws_lambda_function.nop_lambda.arn
@@ -25,7 +26,7 @@ module "acme_workflow" {
 }
 
 locals {
-  prefix = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
+  prefix        = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
   system_bucket = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}-internal"
   default_tags = {
     Deployment = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
@@ -42,9 +43,9 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 data "terraform_remote_state" "cumulus" {
-  backend = "s3"
+  backend   = "s3"
   workspace = "${var.DEPLOY_NAME}"
-  config  = local.cumulus_remote_state_config
+  config    = local.cumulus_remote_state_config
 }
 
 resource "aws_lambda_layer_version" "lambda_dependencies" {

@@ -1,7 +1,23 @@
+
+# CHANGELOG
+
 ## v2.0.6.0
 
 * change `daac/s3-replicator.tf` to reference `v2.0.6` terraform module
 * change `workflows/main.tf` to reference `v2.0.6` terraform module
+
+## v2.0.4.0
+
+* change `daac/s3-replicator.tf` to reference `v2.0.4` terraform module
+* change `workflows/main.tf` to reference `v2.0.4` terraform module
+
+## v2.0.3.0
+
+* change `daac/s3-replicator.tf` to reference `v2.0.3` terraform module
+* change `workflows/main.tf` to reference `v2.0.3` terraform module
+* add some comments to `daac/main.tf` to show how to apply a custom TEA bucket map
+* add a sample TEA bucket map
+* small amount of terraform formatting
 
 ## v2.0.2.0
 

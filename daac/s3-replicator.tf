@@ -18,15 +18,17 @@ s3_replicator_target_prefix = "metrics target prefix name"
 
 locals {
 
-  replicator_bucket = "${local.prefix}-internal"
-  replicator_prefix = "input/s3_access/${var.DEPLOY_NAME}${var.MATURITY}"
-  replicator_target_bucket = "${var.s3_replicator_target_bucket == null ? local.replicator_bucket : var.s3_replicator_target_bucket }"
-  replicator_target_prefix = "${var.s3_replicator_target_prefix == null ? local.replicator_prefix : var.s3_replicator_target_prefix }"
+  replicator_bucket        = "${local.prefix}-internal"
+  replicator_prefix        = "input/s3_access/${var.DEPLOY_NAME}${var.MATURITY}"
+  replicator_target_bucket = "${var.s3_replicator_target_bucket == null ? local.replicator_bucket : var.s3_replicator_target_bucket}"
+  replicator_target_prefix = "${var.s3_replicator_target_prefix == null ? local.replicator_prefix : var.s3_replicator_target_prefix}"
 
 }
 
 module "s3-replicator" {
+
   source = "https://github.com/nasa/cumulus/releases/download/v2.0.6/terraform-aws-cumulus-s3-replicator.zip"
+
   prefix               = "${local.prefix}"
   vpc_id               = data.aws_vpc.application_vpcs.id
   subnet_ids           = data.aws_subnet_ids.subnet_ids.ids
@@ -52,5 +54,5 @@ data "aws_subnet_ids" "subnet_ids" {
 
   tags = {
     Name = "Private application ${data.aws_region.current.name}a subnet"
-   }
+  }
 }
