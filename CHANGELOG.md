@@ -1,4 +1,10 @@
+
 # CHANGELOG
+
+## v2.0.6.0
+
+* change `daac/s3-replicator.tf` to reference `v2.0.6` terraform module
+* change `workflows/main.tf` to reference `v2.0.6` terraform module
 
 ## v2.0.4.0
 
