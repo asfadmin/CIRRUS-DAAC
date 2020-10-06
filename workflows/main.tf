@@ -61,7 +61,7 @@ resource "aws_lambda_function" "nop_lambda" {
   role          = data.terraform_remote_state.cumulus.outputs.lambda_processing_role_arn
   handler       = "lambdas.nop.lambda_handler"
   layers        = [aws_lambda_layer_version.lambda_dependencies.arn]
-
+  timeout       =  10
   source_code_hash = filebase64sha256("${var.DIST_DIR}/lambdas.zip")
 
   runtime = "python3.7"
