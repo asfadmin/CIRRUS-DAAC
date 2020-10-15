@@ -5,6 +5,8 @@
 
 * change `daac/s3-replicator.tf` to reference `v3.0.0` terraform module
 * change `workflows/main.tf` to reference `v3.0.0` terraform module
+* change `daac/outputs.tf` to output a blank bucket_map_key by default,
+   it is needed by the new 3.0.0 Cumulus module in CIRRUS-core
 
 ## v2.0.7.0
 
