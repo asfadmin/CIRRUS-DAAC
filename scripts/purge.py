@@ -73,7 +73,7 @@ log = logging.getLogger(__name__)
 
 for tag in args.tags:
     if not len ( tag.split('=') ) == 2:
-        log.error("Tag '{tag}' is not valid, it should be 'Key=Value'")
+        log.error(f"Tag '{tag}' is not valid, it should be 'Key=Value'")
         exit(-1)
 
 filter_tags = [{'Key': t[0], 'Values': t[1].split(',')} for t in [ tag.split('=') for tag in args.tags ]]
@@ -415,7 +415,7 @@ def get_in_region_buckets():
         region = session.client("s3").get_bucket_location(Bucket=bucket.name)['LocationConstraint']
         region = 'us-east-1' if not region else region
         if not region == args.region:
-            log.info("{bucket.name} is in {region} not {args.region}")
+            log.info(f"{bucket.name} is in {region} not {args.region}")
             continue
 
         log.info(f"checking bucket {bucket.name} in region {region} for Tags")
