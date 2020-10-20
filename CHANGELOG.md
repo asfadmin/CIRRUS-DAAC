@@ -1,6 +1,15 @@
 
 # CHANGELOG
 
+## v3.0.0.0
+
+* change `daac/s3-replicator.tf` to reference `v3.0.0` terraform module
+* change `workflows/main.tf` to reference `v3.0.0` terraform module
+* change `daac/outputs.tf` to output a blank bucket_map_key by default,
+   it is needed by the new 3.0.0 Cumulus module in CIRRUS-core
+* change `Makefile` to add new `plan-daac` and `plan-workflows` targets
+  which can be called from the CIRRUS-Core `Makefile` to run `terraform plan`
+
 ## v2.0.7.0
 
 * change `daac/s3-replicator.tf` to reference `v2.0.7` terraform module

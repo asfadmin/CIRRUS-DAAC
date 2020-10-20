@@ -86,6 +86,22 @@ daac: daac-init
 		-no-color
 
 # ---------------------------
+plan-daac: daac-init
+	$(banner)
+	cd daac
+	if [ -f "variables/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export VARIABLES_OPT="-var-file=variables/${MATURITY}.tfvars"
+		echo "Found maturity-specific variables: $$VARIABLES_OPT"
+		echo "***************************************************************"
+	fi
+	terraform plan \
+		$$VARIABLES_OPT \
+		-input=false \
+		-no-color
+
+# ---------------------------
 ${DIST_DIR}/lambda_dependencies_layer.zip: ${DIST_DIR} workflows/requirements.txt
 	mkdir -p ${DIST_DIR}/python
 	cd ${DIST_DIR}/python
@@ -105,6 +121,11 @@ workflows: workflows-init artifacts
 	$(banner)
 	cd $@
 	terraform apply -var 'DIST_DIR=${DIST_DIR}' -input=false -auto-approve -no-color
+
+plan-workflows: workflows-init artifacts
+	$(banner)
+	cd workflows
+	terraform plan -var 'DIST_DIR=${DIST_DIR}' -input=false -no-color
 
 destroy-workflows: workflows-init
 	$(banner)
