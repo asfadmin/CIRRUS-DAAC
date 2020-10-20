@@ -12,7 +12,7 @@ provider "aws" {
 
 module "acme_workflow" {
 
-  source = "https://github.com/nasa/cumulus/releases/download/v2.0.7/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v3.0.0/terraform-aws-cumulus-workflow.zip"
 
   prefix          = local.prefix
   name            = "ACMEWorkflow"
@@ -56,12 +56,12 @@ resource "aws_lambda_layer_version" "lambda_dependencies" {
 }
 
 resource "aws_lambda_function" "nop_lambda" {
-  filename      = "${var.DIST_DIR}/lambdas.zip"
-  function_name = "${local.prefix}-nop"
-  role          = data.terraform_remote_state.cumulus.outputs.lambda_processing_role_arn
-  handler       = "lambdas.nop.lambda_handler"
-  layers        = [aws_lambda_layer_version.lambda_dependencies.arn]
-  timeout       =  10
+  filename         = "${var.DIST_DIR}/lambdas.zip"
+  function_name    = "${local.prefix}-nop"
+  role             = data.terraform_remote_state.cumulus.outputs.lambda_processing_role_arn
+  handler          = "lambdas.nop.lambda_handler"
+  layers           = [aws_lambda_layer_version.lambda_dependencies.arn]
+  timeout          = 10
   source_code_hash = filebase64sha256("${var.DIST_DIR}/lambdas.zip")
 
   runtime = "python3.7"
