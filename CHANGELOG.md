@@ -1,6 +1,12 @@
 
 # CHANGELOG
 
+## v3.0.1.0
+
+* change `daac/s3-replicator.tf` to reference `v3.0.1` terraform module
+* change `workflows/main.tf` to reference `v3.0.1` terraform module
+* change `daac/main.tf` to add encryption and tags to bucket creation
+
 ## v3.0.0.0
 
 * change `daac/s3-replicator.tf` to reference `v3.0.0` terraform module
