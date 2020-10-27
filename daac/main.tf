@@ -13,6 +13,10 @@ provider "aws" {
 locals {
   prefix = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
 
+  default_tags = {
+    Deployment = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
+  }
+
   standard_bucket_names  = [for n in var.standard_bucket_names  : "${local.prefix}-${n}"]
   protected_bucket_names = [for n in var.protected_bucket_names : "${local.prefix}-${n}"]
   public_bucket_names    = [for n in var.public_bucket_names    : "${local.prefix}-${n}"]
@@ -42,6 +46,14 @@ resource "aws_s3_bucket" "standard-bucket" {
   lifecycle {
     prevent_destroy = true
   }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = "AES256"
+      }
+    }
+  }
+  tags = local.default_tags
 }
 
 //For EMS reporting, buckets which are exposed by TEA need to have server access
@@ -56,6 +68,14 @@ resource "aws_s3_bucket" "internal-bucket" {
     prevent_destroy = true
   }
   acl    = "log-delivery-write"
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = "AES256"
+      }
+    }
+  }
+  tags = local.default_tags
 }
 
 // protected buckets log to "internal"
@@ -70,6 +90,14 @@ resource "aws_s3_bucket" "protected-bucket" {
     target_bucket = "${local.prefix}-internal"
     target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
   }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = "AES256"
+      }
+    }
+  }
+  tags = local.default_tags
 }
 
 // public buckets log to "internal"
@@ -84,6 +112,14 @@ resource "aws_s3_bucket" "public-bucket" {
     target_bucket = "${local.prefix}-internal"
     target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
   }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = "AES256"
+      }
+    }
+  }
+  tags = local.default_tags
 }
 
 resource "aws_s3_bucket" "workflow-bucket" {
@@ -93,6 +129,14 @@ resource "aws_s3_bucket" "workflow-bucket" {
   lifecycle {
     prevent_destroy = true
   }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = "AES256"
+      }
+    }
+  }
+  tags = local.default_tags
 }
 
 resource "aws_s3_bucket" "artifacts-bucket" {
@@ -100,6 +144,14 @@ resource "aws_s3_bucket" "artifacts-bucket" {
   lifecycle {
     prevent_destroy = true
   }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = "AES256"
+      }
+    }
+  }
+  tags = local.default_tags
 }
 
 resource "null_resource" "CMA_release" {
