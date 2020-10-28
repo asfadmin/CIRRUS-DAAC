@@ -4,7 +4,6 @@
     "dataType": "ACME",
     "process": "rtc",
     "duplicateHandling": "replace",
-    "provider_path": "/",
     "granuleId": "^ACME.*.zip$",
     "granuleIdExtraction": "(.+)",
     "sampleFileName": "ACME-001.zip",
