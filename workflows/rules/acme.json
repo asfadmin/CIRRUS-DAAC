@@ -10,5 +10,10 @@
     "rule": {
         "type": "sqs",
         "value": "https://sqs.$AWS_REGION.amazonaws.com/$AWS_ACCOUNT_ID/$DEPLOY_NAME-cumulus-$MATURITY-acme-workflow-queue"
+    },
+    "meta": {
+        "retries": 3,
+        "visibilityTimeout": 300,
+        "provider_path": "/"
     }
 }
