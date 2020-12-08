@@ -1,6 +1,6 @@
 terraform {
   required_providers {
-    aws  = "~> 2.46.0"
+    aws  = "~> 3.19.0"
     null = "~> 2.1.0"
   }
   backend "s3" {
@@ -8,6 +8,9 @@ terraform {
 }
 
 provider "aws" {
+  ignore_tags {
+    key_prefixes = ["gsfc-ngap"]
+  }
 }
 
 locals {
@@ -17,16 +20,16 @@ locals {
     Deployment = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
   }
 
-  standard_bucket_names  = [for n in var.standard_bucket_names  : "${local.prefix}-${n}"]
+  standard_bucket_names  = [for n in var.standard_bucket_names : "${local.prefix}-${n}"]
   protected_bucket_names = [for n in var.protected_bucket_names : "${local.prefix}-${n}"]
-  public_bucket_names    = [for n in var.public_bucket_names    : "${local.prefix}-${n}"]
-  workflow_bucket_names  = [for n in var.workflow_bucket_names  : "${local.prefix}-${n}"]
+  public_bucket_names    = [for n in var.public_bucket_names : "${local.prefix}-${n}"]
+  workflow_bucket_names  = [for n in var.workflow_bucket_names : "${local.prefix}-${n}"]
 
-  standard_bucket_map  = { for n in var.standard_bucket_names  : n => { name = "${local.prefix}-${n}", type = n } }
+  standard_bucket_map  = { for n in var.standard_bucket_names : n => { name = "${local.prefix}-${n}", type = n } }
   protected_bucket_map = { for n in var.protected_bucket_names : n => { name = "${local.prefix}-${n}", type = "protected" } }
-  public_bucket_map    = { for n in var.public_bucket_names    : n => { name = "${local.prefix}-${n}", type = "public" } }
-  workflow_bucket_map  = { for n in var.workflow_bucket_names  : n => { name = "${local.prefix}-${n}", type = "workflow" } }
-  internal_bucket_map  = {
+  public_bucket_map    = { for n in var.public_bucket_names : n => { name = "${local.prefix}-${n}", type = "public" } }
+  workflow_bucket_map  = { for n in var.workflow_bucket_names : n => { name = "${local.prefix}-${n}", type = "workflow" } }
+  internal_bucket_map = {
     internal = {
       name = "${local.prefix}-internal"
       type = "internal"
@@ -35,8 +38,8 @@ locals {
 
   // creates a TEA style bucket map, is outputted via outputs.tf
   bucket_map = merge(local.standard_bucket_map, local.internal_bucket_map,
-                     local.protected_bucket_map, local.public_bucket_map,
-                     local.workflow_bucket_map)
+    local.protected_bucket_map, local.public_bucket_map,
+  local.workflow_bucket_map)
 }
 
 resource "aws_s3_bucket" "standard-bucket" {
@@ -49,7 +52,7 @@ resource "aws_s3_bucket" "standard-bucket" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm     = "AES256"
+        sse_algorithm = "AES256"
       }
     }
   }
@@ -67,11 +70,11 @@ resource "aws_s3_bucket" "internal-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  acl    = "log-delivery-write"
+  acl = "log-delivery-write"
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm     = "AES256"
+        sse_algorithm = "AES256"
       }
     }
   }
@@ -82,7 +85,7 @@ resource "aws_s3_bucket" "internal-bucket" {
 resource "aws_s3_bucket" "protected-bucket" {
   // protected buckets defined in variables.tf
   for_each = toset(local.protected_bucket_names)
-  bucket = each.key
+  bucket   = each.key
   lifecycle {
     prevent_destroy = true
   }
@@ -93,7 +96,7 @@ resource "aws_s3_bucket" "protected-bucket" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm     = "AES256"
+        sse_algorithm = "AES256"
       }
     }
   }
@@ -104,7 +107,7 @@ resource "aws_s3_bucket" "protected-bucket" {
 resource "aws_s3_bucket" "public-bucket" {
   // public buckets defined in variables.tf
   for_each = toset(local.public_bucket_names)
-  bucket = each.key
+  bucket   = each.key
   lifecycle {
     prevent_destroy = true
   }
@@ -115,7 +118,7 @@ resource "aws_s3_bucket" "public-bucket" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm     = "AES256"
+        sse_algorithm = "AES256"
       }
     }
   }
@@ -132,7 +135,7 @@ resource "aws_s3_bucket" "workflow-bucket" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm     = "AES256"
+        sse_algorithm = "AES256"
       }
     }
   }
@@ -147,7 +150,7 @@ resource "aws_s3_bucket" "artifacts-bucket" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm     = "AES256"
+        sse_algorithm = "AES256"
       }
     }
   }
@@ -164,15 +167,15 @@ resource "null_resource" "CMA_release" {
 }
 
 resource "aws_s3_bucket_object" "cma" {
-  depends_on  = [null_resource.CMA_release]
-  bucket = aws_s3_bucket.artifacts-bucket.bucket
-  key = "cumulus-message-adapter-${var.cma_version}.zip"
-  source = "tmp/cumulus-message-adapter.zip"
+  depends_on = [null_resource.CMA_release]
+  bucket     = aws_s3_bucket.artifacts-bucket.bucket
+  key        = "cumulus-message-adapter-${var.cma_version}.zip"
+  source     = "tmp/cumulus-message-adapter.zip"
 }
 
 resource "aws_lambda_layer_version" "cma_layer" {
-  s3_bucket = aws_s3_bucket.artifacts-bucket.bucket
-  s3_key = aws_s3_bucket_object.cma.key
+  s3_bucket  = aws_s3_bucket.artifacts-bucket.bucket
+  s3_key     = aws_s3_bucket_object.cma.key
   layer_name = "${local.prefix}-CMA-layer"
 }
 

@@ -1,6 +1,10 @@
 
 # CHANGELOG
 
+## v4.0.0.1
+
+* Upgrade aws terraform provider to 3.19.x and ignore gsfc-ngap tags when deciding what components need to be rebuilt
+
 ## v4.0.0.0
 
 * change `daac/s3-replicator.tf` to reference `v4.0.0` terraform module
