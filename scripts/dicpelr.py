@@ -1,3 +1,7 @@
+"""
+DICPLER = DIsmantlement of Cumlus, Ever Lasting resources
+"""
+
 import json
 import os
 import re
