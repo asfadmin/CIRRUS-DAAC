@@ -5,6 +5,7 @@ DICPLER = DIsmantlement of Cumlus, Ever Lasting resources
 import json
 import os
 import re
+
 from subprocess import call
 
 import boto3
@@ -30,37 +31,24 @@ class Dicpelr:
     AWS_CLI_PRAMS = f"--profile {AWS_PROFILE} --region={AWS_REGION} --tag Deployment={STACK_NAME}"
 
     lambda_event_source_map_uuids = []
-    bucket_names = []
+    s3_bucket_names = []
     iam_roles = []
 
     def __init__(self):
-        # self._run_purge_script(ARGS)
-        #
-        # self._create_event_source_mapping_json_file()
-        # self._set_lambda_event_source_map_uuids_var()
-        # self._create_s3_bucket_file()
-        # self._set_bucket_var()
-        #
-        # self._delete_ecs_cluster_profile()
-        # self._delete_iam_roles()
-        #
-        # self._delete_lambda_event_source_mappings()
-        # self._delete_ec2()
-        # self._delete_dynamodb_tables()
-        # self._delete_tea_cloudformation()
-        #
-
-        # self._delete_s3()
         self._create_iam_file()
         self._set_iam_vars()
-        print(self.iam_roles)
+
+        self._create_event_source_mapping_json_file()
+        self._set_lambda_event_source_map_uuids_var()
+
+        self._create_s3_bucket_file()
+        self._set_s3_bucket_var()
 
     #   *********************************************************
     #  ******* Start of Functions that Create Files *******
     # *********************************************************
     def _create_event_source_mapping_json_file(self):
-        os.system(
-            f"aws lambda --profile {self.AWS_PROFILE} list-event-source-mappings >> {EVENT_SOURCE_MAPPING_FILE}")
+        os.system(f"aws lambda --profile {self.AWS_PROFILE} list-event-source-mappings >> {EVENT_SOURCE_MAPPING_FILE}")
 
     def _create_s3_bucket_file(self):
         os.system(f"aws s3 --profile {self.AWS_PROFILE} ls >> {BUCKET_FILE}")
@@ -77,8 +65,7 @@ class Dicpelr:
             self.lambda_event_source_map_uuids = json.loads(data)["EventSourceMappings"]
         os.remove(EVENT_SOURCE_MAPPING_FILE)
 
-    def _set_bucket_var(self):
-        REGEX = f"{self.STACK_NAME}(.*)"
+    def _set_s3_bucket_var(self):
         with open(BUCKET_FILE) as f:
             data = f.read().split()
         os.remove(BUCKET_FILE)
@@ -86,7 +73,7 @@ class Dicpelr:
         for bucket in data:
             REGEX = re.compile(f"{self.STACK_NAME}(.*)")
             if re.match(REGEX, bucket):
-                self.bucket_names.append(bucket)
+                self.s3_bucket_names.append(bucket)
 
     def _set_iam_vars(self):
         with open(IAM_FILE) as f:
@@ -97,6 +84,9 @@ class Dicpelr:
     #   *********************************************************
     #  ******* Start of Functions for Deleting Resources *******
     # *********************************************************
+    def delete_all_resources(self):
+        pass
+
     def _run_purge_script(self, args):
         arguments = f"{self.AWS_CLI_PRAMS} {args}"
         if self.no_dry_run:
@@ -104,13 +94,18 @@ class Dicpelr:
         # TODO: Update this to a more elegant solution
         call(f"python3 src/purge.py {self.AWS_CLI_PRAMS} {arguments}".split())
 
-    def _delete_iam_roles(self):  # TODO: Update this to do a similar process to _delete_lambda_event_source_mappings()
+    def delete_iam_roles(self):
+        # TODO: Update this to do a similar process to delete_lambda_event_source_mappings()
         # TODO: Fix "An error occurred (DeleteConflict) when calling the DeleteRole operation: Cannot delete entity,
         #  must delete policies first."
         for role in self.iam_roles:
-            os.system(f"aws iam --profile {self.AWS_PROFILE} delete-role --role-name {role}")
+            REGEX = re.compile(f"{self.STACK_NAME}-(.*)")
+            role_name = role["RoleName"]
+            if re.match(REGEX, role_name):
+                print(f"Deleting IAM Role {role_name} in profile {self.AWS_PROFILE}")
+                os.system(f"aws iam --profile {self.AWS_PROFILE} delete-role --role-name {role_name}")
 
-    def _delete_lambda_event_source_mappings(self):
+    def delete_lambda_event_source_mappings(self):
         for event_map in self.lambda_event_source_map_uuids:
             # (publishGranules|sqs2sf|sfEventSqsToDbRecords)
             REGEX = re.compile(f"arn:aws:(.*){self.STACK_NAME}-(.*)")
@@ -120,26 +115,29 @@ class Dicpelr:
                 print(f"Deleting {esa} with the UUID: {uuid}")
                 os.system(f"aws lambda --profile {self.AWS_PROFILE} delete-event-source-mapping --uuid {uuid}")
 
-    def _delete_tea_cloudformation(self):
+    def delete_tea_cloudformation(self):
         CLOUDFORMATION_ARGS = "-d cloudformation"
         self._run_purge_script(CLOUDFORMATION_ARGS)
 
-    def _delete_dynamodb_tables(self):
+    def delete_dynamodb_tables(self):
         DYNAMO_DB_ARGS = "-d dynamodb"
         self._run_purge_script(DYNAMO_DB_ARGS)
 
-    def _delete_ec2(self):
+    def delete_ec2(self):
         EC2_ARGS = "-d ec2"
         self._run_purge_script(EC2_ARGS)
 
-    def _delete_s3(self):
-        for b in self.bucket_names:
+    def delete_s3(self):
+        for b in self.s3_bucket_names:
             print(f"Deleting the s3 bucket: {b}")
             s3 = boto3.resource('s3')
             b = s3.Bucket(b)
             b.object_versions.delete()
             b.delete()
 
-    def _delete_ecs_cluster_profile(self):
+    def delete_ecs_cluster_profile(self):
         os.system(f"aws iam --profile {self.AWS_PROFILE} delete-instance-profile "
                   f"--instance-profile-name {self.STACK_NAME}_ecs_cluster_profile")
+
+
+
