@@ -159,7 +159,7 @@ resource "aws_s3_bucket" "artifacts-bucket" {
 
 resource "null_resource" "CMA_release" {
   triggers = {
-    always_run = "${timestamp()}"
+    always_run = timestamp()
   }
   provisioner "local-exec" {
     command = "mkdir -p tmp && curl -L -o tmp/cumulus-message-adapter.zip https://github.com/nasa/cumulus-message-adapter/releases/download/${var.cma_version}/cumulus-message-adapter.zip"
