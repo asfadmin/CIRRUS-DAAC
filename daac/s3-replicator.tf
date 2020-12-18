@@ -20,8 +20,8 @@ locals {
 
   replicator_bucket        = "${local.prefix}-internal"
   replicator_prefix        = "input/s3_access/${var.DEPLOY_NAME}${var.MATURITY}"
-  replicator_target_bucket = "${var.s3_replicator_target_bucket == null ? local.replicator_bucket : var.s3_replicator_target_bucket}"
-  replicator_target_prefix = "${var.s3_replicator_target_prefix == null ? local.replicator_prefix : var.s3_replicator_target_prefix}"
+  replicator_target_bucket = var.s3_replicator_target_bucket == null ? local.replicator_bucket : var.s3_replicator_target_bucket
+  replicator_target_prefix = var.s3_replicator_target_prefix == null ? local.replicator_prefix : var.s3_replicator_target_prefix
 
 }
 
@@ -29,11 +29,11 @@ module "s3-replicator" {
 
   source = "https://github.com/nasa/cumulus/releases/download/v4.0.0/terraform-aws-cumulus-s3-replicator.zip"
 
-  prefix               = "${local.prefix}"
+  prefix               = local.prefix
   vpc_id               = data.aws_vpc.application_vpcs.id
   subnet_ids           = data.aws_subnet_ids.subnet_ids.ids
   permissions_boundary = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/NGAPShRoleBoundary"
-  tags                 = { Deployment = "${local.prefix}" }
+  tags                 = { Deployment = local.prefix }
   source_bucket        = "${local.prefix}-internal"
   source_prefix        = "${local.prefix}/ems-distribution/s3-server-access-logs"
   target_bucket        = local.replicator_target_bucket

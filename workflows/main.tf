@@ -1,6 +1,6 @@
 terraform {
   required_providers {
-    aws  = "~> 2.46.0"
+    aws  = "~> 3.19.0"
     null = "~> 2.1.0"
   }
   backend "s3" {
@@ -8,6 +8,9 @@ terraform {
 }
 
 provider "aws" {
+  ignore_tags {
+    key_prefixes = ["gsfc-ngap"]
+  }
 }
 
 module "acme_workflow" {
@@ -35,7 +38,7 @@ locals {
   cumulus_remote_state_config = {
     bucket = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}-tf-state-${substr(data.aws_caller_identity.current.account_id, -4, 4)}"
     key    = "cumulus/terraform.tfstate"
-    region = "${data.aws_region.current.name}"
+    region = data.aws_region.current.name
   }
 }
 
@@ -44,7 +47,7 @@ data "aws_region" "current" {}
 
 data "terraform_remote_state" "cumulus" {
   backend   = "s3"
-  workspace = "${var.DEPLOY_NAME}"
+  workspace = var.DEPLOY_NAME
   config    = local.cumulus_remote_state_config
 }
 
