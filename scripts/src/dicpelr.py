@@ -15,16 +15,15 @@ import boto3
 #   The Cluster cannot be deleted while Container Instances are active or draining.
 
 ARGS = "-d cloudwatch -d ecs -d es -d events -d lambda -d logs -d " \
-       "secretsmanager -d sns -d sqs -d states"
+       "secretsmanager -d sns -d sqs -d states -d s3"
 
 EVENT_SOURCE_MAPPING_FILE = "event_source_mapping.json"
 BUCKET_FILE = "bucket.txt"
 IAM_FILE = "iam.json"
+POLICY_FILE = "policy.json"
 
 
 class Dicpelr:
-    no_dry_run = True  # TODO: Set Default to == False
-
     STACK_NAME = f"{os.getenv('DEPLOY_NAME')}-cumulus-{os.getenv('MATURITY')}"
     AWS_REGION = os.getenv("AWS_REGION")
     AWS_PROFILE = os.getenv("AWS_PROFILE")
@@ -33,6 +32,7 @@ class Dicpelr:
     lambda_event_source_map_uuids = []
     s3_bucket_names = []
     iam_roles = []
+    policies = []
 
     def __init__(self):
         self._create_iam_file()
@@ -55,6 +55,12 @@ class Dicpelr:
 
     def _create_iam_file(self):
         os.system(f"aws iam --profile {self.AWS_PROFILE} list-roles >> {IAM_FILE}")
+
+    def _create_policy_file(self, iam_role_name):
+        cmd = f"aws --profile={self.AWS_PROFILE} iam list-role-policies --role-name {iam_role_name}"
+        policy_file = "policy.json"
+
+        os.system(f"{cmd} > {policy_file}")
 
     #   **************************************************************************
     #  ******* Start of Functions that Convert Files to Vars *******
@@ -81,27 +87,43 @@ class Dicpelr:
             self.iam_roles = json.loads(data)["Roles"]
         os.remove(IAM_FILE)
 
+    def _set_policy_var(self):
+        with open(POLICY_FILE) as f:
+            data = f.read()
+            self.policies = json.loads(data)["PolicyNames"]
+        os.remove(POLICY_FILE)
+
     #   *********************************************************
     #  ******* Start of Functions for Deleting Resources *******
     # *********************************************************
     def delete_all_resources(self):
-        pass
+        self.delete_iam_roles()
+        self.delete_lambda_event_source_mappings()
+        self.delete_s3()
 
     def _run_purge_script(self, args):
         arguments = f"{self.AWS_CLI_PRAMS} {args}"
         if self.no_dry_run:
-            arguments = f"{arguments}  --no-dry-run -c false"
-        # TODO: Update this to a more elegant solution
-        call(f"python3 src/purge.py {self.AWS_CLI_PRAMS} {arguments}".split())
+            arguments = f"  --no-dry-run -c false {arguments}"
+        call(f"python3 purge.py {self.AWS_CLI_PRAMS} {arguments}".split())
+
+    def _delete_iam_rule_attached_policy(self, iam_role_name):
+        self._create_policy_file(iam_role_name)
+        self._set_policy_var()
+        for policy in self.policies:
+            print(f"Removing the policy: {policy} from Role: {iam_role_name}")
+            os.system(f"aws --profile={self.AWS_PROFILE} iam delete-role-policy --role-name "
+                      f"{iam_role_name} --policy-name {policy}")
 
     def delete_iam_roles(self):
         # TODO: Update this to do a similar process to delete_lambda_event_source_mappings()
         # TODO: Fix "An error occurred (DeleteConflict) when calling the DeleteRole operation: Cannot delete entity,
         #  must delete policies first."
         for role in self.iam_roles:
-            REGEX = re.compile(f"{self.STACK_NAME}-(.*)")
+            REGEX = re.compile(f"{self.STACK_NAME}(-|_)(.*)")
             role_name = role["RoleName"]
             if re.match(REGEX, role_name):
+                self._delete_iam_rule_attached_policy(role_name)
                 print(f"Deleting IAM Role {role_name} in profile {self.AWS_PROFILE}")
                 os.system(f"aws iam --profile {self.AWS_PROFILE} delete-role --role-name {role_name}")
 
@@ -140,4 +162,7 @@ class Dicpelr:
                   f"--instance-profile-name {self.STACK_NAME}_ecs_cluster_profile")
 
 
+if __name__ == "__main__":
+    d = Dicpelr()
+    d.delete_all_resources()
 
