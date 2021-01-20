@@ -17,3 +17,7 @@ workflow_bucket_names = [
   "acme-products",
   "acme-browse"
 ]
+
+# Example of buckets we need to access, but won't create.
+# These ARE NOT prefixed
+partner_bucket_names = ["partner-collab-s3-bucket"]
