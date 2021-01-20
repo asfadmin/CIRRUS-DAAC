@@ -41,7 +41,7 @@ locals {
   // creates a TEA style bucket map, is outputted via outputs.tf
   bucket_map = merge(local.standard_bucket_map, local.internal_bucket_map,
     local.protected_bucket_map, local.public_bucket_map,
-  local.workflow_bucket_map)
+    local.workflow_bucket_map, local.partner_bucket_map)
 }
 
 resource "aws_s3_bucket" "standard-bucket" {
