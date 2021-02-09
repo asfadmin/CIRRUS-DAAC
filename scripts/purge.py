@@ -47,7 +47,7 @@ examples:
 
 '''
 
-KNOWN_TYPES = ['cloudformation', 'cloudwatch', 'dynamodb', 'ec2', 'ecs', 'es', 'events', 'kms', 'lambda', 'logs', 's3',
+KNOWN_TYPES = ['apigateway', 'cloudformation', 'cloudwatch', 'dynamodb', 'ec2', 'ecs', 'es', 'events', 'kms', 'lambda', 'logs', 's3',
                'secretsmanager', 'sns', 'sqs', 'states']
 
 parser = argparse.ArgumentParser()
