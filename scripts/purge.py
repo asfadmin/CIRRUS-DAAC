@@ -544,7 +544,6 @@ all_resources = non_ec2_resources + ec2_resources
 
 for resource in all_resources:
     if args.do and resource['Class'] not in args.do:
-        log.info(resource)
         continue
 
     try:
