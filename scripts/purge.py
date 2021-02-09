@@ -47,7 +47,7 @@ examples:
 
 '''
 
-KNOWN_TYPES = ['cloudformation', 'cloudwatch', 'dynamodb', 'ec2', 'ecs', 'es', 'events', 'lambda', 'logs', 's3',
+KNOWN_TYPES = ['cloudformation', 'cloudwatch', 'dynamodb', 'ec2', 'ecs', 'es', 'events', 'kms', 'lambda', 'logs', 's3',
                'secretsmanager', 'sns', 'sqs', 'states']
 
 parser = argparse.ArgumentParser()
@@ -537,55 +537,56 @@ resources = [{'Class': o[2], 'Type': ':'.join(o[5:]), 'Arn': ":".join(o)} for o 
 if args.do:
     log.info(f"Only processing types: {args.do}")
 
-try:
-  for resource in resources:
+# reorder resource list to process EC2 resources last, since their deletion
+# is usually blocked until after resources are deleted
+non_ec2_resources = [resource for resource in resources if resource['Class'] != 'ec2']
+ec2_resources = [resource for resource in resources if resource['Class'] == 'ec2']
+all_resources = non_ec2_resources + ec2_resources
+
+for resource in all_resources:
     if args.do and resource['Class'] not in args.do:
         log.info(resource)
         continue
 
-    if resource['Class'] == 'lambda':
-        delete_lambda(resource)
-    elif resource['Class'] == 'events':
-        delete_events(resource)
-    elif resource['Class'] == 'ecs':
-        delete_ecs(resource)
-    elif resource['Class'] == 'ec2':
-        ec2_resources.append(resource)
-    elif resource['Class'] == 'apigateway':
-        delete_api_gateway(resource)
-    elif resource['Class'] == 'cloudwatch':
-        delete_cloudwatch(resource)
-    elif resource['Class'] == 'cloudformation':
-        delete_cloudformation(resource)
-    elif resource['Class'] == 'dynamodb':
-        delete_dynamodb(resource)
-    elif resource['Class'] == 'es':
-        delete_es(resource)
-    elif resource['Class'] == 's3':
-        delete_s3(resource)
-    elif resource['Class'] == 'kms':
-        delete_kms(resource)
-    elif resource['Class'] == 'logs':
-        delete_logs(resource)
-    elif resource['Class'] == 'secretsmanager':
-        delete_sm(resource)
-    elif resource['Class'] == 'sns':
-        delete_sns(resource)
-    elif resource['Class'] == 'sqs':
-        delete_sqs(resource)
-    elif resource['Class'] == 'states':
-        delete_state(resource)
-    else:
-        unsupported_objects.append(resource)
-        log.warning(f"Cannot clean unsupported object type: {resource['Class']}")
-
-  if len(ec2_resources):
-    for ec2_resource in ec2_resources:
-      delete_ec2(ec2_resource)
-
-except ClientError as e:
-    if 'DryRunOperation' not in str(e):
-        log.warning(f"Could not execute AWS request: {e}")
+    try:
+        if resource['Class'] == 'lambda':
+            delete_lambda(resource)
+        elif resource['Class'] == 'events':
+            delete_events(resource)
+        elif resource['Class'] == 'ecs':
+            delete_ecs(resource)
+        elif resource['Class'] == 'ec2':
+            delete_ec2(resource)
+        elif resource['Class'] == 'apigateway':
+            delete_api_gateway(resource)
+        elif resource['Class'] == 'cloudwatch':
+            delete_cloudwatch(resource)
+        elif resource['Class'] == 'cloudformation':
+            delete_cloudformation(resource)
+        elif resource['Class'] == 'dynamodb':
+            delete_dynamodb(resource)
+        elif resource['Class'] == 'es':
+            delete_es(resource)
+        elif resource['Class'] == 's3':
+            delete_s3(resource)
+        elif resource['Class'] == 'kms':
+            delete_kms(resource)
+        elif resource['Class'] == 'logs':
+            delete_logs(resource)
+        elif resource['Class'] == 'secretsmanager':
+            delete_sm(resource)
+        elif resource['Class'] == 'sns':
+            delete_sns(resource)
+        elif resource['Class'] == 'sqs':
+            delete_sqs(resource)
+        elif resource['Class'] == 'states':
+            delete_state(resource)
+        else:
+            unsupported_objects.append(resource)
+            log.warning(f"Cannot clean unsupported object type: {resource['Class']}")
+    except ClientError as e:
+        if 'DryRunOperation' not in str(e):
+            log.warning(f"Could not execute AWS request: {e}")
 
 if len(unsupported_objects):
     log.warning("Found these unsupported objects:")
