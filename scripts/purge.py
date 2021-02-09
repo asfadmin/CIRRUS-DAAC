@@ -85,7 +85,6 @@ session = boto3.Session(profile_name=args.profile, region_name=args.region)
 rgt_client = session.client('resourcegroupstaggingapi')  # , region_name=args.region)
 
 unsupported_objects = []
-ec2_resources = []
 
 def get_confirmation(resource):
     if args.confirm == 'false':
