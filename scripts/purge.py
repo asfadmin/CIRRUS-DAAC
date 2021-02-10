@@ -11,43 +11,43 @@ usage: purge.py [-h] -p PROFILE -t TAGS
 
 arguments:
   -h, --help              show this help message and exit
-  
+
   REQUIRED Params:
   --profile PROFILE       AWS profile to use for cleaning
   --region  REGION        AWS Region to purge from
   --tag     TAGS          'TagName=Value' or 'TagName=Value1,Value2' pairs to filter objects.
                           --tag is required EVEN when doing a specific bucket purge, its just ignored
 
-  
+
   OPTIONAL Params:
   --bucket-filter BUCKET  When finding bucket, only search THIS prefix. Optional, but faster!
   --confirm       BOOL    true/false ask to confirm deletes (Default=true)
-  --do            TYPES   Only do this type of resource ( one or more )                      
+  --do            TYPES   Only do this type of resource ( one or more )
   --purge-bucket  BUCKET  Skip everything else, just purge this bucket bucket!
   --no-dry-run            Dont do a dry run, ACTUALLY do the delete!
-  
-examples: 
+
+examples:
 
   # Show what CIRRUS resources willl be deleted. This is just a dry run, so it'll JUST list.
   ./purge.py --profile $AWS_PROFILE --region=$AWS_REGION \
              --tag Deployment=$DEPLOY_NAME --bucket $DEPLOY_NAME --confirm=false
-  
+
   # Purge all S3 buckets named s3://bb-terraform* and Logs resources with tags Deployment=bb-terraform & Maturity=DEV
   ./purge.py --profile dev-account \
              --tag Deployment=bb-terraform --tag Maturity=DEV \
-             --bucket bb-terraform \ 
+             --bucket bb-terraform \
              --do s3 --do events --do logs \
              --no-dry-run
-             
+
   # Purge S3 bucket name s3://bb-terraform-state REGAURDLESS of tags
   ./purge.py --profile dev-account \
              --tag Maturity=DEV \
              --purge-bucket bb-terraform-state \
              --no-dry-run
-  
+
 '''
 
-KNOWN_TYPES = ['cloudformation', 'cloudwatch', 'dynamodb', 'ec2', 'ecs', 'es', 'events', 'lambda', 'logs', 's3',
+KNOWN_TYPES = ['apigateway', 'cloudformation', 'cloudwatch', 'dynamodb', 'ec2', 'ecs', 'es', 'events', 'kms', 'lambda', 'logs', 's3',
                'secretsmanager', 'sns', 'sqs', 'states']
 
 parser = argparse.ArgumentParser()
@@ -86,7 +86,6 @@ rgt_client = session.client('resourcegroupstaggingapi')  # , region_name=args.re
 
 unsupported_objects = []
 
-
 def get_confirmation(resource):
     if args.confirm == 'false':
         log.debug("Skipping user confirmation because ---confirm=false")
@@ -106,10 +105,22 @@ def get_confirmation(resource):
 
 #########
 # Deletion handlers
+def delete_api_gateway(resource):
+    api_client = session.client('apigateway')
+
+    # Object Specifics
+    resource['RestApiId'] = resource['Type'].split('/')[2]
+    log.info(resource)
+
+    if get_confirmation(resource):
+        log.info(f"Deleting API gateway REST API {resource['Arn']}")
+        if not args.dryrun:
+          api_client.delete_rest_api(restApiId=resource['RestApiId'])
+
 def delete_lambda(resource):
     l_client = session.client('lambda')
 
-    # Object Specifics 
+    # Object Specifics
     resource['SubType'] = resource['Type'].split(':')[0]
     resource['Name'] = "/".join(resource['Type'].split(':')[1:])
 
@@ -211,7 +222,7 @@ def delete_ec2_sg(resource, ec2_client):
     if get_confirmation(resource):
         log.info(f"Terminating ec2 Security Group {resource['Name']}")
         if not args.dryrun:
-            log.warn(f"This will probably fail because of unremovable attached Network interface ID (ENI-*)")
+            log.warning(f"This will probably fail because of unremovable attached Network interface ID (ENI-*)")
             ec2_client.delete_security_group(GroupId=resource['Name'], DryRun=False)
         else:
             ec2_client.delete_security_group(GroupId=resource['Name'], DryRun=True)
@@ -300,6 +311,20 @@ def delete_es_domain(resource, es_client):
         if not args.dryrun:
             es_client.delete_elasticsearch_domain(DomainName=resource['Name'])
 
+def delete_kms(resource):
+  kms_client = session.client('kms')
+
+  if get_confirmation(resource):
+    log.info(f"Scheduling KMS key {resource['Arn']} deletion in 7 days")
+    if not args.dryrun:
+      try:
+        kms_client.schedule_key_deletion(
+          KeyId=resource['Arn'],
+          PendingWindowInDays=7
+        )
+      except ClientError as e:
+        if 'pending deletion' not in str(e):
+          log.warning(f"Could not execute AWS request: {e}")
 
 def delete_logs(resource):
     logs_client = session.client('logs')
@@ -352,10 +377,17 @@ def delete_state(resource):
 
     if resource['SubType'] == 'stateMachine':
         delete_state_machine(resource, sfn_client)
+    elif resource['SubType'] == 'activity':
+        delete_state_activity(resource, sfn_client)
     else:
         unsupported_objects.append(resource)
         log.warning(f"State Machine {resource['SubType']} deletion not yet supported")
 
+def delete_state_activity(resource, sfn_client):
+    if get_confirmation(resource):
+        log.info(f"Deleting State Machine activity {resource['Name']}")
+        if not args.dryrun:
+            sfn_client.delete_activity(activityArn=resource['Arn'])
 
 def delete_state_machine(resource, sfn_client):
     if get_confirmation(resource):
@@ -386,7 +418,7 @@ def delete_sqs(resource):
 
 
 def delete_s3(resource):
-    # We should ONLY get buckets here. 
+    # We should ONLY get buckets here.
 
     if not get_confirmation(resource):
         return
@@ -490,7 +522,7 @@ if args.bucket_list:
     exit(0)
 
 #########
-# Get tagged resources 
+# Get tagged resources
 arns = get_all_tagged_arns(filter_tags)
 
 # bucket tags need to be fetched differently:
@@ -504,7 +536,13 @@ resources = [{'Class': o[2], 'Type': ':'.join(o[5:]), 'Arn': ":".join(o)} for o 
 if args.do:
     log.info(f"Only processing types: {args.do}")
 
-for resource in resources:
+# reorder resource list to process EC2 resources last, since their deletion
+# is usually blocked until after resources are deleted
+non_ec2_resources = [resource for resource in resources if resource['Class'] != 'ec2']
+ec2_resources = [resource for resource in resources if resource['Class'] == 'ec2']
+all_resources = non_ec2_resources + ec2_resources
+
+for resource in all_resources:
     if args.do and resource['Class'] not in args.do:
         continue
 
@@ -517,6 +555,8 @@ for resource in resources:
             delete_ecs(resource)
         elif resource['Class'] == 'ec2':
             delete_ec2(resource)
+        elif resource['Class'] == 'apigateway':
+            delete_api_gateway(resource)
         elif resource['Class'] == 'cloudwatch':
             delete_cloudwatch(resource)
         elif resource['Class'] == 'cloudformation':
@@ -527,6 +567,8 @@ for resource in resources:
             delete_es(resource)
         elif resource['Class'] == 's3':
             delete_s3(resource)
+        elif resource['Class'] == 'kms':
+            delete_kms(resource)
         elif resource['Class'] == 'logs':
             delete_logs(resource)
         elif resource['Class'] == 'secretsmanager':
@@ -540,7 +582,6 @@ for resource in resources:
         else:
             unsupported_objects.append(resource)
             log.warning(f"Cannot clean unsupported object type: {resource['Class']}")
-
     except ClientError as e:
         if 'DryRunOperation' not in str(e):
             log.warning(f"Could not execute AWS request: {e}")
