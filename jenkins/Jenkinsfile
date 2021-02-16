@@ -1,6 +1,7 @@
 pipeline {
   parameters {
       choice(name: 'MATURITY', choices: ['dev', 'int', 'test', 'prod'], description: 'The MATURITY (AWS) account to deploy')
+      string(name: 'BUILD_NUM', defaultValue: '', description: 'The Cumulus build number')
       string(name: 'DEPLOY_NAME', defaultValue: 'daac', description: 'The name of the stack for this MATURITY')
 
       string(name: 'DAAC_REPO', defaultValue: 'git@github.com:asfadmin/CIRRUS-DAAC', description: 'The DAAC Cumulus git repository to deploy')
@@ -29,7 +30,7 @@ pipeline {
 
     stage('Deploy feature branch to DEV / sandbox') {
       when {
-        branch '*-PR-*'
+        branch '*-*-PR-*'
       }
       steps {
         echo "Deploy feature branch to DEV / sandbox"
@@ -40,9 +41,19 @@ pipeline {
           if (values == null || values.length == 0) {
              echo "Could not find a stack name in the branch ${env.BRANCH_NAME}"
           } else {
-             stack_name = values[0]
+             env_vars = values[0].split('-')
+             if (env_vars == null || env_vars.length == 0){
+                echo "The Branch name format to include build_num: {DEPLOY_NAME}-{BUILD_NUM}-PR-* "
+                stack_name = values[0]
+                build_num = 'N/A'
+             } else {
+                stack_name = env_vars[0]
+                build_num = env_vars[1]
+             }
           }
+
           DEPLOY_NAME_LOCAL = stack_name
+          BUILD_NUM_LOCAL = build_num
           MATURITY_LOCAL = 'dev'
           NASA_MATURITY = 'sandbox'
           UAT_OR_PROD = 'UAT'
@@ -54,6 +65,7 @@ pipeline {
 
           build job: "${env.DOWNSTREAM_JOB}", parameters: [
               [$class: 'StringParameterValue', name: 'MATURITY', value: "${MATURITY_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'BUILD_NUM', value: "${BUILD_NUM_LOCAL}"],
               [$class: 'StringParameterValue', name: 'DEPLOY_NAME', value: "${DEPLOY_NAME_LOCAL}"],
               [$class: 'StringParameterValue', name: 'DAAC_REPO', value: "${params.DAAC_REPO}"],
               [$class: 'StringParameterValue', name: 'DAAC_REF', value: "${env.BRANCH_NAME}"],
