@@ -1,6 +1,10 @@
 
 # CHANGELOG
 
+## v5.0.1.2
+
+* add dummy `data-persistence` variable files
+
 ## v5.0.1.0
 
 * change `daac/s3-replicator.tf` to reference `v5.0.1` terraform module
