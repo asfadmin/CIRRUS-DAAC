@@ -1,7 +1,13 @@
 terraform {
   required_providers {
-    aws  = "~> 3.19.0"
-    null = "~> 2.1.0"
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.19.0"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 2.1.0"
+    }
   }
   backend "s3" {
   }

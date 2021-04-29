@@ -12,7 +12,7 @@ FROM amazonlinux:2
 #   * Application Python dependencies
 
 ENV NODE_VERSION "12.x"
-ENV TERRAFORM_VERSION "0.12.18"
+ENV TERRAFORM_VERSION "0.13.6"
 
 # Add NodeJS and Yarn repos & update package index
 RUN \
