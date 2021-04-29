@@ -1,6 +1,15 @@
 
 # CHANGELOG
 
+## v5.0.1.3
+
+* changes necessary for upgrading Terraform to v0.13.6
+  * add versions.tf to daac and workflows modules
+  * change the required_providers definition syntax in the main.tf file in both
+  the daac and workflows modules
+  * two small auto-lint changes to daac/main.tf
+  * update Docker file with new Terraform
+
 ## v5.0.1.2
 
 * add dummy `data-persistence` variable files
