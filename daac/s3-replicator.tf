@@ -27,7 +27,7 @@ locals {
 
 module "s3-replicator" {
 
-  source = "https://github.com/nasa/cumulus/releases/download/v5.0.1/terraform-aws-cumulus-s3-replicator.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v6.0.0/terraform-aws-cumulus-s3-replicator.zip"
 
   prefix               = local.prefix
   vpc_id               = data.aws_vpc.application_vpcs.id
