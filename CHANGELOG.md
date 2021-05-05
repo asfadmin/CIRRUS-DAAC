@@ -1,6 +1,11 @@
 
 # CHANGELOG
 
+## v6.0.0.0
+
+* change `daac/s3-replicator.tf` to reference `v6.0.0` terraform module
+* change `workflows/main.tf` to reference `v6.0.0` terraform module
+
 ## v5.0.1.3
 
 * changes necessary for upgrading Terraform to v0.13.6
