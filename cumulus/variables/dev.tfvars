@@ -22,3 +22,7 @@ launchpad_certificate = "launchpad.pfx"
 
 # Uncomment to specify an AMI; if not specifed, the default will be the latest image_id_ecs_amz2
 # ecs_cluster_instance_image_id = "ami-06591f94cb01939d3"
+
+
+#Per variable definition, set this to true if using a serverless RDS
+rds_connection_heartbeat = true

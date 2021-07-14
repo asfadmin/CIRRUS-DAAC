@@ -1,6 +1,14 @@
 
 # CHANGELOG
 
+## v9.2.0.0
+
+* add rds template and data-migration1 variables
+* update Makefile to support `make rds`
+* update cumulus dev.tfvars to show usage of `rds_connection_heartbeat` variable
+* change `daac/s3-replicator.tf` to reference `v9.2.0` terraform module
+* change `workflows/main.tf` to reference `v9.2.0` terraform module
+
 ## v8.1.1.0
 
 * change `daac/s3-replicator.tf` to reference `v8.1.1` terraform module
