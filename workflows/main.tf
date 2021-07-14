@@ -60,6 +60,7 @@ data "terraform_remote_state" "cumulus" {
 resource "aws_lambda_layer_version" "lambda_dependencies" {
   filename   = "${var.DIST_DIR}/lambda_dependencies_layer.zip"
   layer_name = "${local.prefix}-lambda_dependencies"
+  source_code_hash = filebase64sha256("${var.DIST_DIR}/lambda_dependencies_layer.zip")
 
   compatible_runtimes = ["python3.7"]
 }
