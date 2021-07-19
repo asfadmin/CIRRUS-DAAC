@@ -2,7 +2,7 @@ pipeline {
   parameters {
       choice(name: 'MATURITY', choices: ['dev', 'int', 'test', 'prod'], description: 'The MATURITY (AWS) account to deploy')
       string(name: 'DEPLOY_NAME', defaultValue: 'daac', description: 'The name of the stack for this MATURITY')
-      choice(name: 'MAKE_COMMAND', choices: ['all', 'tf', 'daac', 'data-persistence', 'cumulus', 'workflows'], description: 'What section of cumulus to deploy.')
+      choice(name: 'MAKE_COMMAND', choices: ['all', 'tf', 'daac', 'data-persistence', 'cumulus', 'workflows', 'cumulus_v9_2_0_upgrade'], description: 'What section of cumulus to deploy.')
 
       string(name: 'DAAC_REPO', defaultValue: 'git@github.com:asfadmin/CIRRUS-DAAC', description: 'The DAAC Cumulus git repository to deploy')
       string(name: 'DAAC_REF', defaultValue: 'master', description: 'The DAAC_REPO git ref to deploy')
