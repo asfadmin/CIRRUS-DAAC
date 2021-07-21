@@ -177,6 +177,7 @@ plan-rds: rds-init
 	fi
 	terraform plan \
 		$$SECRETS_OPT \
+		$$VARIABLES_OPT \
 		-input=false \
 		-no-color
 

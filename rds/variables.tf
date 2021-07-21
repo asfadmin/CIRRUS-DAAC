@@ -34,7 +34,7 @@ variable "snapshot_identifier" {
 variable "engine_version" {
   description = "Postgres engine version for Serverless cluster"
   type        = string
-  default     = "10.12"
+  default     = "10.14"
 }
 
 ### Required for user/database provisioning
@@ -47,4 +47,16 @@ variable "provision_user_database" {
 variable "rds_user_password" {
   type    = string
   default = ""
+}
+
+variable "backup_retention_period" {
+  description = "Number of backup periods to retain"
+  type        = number
+  default     = 1
+}
+
+variable "backup_window" {
+  description = "Preferred database backup window (UTC)"
+  type        = string
+  default     = "07:00-09:00"
 }

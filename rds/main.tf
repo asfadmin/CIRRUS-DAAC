@@ -55,6 +55,8 @@ module "rds_cluster" {
   subnets                  = data.aws_subnet_ids.subnet_ids.ids
   engine_version           = var.engine_version
   deletion_protection      = var.deletion_protection
+  backup_retention_period  = var.backup_retention_period
+  backup_window            = var.backup_window
   cluster_identifier       = local.cluster_identifier
   tags                     = local.default_tags
   snapshot_identifier      = var.snapshot_identifier
