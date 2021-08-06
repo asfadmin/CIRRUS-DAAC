@@ -2,6 +2,7 @@ pipeline {
   parameters {
       choice(name: 'MATURITY', choices: ['dev', 'int', 'test', 'prod'], description: 'The MATURITY (AWS) account to deploy')
       string(name: 'DEPLOY_NAME', defaultValue: 'daac', description: 'The name of the stack for this MATURITY')
+      choice(name: 'MAKE_COMMAND', choices: ['all', 'tf', 'daac', 'data-persistence', 'cumulus', 'workflows', 'cumulus_v9_2_0_upgrade'], description: 'What section of cumulus to deploy.')
 
       string(name: 'DAAC_REPO', defaultValue: 'git@github.com:asfadmin/CIRRUS-DAAC', description: 'The DAAC Cumulus git repository to deploy')
       string(name: 'DAAC_REF', defaultValue: 'master', description: 'The DAAC_REPO git ref to deploy')
@@ -16,6 +17,7 @@ pipeline {
     CMR_CREDS_BASE = 'daac-cumulus-core-cmr_creds_'
     URS_CREDS_BASE = 'daac-cumulus-core-urs_creds_'
     SECRET_TOKEN_BASE = 'daac-cumulus-core-token-'
+    DB_ADMIN_PASSWORD = 'daac-cumulus-db_creds'
   }
 
   agent { label 'docker' }
@@ -62,6 +64,8 @@ pipeline {
               [$class: 'StringParameterValue', name: 'CMR_CREDS_ID', value: "${CMR_CREDS_LOCAL}"],
               [$class: 'StringParameterValue', name: 'URS_CREDS_ID', value: "${URS_CREDS_LOCAL}"],
               [$class: 'StringParameterValue', name: 'SECRET_TOKEN_ID', value: "${SECRET_TOKEN_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'MAKE_COMMAND', value: "${params.MAKE_COMMAND}"],
+              [$class: 'StringParameterValue', name: 'DB_ADMIN_PASSWORD', value: "${env.DB_ADMIN_PASSWORD}"],
           ]
         }
       }
@@ -94,6 +98,8 @@ pipeline {
               [$class: 'StringParameterValue', name: 'CMR_CREDS_ID', value: "${CMR_CREDS_LOCAL}"],
               [$class: 'StringParameterValue', name: 'URS_CREDS_ID', value: "${URS_CREDS_LOCAL}"],
               [$class: 'StringParameterValue', name: 'SECRET_TOKEN_ID', value: "${SECRET_TOKEN_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'MAKE_COMMAND', value: "${params.MAKE_COMMAND}"],
+              [$class: 'StringParameterValue', name: 'DB_ADMIN_PASSWORD', value: "${env.DB_ADMIN_PASSWORD}"],
           ]
         }
       }
@@ -132,6 +138,8 @@ pipeline {
               [$class: 'StringParameterValue', name: 'CMR_CREDS_ID', value: "${CMR_CREDS_LOCAL}"],
               [$class: 'StringParameterValue', name: 'URS_CREDS_ID', value: "${URS_CREDS_LOCAL}"],
               [$class: 'StringParameterValue', name: 'SECRET_TOKEN_ID', value: "${SECRET_TOKEN_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'MAKE_COMMAND', value: "${params.MAKE_COMMAND}"],
+              [$class: 'StringParameterValue', name: 'DB_ADMIN_PASSWORD', value: "${env.DB_ADMIN_PASSWORD}"],
           ]
         }
       }
@@ -164,6 +172,8 @@ pipeline {
               [$class: 'StringParameterValue', name: 'CMR_CREDS_ID', value: "${CMR_CREDS_LOCAL}"],
               [$class: 'StringParameterValue', name: 'URS_CREDS_ID', value: "${URS_CREDS_LOCAL}"],
               [$class: 'StringParameterValue', name: 'SECRET_TOKEN_ID', value: "${SECRET_TOKEN_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'MAKE_COMMAND', value: "${params.MAKE_COMMAND}"],
+              [$class: 'StringParameterValue', name: 'DB_ADMIN_PASSWORD', value: "${env.DB_ADMIN_PASSWORD}"],
           ]
         }
       }
@@ -196,6 +206,8 @@ pipeline {
               [$class: 'StringParameterValue', name: 'CMR_CREDS_ID', value: "${CMR_CREDS_LOCAL}"],
               [$class: 'StringParameterValue', name: 'URS_CREDS_ID', value: "${URS_CREDS_LOCAL}"],
               [$class: 'StringParameterValue', name: 'SECRET_TOKEN_ID', value: "${SECRET_TOKEN_LOCAL}"],
+              [$class: 'StringParameterValue', name: 'MAKE_COMMAND', value: "${params.MAKE_COMMAND}"],
+              [$class: 'StringParameterValue', name: 'DB_ADMIN_PASSWORD', value: "${env.DB_ADMIN_PASSWORD}"],
           ]
         }
       }
