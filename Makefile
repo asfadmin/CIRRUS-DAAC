@@ -65,7 +65,7 @@ test-watch:
 		-backend-config "dynamodb_table=${DEPLOY_NAME}-cumulus-${MATURITY}-tf-locks"
 	terraform workspace new ${DEPLOY_NAME} 2>/dev/null || terraform workspace select ${DEPLOY_NAME}
 
-modules = daac workflows
+modules = daac workflows rds
 init-modules := $(modules:%-init=%)
 
 # ---------------------------
@@ -131,6 +131,81 @@ destroy-workflows: workflows-init
 	$(banner)
 	cd workflows
 	terraform destroy -var 'DIST_DIR=${DIST_DIR}' -input=false -auto-approve -no-color
+
+# ---------------------------
+rds: rds-init
+	$(banner)
+	cd $@
+	if [ -f "secrets/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export SECRETS_OPT="-var-file=secrets/${MATURITY}.tfvars"
+		echo "Found maturity-specific secrets: $$SECRETS_OPT"
+		echo "***************************************************************"
+	fi
+	if [ -f "variables/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export VARIABLES_OPT="-var-file=variables/${MATURITY}.tfvars"
+		echo "Found maturity-specific variables: $$VARIABLES_OPT"
+		echo "***************************************************************"
+	fi
+	terraform apply \
+		$$SECRETS_OPT \
+		$$VARIABLES_OPT \
+		-input=false \
+		-auto-approve \
+		-no-color
+
+# ---------------------------
+plan-rds: rds-init
+	$(banner)
+	cd rds
+	if [ -f "secrets/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export SECRETS_OPT="-var-file=secrets/${MATURITY}.tfvars"
+		echo "Found maturity-specific secrets: $$SECRETS_OPT"
+		echo "***************************************************************"
+	fi
+	if [ -f "variables/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export VARIABLES_OPT="-var-file=variables/${MATURITY}.tfvars"
+		echo "Found maturity-specific variables: $$VARIABLES_OPT"
+		echo "***************************************************************"
+	fi
+	terraform plan \
+		$$SECRETS_OPT \
+		$$VARIABLES_OPT \
+		-input=false \
+		-no-color
+
+# ---------------------------
+destroy-rds: rds-init
+	$(banner)
+	cd rds
+	if [ -f "secrets/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export SECRETS_OPT="-var-file=secrets/${MATURITY}.tfvars"
+		echo "Found maturity-specific secrets: $$SECRETS_OPT"
+		echo "***************************************************************"
+	fi
+	if [ -f "variables/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export VARIABLES_OPT="-var-file=variables/${MATURITY}.tfvars"
+		echo "Found maturity-specific variables: $$VARIABLES_OPT"
+		echo "***************************************************************"
+	fi
+	export TF_CMD="terraform destroy \
+				$$VARIABLES_OPT \
+				$$SECRETS_OPT \
+				-input=false \
+				-no-color \
+				-auto-approve"
+	eval $$TF_CMD
 
 # ---------------------------
 pcrs: workflows/providers/* workflows/collections/* workflows/rules/*
