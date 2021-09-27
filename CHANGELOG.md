@@ -1,6 +1,10 @@
 
 # CHANGELOG
 
+## v9.2.0.2
+
+* Add GitHub Action configuration for [TFLint](https://github.com/terraform-linters/tflint/)
+
 ## v9.2.0.0
 
 * add rds template and data-migration1 variables
