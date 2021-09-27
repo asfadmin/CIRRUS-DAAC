@@ -44,7 +44,7 @@ locals {
     }
   }
 
-  // creates a TEA style bucket map, is outputted via outputs.tf
+  # creates a TEA style bucket map, is outputted via outputs.tf
   bucket_map = merge(local.standard_bucket_map, local.internal_bucket_map,
     local.protected_bucket_map, local.public_bucket_map,
   local.workflow_bucket_map, local.partner_bucket_map)
@@ -67,11 +67,11 @@ resource "aws_s3_bucket" "standard-bucket" {
   tags = local.default_tags
 }
 
-//For EMS reporting, buckets which are exposed by TEA need to have server access
-// logging enabled.  The Cumulus standard is for the logs to be added to the
-// "internal" bucket.  An acl is added to this bucket
-//  This is documented more fully in:
-//  https://nasa.github.io/cumulus/docs/deployment/server_access_logging
+#For EMS reporting, buckets which are exposed by TEA need to have server access
+# logging enabled.  The Cumulus standard is for the logs to be added to the
+# "internal" bucket.  An acl is added to this bucket
+#  This is documented more fully in:
+#  https://nasa.github.io/cumulus/docs/deployment/server_access_logging
 
 resource "aws_s3_bucket" "internal-bucket" {
   bucket = "${local.prefix}-internal"
@@ -89,9 +89,9 @@ resource "aws_s3_bucket" "internal-bucket" {
   tags = local.default_tags
 }
 
-// protected buckets log to "internal"
+# protected buckets log to "internal"
 resource "aws_s3_bucket" "protected-bucket" {
-  // protected buckets defined in variables.tf
+  # protected buckets defined in variables.tf
   for_each = toset(local.protected_bucket_names)
   bucket   = each.key
   lifecycle {
@@ -111,9 +111,9 @@ resource "aws_s3_bucket" "protected-bucket" {
   tags = local.default_tags
 }
 
-// public buckets log to "internal"
+# public buckets log to "internal"
 resource "aws_s3_bucket" "public-bucket" {
-  // public buckets defined in variables.tf
+  # public buckets defined in variables.tf
   for_each = toset(local.public_bucket_names)
   bucket   = each.key
   lifecycle {
