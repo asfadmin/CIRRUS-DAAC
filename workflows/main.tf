@@ -21,7 +21,7 @@ provider "aws" {
 
 module "acme_workflow" {
 
-  source = "https://github.com/nasa/cumulus/releases/download/v9.2.0/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v9.7.0/terraform-aws-cumulus-workflow.zip"
 
   prefix          = local.prefix
   name            = "ACMEWorkflow"
@@ -58,8 +58,8 @@ data "terraform_remote_state" "cumulus" {
 }
 
 resource "aws_lambda_layer_version" "lambda_dependencies" {
-  filename   = "${var.DIST_DIR}/lambda_dependencies_layer.zip"
-  layer_name = "${local.prefix}-lambda_dependencies"
+  filename         = "${var.DIST_DIR}/lambda_dependencies_layer.zip"
+  layer_name       = "${local.prefix}-lambda_dependencies"
   source_code_hash = filebase64sha256("${var.DIST_DIR}/lambda_dependencies_layer.zip")
 
   compatible_runtimes = ["python3.7"]
