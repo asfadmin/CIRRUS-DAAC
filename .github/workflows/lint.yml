@@ -1,6 +1,8 @@
 name: lint
 on:
   push:
+    branches:
+      - master
   pull_request:
 
 jobs:
@@ -9,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v2
