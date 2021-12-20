@@ -21,4 +21,4 @@ metrics_es_username = null
 launchpad_certificate = "launchpad.pfx"
 
 # Uncomment to specify an AMI; if not specifed, the default will be the latest image_id_ecs_amz2
-# ecs_cluster_instance_image_id = "ami-06591f94cb01939d3"
+# ecs_cluster_instance_image_id = "ami-0e77b9f8830138cd2"
