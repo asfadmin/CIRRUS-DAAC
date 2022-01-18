@@ -1,6 +1,15 @@
 
 # CHANGELOG
 
+## v9.9.0.0
+
+* change `daac/s3-replicator.tf` to reference `v9.9.0` terraform module
+* change `workflows/main.tf` to reference `v9.9.0` terraform module
+* Upgrade hashicorp/aws terraform to `~> v3.70.0`
+* Pin hashicorp/archive terraform to `~> v2.2.0`
+* Pin hashicrop/null terraform to `~> v2.1` consistently
+* Update python worklows requirements.txt to the latest cumulus versions
+
 ## v9.2.0.2
 
 * Add GitHub Action configuration for [TFLint](https://github.com/terraform-linters/tflint/)
