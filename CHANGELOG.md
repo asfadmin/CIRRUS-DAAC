@@ -1,6 +1,11 @@
 
 # CHANGELOG
 
+## v10.0.1
+
+* Upgrade to [Cumulus v10.0.1](https://github.com/nasa/Cumulus/releases/tag/v10.0.1)
+  * see [Cumulus v10.0.0](https://github.com/nasa/Cumulus/releases/tag/v10.0.0) release notes for required migration steps for workflows and collection configurations
+
 ## v9.9.0.0
 
 * change `daac/s3-replicator.tf` to reference `v9.9.0` terraform module
