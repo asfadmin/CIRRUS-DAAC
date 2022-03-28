@@ -1,10 +1,11 @@
 
 # CHANGELOG
 
-## v10.0.1
+## v10.1.2.0
 
-* Upgrade to [Cumulus v10.0.1](https://github.com/nasa/Cumulus/releases/tag/v10.0.1)
+* Upgrade to [Cumulus v10.1.2](https://github.com/nasa/Cumulus/releases/tag/v10.1.2)
   * see [Cumulus v10.0.0](https://github.com/nasa/Cumulus/releases/tag/v10.0.0) release notes for required migration steps for workflows and collection configurations
+  * CIRRUS-core includes a script for the migration step on [Cumulus v10.1.1](https://github.com/nasa/Cumulus/releases/tag/v10.1.1)
 
 ## v9.9.0.0
 
