@@ -1,12 +1,17 @@
 
 # CHANGELOG
 
+## v11.1.0.0
+
+* Upgrade to [Cumulus v11.1.0](https://github.com/nasa/Cumulus/releases/tag/v11.1.0)
+  * see [Cumulus v11.0.0](https://github.com/nasa/Cumulus/releases/tag/v11.0.0) release notes for required migration steps for workflows and collection configurations
+
 ## v10.1.2.0
 
 * Upgrade to [Cumulus v10.1.2](https://github.com/nasa/Cumulus/releases/tag/v10.1.2)
-    * see [Cumulus v10.0.0](https://github.com/nasa/Cumulus/releases/tag/v10.0.0) release notes for required migration steps for workflows and collection configurations
-        * note that some lambdas and other workflow components may need to be updated for compatibility with the message format changes made in Cumulus v10.0.0, e.g., the dmrpp-generator must be upgraded to [v3.3.0.beta](https://ghrcdaac.github.io/dmrpp-generator/#v330beta)
-    * CIRRUS-core includes a script for the migration step on [Cumulus v10.1.1](https://github.com/nasa/Cumulus/releases/tag/v10.1.1)
+  * see [Cumulus v10.0.0](https://github.com/nasa/Cumulus/releases/tag/v10.0.0) release notes for required migration steps for workflows and collection configurations
+    * note that some lambdas and other workflow components may need to be updated for compatibility with the message format changes made in Cumulus v10.0.0, e.g., the dmrpp-generator must be upgraded to [v3.3.0.beta](https://ghrcdaac.github.io/dmrpp-generator/#v330beta)
+  * CIRRUS-core includes a script for the migration step on [Cumulus v10.1.1](https://github.com/nasa/Cumulus/releases/tag/v10.1.1)
 
 ## v9.9.0.0
 
