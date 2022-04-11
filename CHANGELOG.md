@@ -4,7 +4,9 @@
 ## v11.1.0.0
 
 * Upgrade to [Cumulus v11.1.0](https://github.com/nasa/Cumulus/releases/tag/v11.1.0)
-  * see [Cumulus v11.0.0](https://github.com/nasa/Cumulus/releases/tag/v11.0.0) release notes for required migration steps for workflows and collection configurations
+  * see [Cumulus v11.0.0](https://github.com/nasa/Cumulus/releases/tag/v11.0.0) release notes for required migration
+  steps for workflows and collection configurations, as well as lambda executions. If upgrading from CIRRUS v9.9.0.0
+  or an earlier version, see the v10.1.2.0 notes as well.
 
 ## v10.1.2.0
 
