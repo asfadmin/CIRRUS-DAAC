@@ -1,6 +1,10 @@
 
 # CHANGELOG
 
+## v11.1.0.1
+
+* CIRRUS-core: added scripts for Cumulus v11.0.0 post-deployment notes
+
 ## v11.1.0.0
 
 * Upgrade to [Cumulus v11.1.0](https://github.com/nasa/Cumulus/releases/tag/v11.1.0)
