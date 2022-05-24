@@ -99,10 +99,9 @@ Python lambda with unit tests. You can run the tests as shown above.
 
 There is a `dashboard` make target which will build and deploy a version of a
 Cumulus dashboard to a bucket named `$DEPLOY_NAME-cumulus-$MATURITY-dashboard`
-assuming you created such a bucket during your deployment.
+which is created during the cumulus deployment.
 
-The dashboard build process happens within a Docker container, therefore the
-`make dashboard` target cannot be envoked within a Docker container.  Additionally,
+The dashboard build process requires npm to be installed. Additionally,
 since the final step copies data to your dashboard bucket, you need to run
 `source env.sh <profile-name> <deploy-name> <maturity>` to set up your AWS
 environment prior to running the build process
