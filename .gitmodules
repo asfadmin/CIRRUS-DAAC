@@ -1,0 +1,3 @@
+[submodule "cumulus-dashboard"]
+	path = cumulus-dashboard
+	url = https://github.com/nasa/cumulus-dashboard
