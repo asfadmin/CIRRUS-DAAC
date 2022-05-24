@@ -108,18 +108,15 @@ since the final step copies data to your dashboard bucket, you need to run
 environment prior to running the build process
 
 You need to pass in:
+```bash
+CUMULUS_API_ROOT="your api root"
+DEPLOY_NAME=your deploy name  # Set by env.sh
+MATURITY=dev                  # Set by env.sh
+```
 
-        CUMULUS_API_ROOT="your api root"
-        CUMULUS_DASHBOARD_VERSION="version-of-dashboar"
-        DEPLOY_NAME=your deploy name
-        MATURITY=dev
-        SERVED_BY_CUMULUS_API=true (optional defaults to true)
-
-Example - to build a dashboard which is not served via the Cumulus API
-
-        $ CUMULUS_API_ROOT="https://xxx.execute-api.us-west-2.amazonaws.com:8000/dev" \
-          CUMULUS_DASHBOARD_VERSION="v1.8.0" \
-          DEPLOY_NAME=kb \
-          MATURITY=dev \
-          SERVED_BY_CUMULUS_API= \
-          make dashboard
+Example
+```bash
+source env.sh sbx-profile kb dev
+export CUMULUS_API_ROOT="https://xxx.execute-api.us-west-2.amazonaws.com:8000/dev"
+make dashboard
+```

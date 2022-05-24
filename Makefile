@@ -219,35 +219,28 @@ pcrs: workflows/providers/* workflows/collections/* workflows/rules/*
 #    CUMULUS_API_ROOT: The HTTP URL for the Cumulus instance's API, e.g.:
 #
 #      CUMULUS_API_ROOT="https://mlcjs8s9ac.execute-api.us-east-1.amazonaws.com/dev/"
-#
-#    CUMULUS_DASHBOARD_VERSION: The version number (e.g., v1.7.2) to build & deploy
-#
+##
 #    Then call:
 #
 #      make dashboard
 #
-tmp:
-	mkdir -p tmp
 
-tmp-cumulus-dashboard: tmp
-	rm -rf tmp/cumulus-dashboard
-	git clone https://github.com/nasa/cumulus-dashboard tmp/cumulus-dashboard
-	cd tmp/cumulus-dashboard
-	git fetch origin ${CUMULUS_DASHBOARD_VERSION}:refs/tags/${CUMULUS_DASHBOARD_VERSION}
-	git checkout ${CUMULUS_DASHBOARD_VERSION}
+# We could get more granular with the dependencies here, but using the
+# dashboard directory is probably fine since we aren't developing it.
+# TODO(reweeden): Integrate this with Jenkins
+cumulus-dashboard/dist: cumulus-dashboard
+	export SERVED_BY_CUMULUS_API=true
+	export DAAC_NAME=${DEPLOY_NAME}
+	export STAGE=${MATURITY}
+	export HIDE_PDR=false
+	export LABELS=daac
+	export APIROOT=${CUMULUS_API_ROOT}
+	cd $(@D)
+	@echo "APIROOT=$$APIROOT"
+	npm install --no-optional --cache ../.npm
+	npm run build
 
-build-dashboard: tmp-cumulus-dashboard
-	cd tmp/cumulus-dashboard
-	SERVED_BY_CUMULUS_API=${SERVED_BY_CUMULUS_API} \
-	DAAC_NAME=${DEPLOY_NAME} \
-	STAGE=${MATURITY} \
-	HIDE_PDR=false \
-	LABELS=daac \
-	APIROOT=${CUMULUS_API_ROOT} \
-	./bin/build_in_docker.sh
-
-deploy-dashboard: dashboard-init
-	cd tmp/cumulus-dashboard
-	aws s3 sync dist s3://${DEPLOY_NAME}-cumulus-${MATURITY}-dashboard --acl public-read
-
-dashboard: build-dashboard deploy-dashboard
+.PHONY: dashboard
+dashboard: cumulus-dashboard/dist
+	$(banner)
+	aws s3 sync cumulus-dashboard/dist s3://${DEPLOY_NAME}-cumulus-${MATURITY}-dashboard --delete
