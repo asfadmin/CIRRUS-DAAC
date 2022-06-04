@@ -213,28 +213,22 @@ pcrs: workflows/providers/* workflows/collections/* workflows/rules/*
 	scripts/deploy-pcrs.sh ${SELF_DIR}/workflows ${cumulus_id_rsa-"~/.ssh/id_rsa"}
 
 # ------ Cumulus Dashboard ------
-#
-#  Deploying the dashboard requires the environment variables:
-#
-#    CUMULUS_API_ROOT: The HTTP URL for the Cumulus instance's API, e.g.:
-#
-#      CUMULUS_API_ROOT="https://mlcjs8s9ac.execute-api.us-east-1.amazonaws.com/dev/"
-##
-#    Then call:
-#
-#      make dashboard
-#
 
 # We could get more granular with the dependencies here, but using the
 # dashboard directory is probably fine since we aren't developing it.
 # TODO(reweeden): Integrate this with Jenkins
-cumulus-dashboard/dist: cumulus-dashboard
-	export SERVED_BY_CUMULUS_API=true
+cumulus-dashboard/dist: cumulus-dashboard cumulus-init
+	if [ "$MATURITY" = "dev" ]
+	then
+		export SERVED_BY_CUMULUS_API=true
+	else
+		export SERVED_BY_CUMULUS_API=false
+	fi
 	export DAAC_NAME=${DEPLOY_NAME}
 	export STAGE=${MATURITY}
 	export HIDE_PDR=false
 	export LABELS=daac
-	export APIROOT=${CUMULUS_API_ROOT}
+	export APIROOT=$(shell cd cumulus && terraform output archive_api_uri)
 	cd $(@D)
 	@echo "APIROOT=$$APIROOT"
 	npm install --no-optional --cache ../.npm

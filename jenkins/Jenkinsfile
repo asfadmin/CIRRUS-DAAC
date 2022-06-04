@@ -175,6 +175,18 @@ pipeline {
 
 
 def deploy(params) {
+  if (!params.APIROOT) {
+    def endpoints = [
+      api: [
+        dev: '',
+        int: '',
+        test: '',
+        prod: ''
+      ]
+    ]
+    params.APIROOT = endpoints['api'][params.MATURITY]
+  }
+
   withEnv([
     "DEPLOY_NAME=${params.DEPLOY_NAME}",
     "AWS_REGION=${params.AWS_REGION}",
