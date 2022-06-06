@@ -9,6 +9,7 @@ pipeline {
       string(name: 'DEPLOY_NAME', defaultValue: get_deploy_name() ?: 'daac', description: 'The name of the stack for this MATURITY')
       choice(name: 'AWS_REGION', choices: ['us-east-1', 'us-west-2'], description: 'AWS Region to deploy to')
       choice(name: 'MAKE_TARGET', choices: ['all', 'tf', 'daac', 'data-persistence', 'cumulus', 'workflows', 'cumulus_v9_2_0_upgrade'], description: 'What section of cumulus to deploy.')
+      booleanParam(name: 'DEPLOY_DASHBOARD', defaultValue: false, description: 'Whether or not to deploy the cumulus dashboard')
 
       string(name: 'CORE_REPO', defaultValue: 'git@github.com:asfadmin/CIRRUS-core', description: 'The CIRRUS-core repo location')
       string(name: 'CORE_REF', defaultValue: 'v11.1.0.0', description: 'The CIRRUS-core git ref to check out. This needs to correspond with the correct version of Cumulus.')
@@ -76,6 +77,7 @@ pipeline {
           MATURITY: 'dev',
           CONTAINER_TAG: params.CORE_REF,
           MAKE_TARGET: params.MAKE_TARGET,
+          DEPLOY_DASHBOARD: params.DEPLOY_DASHBOARD,
           AWS_CREDS: "${env.AWS_CREDS_BASE}sbx",
           CMR_CREDS: "${env.CMR_CREDS_BASE}UAT",
           URS_CREDS: "${env.URS_CREDS_BASE}UAT",
@@ -97,6 +99,7 @@ pipeline {
           MATURITY: 'dev',
           CONTAINER_TAG: params.CORE_REF,
           MAKE_TARGET: params.MAKE_TARGET,
+          DEPLOY_DASHBOARD: params.DEPLOY_DASHBOARD,
           AWS_CREDS: "${env.AWS_CREDS_BASE}sbx",
           CMR_CREDS: "${env.CMR_CREDS_BASE}UAT",
           URS_CREDS: "${env.URS_CREDS_BASE}UAT",
@@ -120,6 +123,7 @@ pipeline {
           MATURITY: 'int',
           CONTAINER_TAG: params.CORE_REF,
           MAKE_TARGET: params.MAKE_TARGET,
+          DEPLOY_DASHBOARD: params.DEPLOY_DASHBOARD,
           AWS_CREDS: "${env.AWS_CREDS_BASE}sit",
           CMR_CREDS: "${env.CMR_CREDS_BASE}UAT",
           URS_CREDS: "${env.URS_CREDS_BASE}UAT",
@@ -141,6 +145,7 @@ pipeline {
           MATURITY: 'test',
           CONTAINER_TAG: params.CORE_REF,
           MAKE_TARGET: params.MAKE_TARGET,
+          DEPLOY_DASHBOARD: params.DEPLOY_DASHBOARD,
           AWS_CREDS: "${env.AWS_CREDS_BASE}uat",
           CMR_CREDS: "${env.CMR_CREDS_BASE}UAT",
           URS_CREDS: "${env.URS_CREDS_BASE}UAT",
@@ -162,6 +167,7 @@ pipeline {
           MATURITY: 'prod',
           CONTAINER_TAG: params.CORE_REF,
           MAKE_TARGET: params.MAKE_TARGET,
+          DEPLOY_DASHBOARD: params.DEPLOY_DASHBOARD,
           AWS_CREDS: "${env.AWS_CREDS_BASE}prod",
           CMR_CREDS: "${env.CMR_CREDS_BASE}PROD",
           URS_CREDS: "${env.URS_CREDS_BASE}PROD",
@@ -193,6 +199,7 @@ def deploy(params) {
     "MATURITY=${params.MATURITY}",
     "CONTAINER_TAG=${params.CONTAINER_TAG}",
     "MAKE_TARGET=${params.MAKE_TARGET}",
+    "DASHBOARD_TARGET=${params.DEPLOY_DASHBOARD ? 'dashboard' : ''}",
     "CONTAINER_NAME_PREFIX=${env.JOB_NAME.replaceAll('/', '-')}"
   ]) {
     withCredentials([
@@ -224,7 +231,7 @@ def deploy(params) {
                               -v "$WORKSPACE":/CIRRUS-DAAC \
                               --name=$CONTAINER_NAME_PREFIX-cirrus-core \
                               cirrus-core:$CONTAINER_TAG \
-                              /bin/bash -c "make $MAKE_TARGET"
+                              /bin/bash -c "make $MAKE_TARGET $DASHBOARD_TARGET"
       '''
     }// withCredentials
   }

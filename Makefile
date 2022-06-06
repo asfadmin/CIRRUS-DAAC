@@ -216,7 +216,6 @@ pcrs: workflows/providers/* workflows/collections/* workflows/rules/*
 
 # We could get more granular with the dependencies here, but using the
 # dashboard directory is probably fine since we aren't developing it.
-# TODO(reweeden): Integrate this with Jenkins
 cumulus-dashboard/dist: cumulus-dashboard cumulus-init
 	if [ "$MATURITY" = "dev" ]
 	then
