@@ -224,6 +224,7 @@ cumulus-dashboard/dist: cumulus-dashboard cumulus-init
 	export STAGE=${MATURITY}
 	export HIDE_PDR=false
 	export LABELS=daac
+	export AUTH_METHOD=launchpad
 	export APIROOT=$(shell cd cumulus && terraform output archive_api_uri)
 	cd $(@D)
 	@echo "APIROOT=$$APIROOT"
