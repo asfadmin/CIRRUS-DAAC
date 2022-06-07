@@ -217,11 +217,8 @@ pcrs: workflows/providers/* workflows/collections/* workflows/rules/*
 # We could get more granular with the dependencies here, but using the
 # dashboard directory is probably fine since we aren't developing it.
 cumulus-dashboard/dist: cumulus-dashboard cumulus-init
-	if [ "$MATURITY" = "dev" ]
-	then
+	if [ "${MATURITY}" = "dev" ]; then
 		export SERVED_BY_CUMULUS_API=true
-	else
-		export SERVED_BY_CUMULUS_API=false
 	fi
 	export DAAC_NAME=${DEPLOY_NAME}
 	export STAGE=${MATURITY}
