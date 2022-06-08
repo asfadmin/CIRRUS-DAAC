@@ -34,7 +34,7 @@ variable "snapshot_identifier" {
 variable "engine_version" {
   description = "Postgres engine version for Serverless cluster"
   type        = string
-  default     = "10.14"
+  default     = "10.18"
 }
 
 ### Required for user/database provisioning

@@ -1,6 +1,10 @@
 
 # CHANGELOG
 
+## Unreleased
+
+* Bump RDS engine version to 10.18
+
 ## v11.1.0.1
 
 * CIRRUS-core: added scripts for Cumulus v11.0.0 post-deployment notes
