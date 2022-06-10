@@ -179,7 +179,8 @@ def deploy(params) {
     "AWS_REGION=${params.AWS_REGION}",
     "MATURITY=${params.MATURITY}",
     "CONTAINER_TAG=${params.CONTAINER_TAG}",
-    "MAKE_TARGET=${params.MAKE_TARGET}"
+    "MAKE_TARGET=${params.MAKE_TARGET}",
+    "CONTAINER_NAME_PREFIX=${env.JOB_NAME.replaceAll('/', '-')}"
   ]) {
     withCredentials([
       [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: params.AWS_CREDS],
@@ -208,7 +209,7 @@ def deploy(params) {
                               --env TF_VAR_db_admin_password="$DB_CREDS_PSW" \
                               -v "$WORKSPACE/CIRRUS-core":/CIRRUS-core \
                               -v "$WORKSPACE":/CIRRUS-DAAC \
-                              --name=cirrus-core \
+                              --name=$CONTAINER_NAME_PREFIX-cirrus-core \
                               cirrus-core:$CONTAINER_TAG \
                               /bin/bash -c "make $MAKE_TARGET"
       '''
