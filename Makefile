@@ -225,9 +225,17 @@ cumulus-dashboard/dist: cumulus-dashboard cumulus-init
 	export HIDE_PDR=false
 	export LABELS=daac
 	export AUTH_METHOD=launchpad
-	export APIROOT=$(shell cd cumulus && terraform output archive_api_uri)
+	if [ -z "${APIROOT}" ]; then
+		export APIROOT=$(shell cd cumulus && terraform output archive_api_uri)
+	fi
 	cd $(@D)
-	@echo "APIROOT=$$APIROOT"
+	@echo "SERVED_BY_CUMULUS_API='$$SERVED_BY_CUMULUS_API'"
+	@echo "DAAC_NAME='$$DAAC_NAME'"
+	@echo "STAGE='$$STAGE'"
+	@echo "HIDE_PDR='$$HIDE_PDR'"
+	@echo "LABELS='$$LABELS'"
+	@echo "AUTH_METHOD='$$AUTH_METHOD'"
+	@echo "APIROOT='$$APIROOT'"
 	npm install --no-optional --cache ../.npm
 	npm run build
 
