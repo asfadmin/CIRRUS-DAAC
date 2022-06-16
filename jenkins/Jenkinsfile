@@ -42,8 +42,9 @@ pipeline {
           git checkout ${params.CORE_REF}
           git submodule update --init --recursive
           # If working in a branch, we need to be sure to `git pull` new changes
-          if [ `git show -s --pretty=%d HEAD | grep -c 'HEAD, tag'` -gt 0 ]; then
-            echo 'Tag is up-to-date'; else git pull
+          cat .git/HEAD | grep -q "ref: refs/heads"
+          if [ \$? -eq 0 ]; then
+              git pull
           fi
           cd ..
           tree
