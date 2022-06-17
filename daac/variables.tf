@@ -45,3 +45,8 @@ variable "s3_replicator_target_prefix" {
   type = string
   default = null
 }
+
+variable "dashboard_cloudfront_oai_id" {
+  type = string
+  default = null
+}
