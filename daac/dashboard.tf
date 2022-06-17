@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "dashboard_bucket_policy_document" {
     resources = ["${aws_s3_bucket.dashboard_bucket.arn}/*"]
 
     principals {
-      type        = "AWS"
+      type = "AWS"
       identifiers = [
         for distribution in data.aws_cloudfront_origin_access_identity.dashboard_cloudfront_oai : distribution.iam_arn
       ]
@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "dashboard_bucket_policy_document" {
     resources = [aws_s3_bucket.dashboard_bucket.arn]
 
     principals {
-      type        = "AWS"
+      type = "AWS"
       identifiers = [
         for distribution in data.aws_cloudfront_origin_access_identity.dashboard_cloudfront_oai : distribution.iam_arn
       ]
