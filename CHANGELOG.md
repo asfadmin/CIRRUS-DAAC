@@ -4,6 +4,11 @@
 ## Unreleased
 
 * Bump RDS engine version to 10.18
+* Cumulus dashboard
+  - NOTE: You will need to move the dashboard bucket in the daac module with the following command:
+  ```
+  terraform state mv 'aws_s3_bucket.standard-bucket["<prefix>-dashboard"]' aws_s3_bucket.dashboard_bucket
+  ```
 
 ## v11.1.0.1
 

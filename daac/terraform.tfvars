@@ -7,7 +7,7 @@ cma_version = "v1.3.0"
 
 # if you want to overide the default standard, protected or public bucket lists
 # you can do it here
-standard_bucket_names = ["private", "dashboard"]
+standard_bucket_names = ["private"]
 protected_bucket_names = ["protected", "protected-1"]
 public_bucket_names = ["public", "public-1"]
 
