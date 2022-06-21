@@ -101,6 +101,9 @@ There is a `dashboard` make target which will build and deploy a version of a
 Cumulus dashboard to a bucket named `$DEPLOY_NAME-cumulus-$MATURITY-dashboard`
 which is created during the cumulus deployment.
 
+To build the dashboard you will first have to clone the source repo from
+[https://github.com/nasa/cumulus-dashboard](https://github.com/nasa/cumulus-dashboard)
+
 The dashboard build process requires npm to be installed. Additionally,
 since the final step copies data to your dashboard bucket, you need to run
 `source env.sh <profile-name> <deploy-name> <maturity>` to set up your AWS
@@ -108,6 +111,7 @@ environment prior to running the build process
 
 You need to pass in:
 ```bash
+DASHBOARD_DIR=/path/to/your/dashboard
 CUMULUS_API_ROOT="your api root"
 DEPLOY_NAME=your deploy name  # Set by env.sh
 MATURITY=dev                  # Set by env.sh
@@ -116,6 +120,7 @@ MATURITY=dev                  # Set by env.sh
 Example
 ```bash
 source env.sh sbx-profile kb dev
+export DASHBOARD_DIR="../cumulus-dashboard"
 export CUMULUS_API_ROOT="https://xxx.execute-api.us-west-2.amazonaws.com:8000/dev"
 make dashboard
 ```

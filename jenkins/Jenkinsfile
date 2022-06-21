@@ -9,7 +9,10 @@ pipeline {
       string(name: 'DEPLOY_NAME', defaultValue: get_deploy_name() ?: 'daac', description: 'The name of the stack for this MATURITY')
       choice(name: 'AWS_REGION', choices: ['us-east-1', 'us-west-2'], description: 'AWS Region to deploy to')
       choice(name: 'MAKE_TARGET', choices: ['all', 'tf', 'daac', 'data-persistence', 'cumulus', 'workflows', 'cumulus_v9_2_0_upgrade'], description: 'What section of cumulus to deploy.')
+
       booleanParam(name: 'DEPLOY_DASHBOARD', defaultValue: false, description: 'Whether or not to deploy the cumulus dashboard')
+      string(name: 'DASHBOARD_REPO', defaultValue: 'git@github.com:nasa/cumulus-dashboard', description: 'The cumulus-dashboard repo location')
+      string(name: 'DASHBOARD_REF', defaultValue: 'v11.0.0', description: 'The cumulus-dashboard git ref to check out. This needs to correspond to a version of the dashboard which is compatible with the version of Cumulus in CORE_REF.')
       string(name: 'DASHBOARD_API_ROOT', defaultValue: '', description: 'Override for the dashboard APIROOT variable')
 
       string(name: 'CORE_REPO', defaultValue: 'git@github.com:asfadmin/CIRRUS-core', description: 'The CIRRUS-core repo location')
@@ -33,24 +36,22 @@ pipeline {
       }
     }
 
-    stage('Clone and checkout core repo/ref') {
+    stage('Clone and checkout repos/refs') {
       steps {
-        sh """#!/bin/bash
-          if [ ! -d \"CIRRUS-core\" ]; then
-            git clone ${params.CORE_REPO} CIRRUS-core
-          fi
-          cd CIRRUS-core
-          git fetch origin --tags
-          git checkout ${params.CORE_REF}
-          git submodule update --init --recursive
-          # If working in a branch, we need to be sure to `git pull` new changes
-          branch=\$(cat .git/HEAD | grep -q "ref: refs/heads")
-          if [ \$? -eq 0 ]; then
-              git pull
-          fi
-          cd ..
-          tree
-        """
+        script {
+          clone(
+            DIR: 'CIRRUS-core',
+            REPO: params.CORE_REPO,
+            REF: params.CORE_REF
+          )
+          if (params.DEPLOY_DASHBOARD) {
+            clone(
+              DIR: 'cumulus-dashboard',
+              REPO: params.DASHBOARD_REPO,
+              REF: params.DASHBOARD_REF
+            )
+          }
+        }
       }
     }
 
@@ -185,6 +186,24 @@ pipeline {
   } // stages
 } // pipeline
 
+def clone(params) {
+  sh """#!/bin/bash
+    if [ ! -d \"${params.DIR}\" ]; then
+      git clone ${params.REPO} ${params.DIR}
+    fi
+    cd ${params.DIR}
+    git fetch origin --tags
+    git checkout ${params.REF}
+    git submodule update --init --recursive
+    # If working in a branch, we need to be sure to `git pull` new changes
+    branch=\$(cat .git/HEAD | grep -q "ref: refs/heads")
+    if [ \$? -eq 0 ]; then
+        git pull
+    fi
+    cd ..
+    tree
+  """
+}
 
 def deploy(params) {
   if (!params.APIROOT) {
@@ -221,6 +240,7 @@ def deploy(params) {
             cd $WORKSPACE/CIRRUS-core
             docker run --rm   --user `id -u` \
                               --env DAAC_DIR="/CIRRUS-DAAC" \
+                              --env DASHBOARD_DIR="cumulus-dashboard" \
                               --env BUILD_NUM="$BUILD_NUMBER" \
                               --env DEPLOY_NAME="$DEPLOY_NAME" \
                               --env MATURITY="$MATURITY" \

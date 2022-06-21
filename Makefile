@@ -213,10 +213,12 @@ pcrs: workflows/providers/* workflows/collections/* workflows/rules/*
 	scripts/deploy-pcrs.sh ${SELF_DIR}/workflows ${cumulus_id_rsa-"~/.ssh/id_rsa"}
 
 # ------ Cumulus Dashboard ------
+# Environment variables:
+#  - DASHBOARD_DIR: Directory where the dashboard source code is checked out
 
 # We could get more granular with the dependencies here, but using the
 # dashboard directory is probably fine since we aren't developing it.
-cumulus-dashboard/dist: cumulus-dashboard cumulus-init
+${DASHBOARD_DIR}/dist: cumulus-dashboard cumulus-init
 	if [ "${MATURITY}" = "dev" ]; then
 		export SERVED_BY_CUMULUS_API=true
 	fi
@@ -228,7 +230,7 @@ cumulus-dashboard/dist: cumulus-dashboard cumulus-init
 	if [ -z "${APIROOT}" ]; then
 		export APIROOT=$(shell cd cumulus && terraform output archive_api_uri)
 	fi
-	cd $(@D)
+	cd $(DASHBOARD_DIR)
 	@echo "SERVED_BY_CUMULUS_API='$$SERVED_BY_CUMULUS_API'"
 	@echo "DAAC_NAME='$$DAAC_NAME'"
 	@echo "STAGE='$$STAGE'"
@@ -240,6 +242,6 @@ cumulus-dashboard/dist: cumulus-dashboard cumulus-init
 	npm run build
 
 .PHONY: dashboard
-dashboard: cumulus-dashboard/dist
+dashboard: $(DASHBOARD_DIR)/dist
 	$(banner)
-	aws s3 sync cumulus-dashboard/dist s3://${DEPLOY_NAME}-cumulus-${MATURITY}-dashboard --delete
+	aws s3 sync $(DASHBOARD_DIR)/dist s3://${DEPLOY_NAME}-cumulus-${MATURITY}-dashboard --delete
