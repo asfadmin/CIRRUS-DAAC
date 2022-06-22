@@ -33,7 +33,7 @@ pipeline {
 
     stage('Clone and checkout core repo/ref') {
       steps {
-        sh """
+        sh """#!/bin/bash
           if [ ! -d \"CIRRUS-core\" ]; then
             git clone ${params.CORE_REPO} CIRRUS-core
           fi
@@ -42,7 +42,7 @@ pipeline {
           git checkout ${params.CORE_REF}
           git submodule update --init --recursive
           # If working in a branch, we need to be sure to `git pull` new changes
-          cat .git/HEAD | grep -q "ref: refs/heads"
+          branch=\$(cat .git/HEAD | grep -q "ref: refs/heads")
           if [ \$? -eq 0 ]; then
               git pull
           fi
