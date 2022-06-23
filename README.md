@@ -99,27 +99,28 @@ Python lambda with unit tests. You can run the tests as shown above.
 
 There is a `dashboard` make target which will build and deploy a version of a
 Cumulus dashboard to a bucket named `$DEPLOY_NAME-cumulus-$MATURITY-dashboard`
-assuming you created such a bucket during your deployment.
+which is created during the cumulus deployment.
 
-The dashboard build process happens within a Docker container, therefore the
-`make dashboard` target cannot be envoked within a Docker container.  Additionally,
+To build the dashboard you will first have to clone the source repo from
+[https://github.com/nasa/cumulus-dashboard](https://github.com/nasa/cumulus-dashboard)
+
+The dashboard build process requires npm to be installed. Additionally,
 since the final step copies data to your dashboard bucket, you need to run
 `source env.sh <profile-name> <deploy-name> <maturity>` to set up your AWS
 environment prior to running the build process
 
 You need to pass in:
+```bash
+DASHBOARD_DIR=/path/to/your/dashboard
+CUMULUS_API_ROOT="your api root"
+DEPLOY_NAME=your deploy name  # Set by env.sh
+MATURITY=dev                  # Set by env.sh
+```
 
-        CUMULUS_API_ROOT="your api root"
-        CUMULUS_DASHBOARD_VERSION="version-of-dashboar"
-        DEPLOY_NAME=your deploy name
-        MATURITY=dev
-        SERVED_BY_CUMULUS_API=true (optional defaults to true)
-
-Example - to build a dashboard which is not served via the Cumulus API
-
-        $ CUMULUS_API_ROOT="https://xxx.execute-api.us-west-2.amazonaws.com:8000/dev" \
-          CUMULUS_DASHBOARD_VERSION="v1.8.0" \
-          DEPLOY_NAME=kb \
-          MATURITY=dev \
-          SERVED_BY_CUMULUS_API= \
-          make dashboard
+Example
+```bash
+source env.sh sbx-profile kb dev
+export DASHBOARD_DIR="../cumulus-dashboard"
+export CUMULUS_API_ROOT="https://xxx.execute-api.us-west-2.amazonaws.com:8000/dev"
+make dashboard
+```
