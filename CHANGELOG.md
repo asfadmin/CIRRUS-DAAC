@@ -1,6 +1,12 @@
 
 # CHANGELOG
 
+## v11.1.4.0
+
+* Upgrade to [Cumulus v11.1.4](https://github.com/nasa/Cumulus/releases/tag/v11.1.4)
+* Note instructions for creating the `files_granule_cumulus_id_index` in the release
+notes if you are continually ingesting data
+
 ## v11.1.3.0
 
 * Upgrade to [Cumulus v11.1.3](https://github.com/nasa/Cumulus/releases/tag/v11.1.3)
