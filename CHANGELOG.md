@@ -1,6 +1,10 @@
 
 # CHANGELOG
 
+## v11.1.5.0
+
+* Upgrade to [Cumulus v11.1.5](https://github.com/nasa/Cumulus/releases/tag/v11.1.5)
+
 ## v11.1.4.0
 
 * Upgrade to [Cumulus v11.1.4](https://github.com/nasa/Cumulus/releases/tag/v11.1.4)
