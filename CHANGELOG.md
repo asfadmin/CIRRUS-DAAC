@@ -1,6 +1,9 @@
 
 # CHANGELOG
 
+## Unreleased
+* Bump RDS engine version to 11.13
+
 ## v13.3.2.0
 
 * Upgrade to [Cumulus v13.3.2](https://github.com/nasa/Cumulus/releases/tag/v13.3.2)
