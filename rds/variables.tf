@@ -34,7 +34,13 @@ variable "snapshot_identifier" {
 variable "engine_version" {
   description = "Postgres engine version for Serverless cluster"
   type        = string
-  default     = "10.18"
+  default     = "11.13"
+}
+
+variable "parameter_group_family" {
+  description = "Database family to use for creating database parameter group"
+  type = string
+  default = "aurora-postgresql11"
 }
 
 ### Required for user/database provisioning
