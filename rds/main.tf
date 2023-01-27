@@ -54,6 +54,7 @@ module "rds_cluster" {
   vpc_id                   = data.aws_vpc.application_vpcs.id
   subnets                  = data.aws_subnet_ids.subnet_ids.ids
   engine_version           = var.engine_version
+  parameter_group_family   = var.parameter_group_family
   deletion_protection      = var.deletion_protection
   backup_retention_period  = var.backup_retention_period
   backup_window            = var.backup_window
