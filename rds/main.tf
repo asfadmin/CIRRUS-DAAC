@@ -47,7 +47,7 @@ resource "random_string" "user_db_pass" {
 }
 
 module "rds_cluster" {
-  source                   = "https://github.com/nasa/cumulus/releases/download/v13.3.2/terraform-aws-cumulus-rds.zip"
+  source                   = "https://github.com/nasa/cumulus/releases/download/v11.1.8/terraform-aws-cumulus-rds.zip"
   db_admin_username        = var.db_admin_username
   db_admin_password        = var.db_admin_password == "" ? random_string.admin_db_pass.result : var.db_admin_password
   region                   = data.aws_region.current.name
@@ -62,6 +62,7 @@ module "rds_cluster" {
   tags                     = local.default_tags
   snapshot_identifier      = var.snapshot_identifier
   provision_user_database  = var.provision_user_database
+  parameter_group_family   = var.parameter_group_family
   prefix                   = local.prefix
   permissions_boundary_arn = local.permissions_boundary_arn
   rds_user_password        = var.rds_user_password == "" ? random_string.user_db_pass.result : var.rds_user_password
