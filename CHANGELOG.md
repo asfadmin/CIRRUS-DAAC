@@ -12,7 +12,7 @@ to match those in the underlying Cumulus modules.
 [Cumulus Dashboard v12.0.0](https://github.com/nasa/cumulus-dashboard/releases/tag/v12.0.0)
 * Also, any ECS tasks are required to use the `cumuluss/cumulus-ecs-task:1.8.0`
 docker image.  This requirement is listed in the
-[Cumulus v11.1.8](https://github.com/nasa/Cumulus/releases/tag/v14.1.0)
+[Cumulus v11.1.8](https://github.com/nasa/Cumulus/releases/tag/v11.1.8)
 breaking changes section.
 
 ## v13.3.2.0
