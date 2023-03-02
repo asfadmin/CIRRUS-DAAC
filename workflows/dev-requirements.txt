@@ -1,5 +1,5 @@
 flake8~=3.7
-ipython~=7.9
+ipython~=8.10
 jedi~=0.15.0
 black~=19.10b0
 pytest~=5.3
