@@ -1,8 +1,19 @@
 
 # CHANGELOG
 
-## Unreleased
+## v14.1.0.0
+* Upgrade to [Cumulus v14.1.0](https://github.com/nasa/Cumulus/releases/tag/v14.1.0)
 * Bump RDS engine version to 11.13
+* Exposes the new `cloudwatch_log_retention_periods` as mentioned in the release
+notes in case a DAAC wants to modify the retention of any CloudWatch log groups.
+* updated the terraform `aws` provider in the `daac` and `workflows` modules
+to match those in the underlying Cumulus modules.
+* **Reminder** - this version requires
+[Cumulus Dashboard v12.0.0](https://github.com/nasa/cumulus-dashboard/releases/tag/v12.0.0)
+* Also, any ECS tasks are required to use the `cumuluss/cumulus-ecs-task:1.8.0`
+docker image.  This requirement is listed in the
+[Cumulus v11.1.8](https://github.com/nasa/Cumulus/releases/tag/v14.1.0)
+breaking changes section.
 
 ## v13.3.2.0
 
