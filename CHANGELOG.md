@@ -1,6 +1,17 @@
 
 # CHANGELOG
 
+## v15.0.3.0
+
+* Upgrade to [Cumulus v15.0.3](https://github.com/nasa/Cumulus/releases/tag/v15.0.3)
+* Per [Cumulus v15.0.2](https://github.com/nasa/Cumulus/releases/tag/v15.0.2)
+release notes, the new `default_log_retention_days` variable has been exposed in
+the Cumulus module to allow daac customization,  default is 30 days (the release
+notes name it incorrectly)
+* Per [Cumulus v15.0.0](https://github.com/nasa/Cumulus/releases/tag/v15.0.0)
+release notes, all ECS tasks should be upgraded to use the `1.9.0` image
+* Upgraded the terraform aws version to `>= 3.75.2` to support `nodejs16.x` Lambdas
+
 ## v14.1.0.0
 * Upgrade to [Cumulus v14.1.0](https://github.com/nasa/Cumulus/releases/tag/v14.1.0)
 * Bump RDS engine version to 11.13
