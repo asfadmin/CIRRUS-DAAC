@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 3.14.1"
+      version = ">= 3.75.2"
     }
 
     random = {
@@ -47,7 +47,7 @@ resource "random_string" "user_db_pass" {
 }
 
 module "rds_cluster" {
-  source                   = "https://github.com/nasa/cumulus/releases/download/v14.1.0/terraform-aws-cumulus-rds.zip"
+  source                   = "https://github.com/nasa/cumulus/releases/download/v15.0.3/terraform-aws-cumulus-rds.zip"
   db_admin_username        = var.db_admin_username
   db_admin_password        = var.db_admin_password == "" ? random_string.admin_db_pass.result : var.db_admin_password
   region                   = data.aws_region.current.name
