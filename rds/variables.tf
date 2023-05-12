@@ -3,20 +3,20 @@ variable "DEPLOY_NAME" {
 }
 
 variable "MATURITY" {
-  type = string
+  type    = string
   default = "dev"
 }
 
 variable "db_admin_username" {
   description = "Username for RDS database authentication"
-  type = string
-  default = "cumulus_admin"
+  type        = string
+  default     = "cumulus_admin"
 }
 
 variable "db_admin_password" {
   description = "Password for RDS database authentication"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "deletion_protection" {
@@ -27,8 +27,8 @@ variable "deletion_protection" {
 
 variable "snapshot_identifier" {
   description = "Optional database snapshot for restoration"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "engine_version" {
@@ -39,15 +39,15 @@ variable "engine_version" {
 
 variable "parameter_group_family" {
   description = "Database family to use for creating database parameter group"
-  type = string
-  default = "aurora-postgresql11"
+  type        = string
+  default     = "aurora-postgresql11"
 }
 
 ### Required for user/database provisioning
 variable "provision_user_database" {
   description = "true/false flag to configure if the module should provision a user and database using default settings"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "rds_user_password" {
