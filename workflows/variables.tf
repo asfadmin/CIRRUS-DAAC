@@ -1,14 +1,14 @@
 variable "DEPLOY_NAME" {
-  type = string
+  type    = string
   default = "daac"
 }
 
 variable "MATURITY" {
-  type = string
+  type    = string
   default = "dev"
 }
 
 variable "DIST_DIR" {
-  type = string
+  type    = string
   default = "../dist"
 }
