@@ -1,39 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 3.75.2"
-    }
-
-    random = {
-      source = "hashicorp/random"
-    }
-
-  }
-
-  backend "s3" {
-  }
-
-}
-
-provider "aws" {
-  ignore_tags {
-    key_prefixes = ["gsfc-ngap"]
-  }
-}
-
-locals {
-  prefix = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
-
-  default_tags = {
-    Deployment = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
-  }
-
-  cluster_identifier = "${local.prefix}-rds-cluster"
-
-  permissions_boundary_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/NGAPShRoleBoundary"
-}
-
 resource "random_string" "admin_db_pass" {
   length  = 50
   upper   = true
@@ -65,23 +29,4 @@ module "rds_cluster" {
   prefix                   = local.prefix
   permissions_boundary_arn = local.permissions_boundary_arn
   rds_user_password        = var.rds_user_password == "" ? random_string.user_db_pass.result : var.rds_user_password
-}
-
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-
-data "aws_vpc" "application_vpcs" {
-  tags = {
-    Name = "Application VPC"
-  }
-}
-
-data "aws_subnet_ids" "subnet_ids" {
-  vpc_id = data.aws_vpc.application_vpcs.id
-
-  filter {
-    name = "tag:Name"
-    values = ["Private application ${data.aws_region.current.name}a subnet",
-    "Private application ${data.aws_region.current.name}b subnet"]
-  }
 }
