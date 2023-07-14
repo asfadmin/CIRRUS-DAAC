@@ -31,7 +31,7 @@ module "s3-replicator" {
 
   prefix               = local.prefix
   vpc_id               = data.aws_vpc.application_vpcs.id
-  subnet_ids           = data.aws_subnet_ids.subnet_ids.ids
+  subnet_ids           = data.aws_subnets.subnet_ids.ids
   permissions_boundary = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/NGAPShRoleBoundary"
   tags                 = { Deployment = local.prefix }
   source_bucket        = "${local.prefix}-internal"
@@ -49,8 +49,12 @@ data "aws_vpc" "application_vpcs" {
   }
 }
 
-data "aws_subnet_ids" "subnet_ids" {
-  vpc_id = data.aws_vpc.application_vpcs.id
+
+data "aws_subnets" "subnet_ids" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.application_vpcs.id]
+  }
 
   tags = {
     Name = "Private application ${data.aws_region.current.name}a subnet"
