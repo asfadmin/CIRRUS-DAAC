@@ -26,7 +26,6 @@ resource "aws_s3_bucket" "internal-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  acl = "log-delivery-write"
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
