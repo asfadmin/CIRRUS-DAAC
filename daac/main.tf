@@ -31,7 +31,6 @@ resource "aws_s3_bucket" "internal-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  acl = "log-delivery-write"
   tags = local.default_tags
 }
 
