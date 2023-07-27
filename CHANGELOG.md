@@ -1,6 +1,10 @@
 
 # CHANGELOG
 
+## Unreleased
+
+* Add terraform resources to create bucket policies allowing CloudFront OAI's
+read access to distribution buckets.
 
 ## v17.0.0.0
 * Upgrade to [Cumulus v17.0.0](https://github.com/nasa/cumulus/releases/tag/v17.0.0)
