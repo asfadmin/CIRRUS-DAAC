@@ -1,16 +1,21 @@
 resource "aws_s3_bucket" "dashboard_bucket" {
   bucket = "${local.prefix}-dashboard"
+
   lifecycle {
     prevent_destroy = true
   }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+
+  tags = local.default_tags
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "dashboard_encryption_configuration" {
+  bucket = aws_s3_bucket.dashboard_bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
-  tags = local.default_tags
 }
 
 #
