@@ -148,7 +148,7 @@ resource "null_resource" "CMA_release" {
   }
 }
 
-resource "aws_s3_bucket_object" "cma" {
+resource "aws_s3_object" "cma" {
   depends_on = [null_resource.CMA_release]
   bucket     = aws_s3_bucket.artifacts-bucket.bucket
   key        = "cumulus-message-adapter-${var.cma_version}.zip"
@@ -157,7 +157,7 @@ resource "aws_s3_bucket_object" "cma" {
 
 resource "aws_lambda_layer_version" "cma_layer" {
   s3_bucket  = aws_s3_bucket.artifacts-bucket.bucket
-  s3_key     = aws_s3_bucket_object.cma.key
+  s3_key     = aws_s3_object.cma.key
   layer_name = "${local.prefix}-CMA-layer"
 }
 
@@ -166,7 +166,7 @@ If you would like to deploy a custom tea bucket map you can uncomment this resou
 and rename and modify the bucket_map.yaml.tmpl.sample file
 */
 /*
-resource "aws_s3_bucket_object" "tea_bucket_map" {
+resource "aws_s3_object" "tea_bucket_map" {
   bucket = aws_s3_bucket.internal-bucket.bucket
   key     = "${local.prefix}/thin-egress-app/${local.prefix}-bucket_map.yaml"
   content = templatefile("./bucket_map.yaml.tmpl", { protected_buckets = local.protected_bucket_names, public_buckets = local.public_bucket_names })

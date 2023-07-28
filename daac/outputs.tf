@@ -14,6 +14,6 @@ output "bucket_map_key" {
 
 /*
 output "bucket_map_key" {
-  value = "${aws_s3_bucket_object.tea_bucket_map.key}"
+  value = "${aws_s3_object.tea_bucket_map.key}"
 }
 */
