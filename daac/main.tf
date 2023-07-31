@@ -142,7 +142,7 @@ and rename and modify the bucket_map.yaml.tmpl.sample file
 /*
 resource "aws_s3_bucket_object" "tea_bucket_map" {
   bucket = aws_s3_bucket.internal-bucket.bucket
-  key     = "${local.prefix}/thin-egress-app/${local.prefix}-bucket_map.yaml"
+  key     = "${local.prefix}/thin-egress-app/${local.prefix}-daac_bucket_map.yaml"
   content = templatefile("./bucket_map.yaml.tmpl", { protected_buckets = local.protected_bucket_names, public_buckets = local.public_bucket_names })
   etag    = md5(templatefile("./bucket_map.yaml.tmpl", { protected_buckets = local.protected_bucket_names, public_buckets = local.public_bucket_names }))
 }
