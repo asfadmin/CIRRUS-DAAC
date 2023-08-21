@@ -5,14 +5,19 @@ resource "aws_s3_bucket" "standard-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+  tags = local.default_tags
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "standard_bucket_encryption_configuration" {
+  for_each = toset(local.standard_bucket_names)
+
+  bucket = each.key
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
-  tags = local.default_tags
 }
 
 #For EMS reporting, buckets which are exposed by TEA need to have server access
@@ -27,14 +32,17 @@ resource "aws_s3_bucket" "internal-bucket" {
     prevent_destroy = true
   }
   acl = "log-delivery-write"
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+  tags = local.default_tags
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "internal_bucket_encryption_configuration" {
+  bucket = aws_s3_bucket.internal-bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
-  tags = local.default_tags
 }
 
 # protected buckets log to "internal"
@@ -49,14 +57,19 @@ resource "aws_s3_bucket" "protected-bucket" {
     target_bucket = "${local.prefix}-internal"
     target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
   }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+  tags = local.default_tags
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "protected_bucket_encryption_configuration" {
+  for_each = toset(local.protected_bucket_names)
+
+  bucket = each.key
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
-  tags = local.default_tags
 }
 
 # public buckets log to "internal"
@@ -71,14 +84,19 @@ resource "aws_s3_bucket" "public-bucket" {
     target_bucket = "${local.prefix}-internal"
     target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
   }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+  tags = local.default_tags
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "public_bucket_encryption_configuration" {
+  for_each = toset(local.public_bucket_names)
+
+  bucket = each.key
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
-  tags = local.default_tags
 }
 
 resource "aws_s3_bucket" "workflow-bucket" {
@@ -88,14 +106,19 @@ resource "aws_s3_bucket" "workflow-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+  tags = local.default_tags
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "workflow_bucket_encryption_configuration" {
+  for_each = toset(local.workflow_bucket_names)
+
+  bucket = each.key
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
-  tags = local.default_tags
 }
 
 resource "aws_s3_bucket" "artifacts-bucket" {
@@ -103,14 +126,17 @@ resource "aws_s3_bucket" "artifacts-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+  tags = local.default_tags
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts_bucket_encryption_configuration" {
+  bucket = aws_s3_bucket.artifacts-bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
-  tags = local.default_tags
 }
 
 resource "null_resource" "CMA_release" {
@@ -122,7 +148,7 @@ resource "null_resource" "CMA_release" {
   }
 }
 
-resource "aws_s3_bucket_object" "cma" {
+resource "aws_s3_object" "cma" {
   depends_on = [null_resource.CMA_release]
   bucket     = aws_s3_bucket.artifacts-bucket.bucket
   key        = "cumulus-message-adapter-${var.cma_version}.zip"
@@ -131,7 +157,7 @@ resource "aws_s3_bucket_object" "cma" {
 
 resource "aws_lambda_layer_version" "cma_layer" {
   s3_bucket  = aws_s3_bucket.artifacts-bucket.bucket
-  s3_key     = aws_s3_bucket_object.cma.key
+  s3_key     = aws_s3_object.cma.key
   layer_name = "${local.prefix}-CMA-layer"
 }
 
@@ -140,7 +166,7 @@ If you would like to deploy a custom tea bucket map you can uncomment this resou
 and rename and modify the bucket_map.yaml.tmpl.sample file
 */
 /*
-resource "aws_s3_bucket_object" "tea_bucket_map" {
+resource "aws_s3_object" "tea_bucket_map" {
   bucket = aws_s3_bucket.internal-bucket.bucket
   key     = "${local.prefix}/thin-egress-app/${local.prefix}-daac_bucket_map.yaml"
   content = templatefile("./bucket_map.yaml.tmpl", { protected_buckets = local.protected_bucket_names, public_buckets = local.public_bucket_names })
