@@ -7,9 +7,7 @@ data "aws_vpc" "application_vpcs" {
   }
 }
 
-data "aws_subnet_ids" "subnet_ids" {
-  vpc_id = data.aws_vpc.application_vpcs.id
-
+data "aws_subnets" "subnet_ids" {
   filter {
     name = "tag:Name"
     values = ["Private application ${data.aws_region.current.name}a subnet",
