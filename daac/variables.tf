@@ -36,6 +36,11 @@ variable "partner_bucket_names" {
   default = []
 }
 
+variable "distribution_bucket_oais" {
+  type    = map(any)
+  default = {}
+}
+
 variable "s3_replicator_target_bucket" {
   type    = string
   default = null
