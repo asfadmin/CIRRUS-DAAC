@@ -1,15 +1,12 @@
 
 # CHANGELOG
 
-## Unreleased
-
-* Add terraform resources to create bucket policies allowing CloudFront OAI's
-read access to distribution buckets.
-
 ## v17.0.0.0
 * Upgrade to [Cumulus v17.0.0](https://github.com/nasa/cumulus/releases/tag/v17.0.0)
 * Upgrade terraform modules to use AWS provider version 5.0
 * Remove data-migration1 from repo
+* Add terraform resources to create bucket policies allowing CloudFront OAI's
+read access to distribution buckets.
 
 ## v16.0.0.0
 
