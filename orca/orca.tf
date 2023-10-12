@@ -4,6 +4,7 @@ module "orca" {
   ## Cumulus Variables
   ## --------------------------
   ## REQUIRED
+
   aws_region               = data.aws_region.current.name
   buckets                  = local.merged_bucket_map
   lambda_subnet_ids        = data.aws_subnets.subnet_ids.ids
@@ -13,6 +14,7 @@ module "orca" {
   vpc_id                   = data.aws_vpc.application_vpcs.id
 
   ## OPTIONAL
+
   tags        = local.default_tags
 
   ## --------------------------
@@ -32,6 +34,7 @@ module "orca" {
   s3_secret_key            = var.orca_s3_secret_key
 
   ## OPTIONAL
+
   default_multipart_chunksize_mb                         = var.default_multipart_chunksize_mb
   metadata_queue_message_retention_time_seconds          = var.metadata_queue_message_retention_time_seconds
   orca_default_recovery_type                             = var.orca_default_recovery_type
