@@ -38,12 +38,23 @@ You can run tests inside of a Docker container:
 
 ## Organization
 
-The repository is organized into three Terraform modules:
+The repository is organized into the following Terraform modules:
+
+### Cumulus Core Modules
 
 * `daac`: Creates DAAC-specific resources necessary for running Cumulus
 * `cumulus`: Creates all runtime Cumulus resources that can then be used
   to run ingest workflows.
 * `workflows`: Creates a Cumulus workflow with a sample Python lambda.
+* `rds`: This module deploys the default [https://github.com/nasa/cumulus/tree/master/tf-modules/cumulus-rds-tf] (`terraform-aws-cumulus-rds` serverless module)
+
+### Optional Cumulus Ecosystem Component Modules:
+
+* `orca`: Creates an instance of the
+  [https://nasa.github.io/cumulus-orca/](operational cloud recovery archive)
+* `orca_recovery_workflow`: Using configuration information from the `cumulus`
+  and `orca` modules creates a default Cumulus workflow, that can be used with
+  Orca for granule recovery.
 
 To customize the deployment for your DAAC, you will need to update
 variables and settings in a few of the modules. Specifically:
@@ -83,6 +94,41 @@ committed to git. The `.gitignore` file will ignore them by default.
 
 DAAC-specific workflows, lambdas, and configuration will be deployed
 by this module. Most workflow development work will be done here.
+
+### orca module
+
+This module will deploy an instance of ORCA ([https://nasa.github.io/cumulus-orca/](Operational Cloud Recovery Archive)).   The module configuration roughly translates to the configuration documentation listed on the ORCA page by exposing all of the variables from that module.  
+
+To configure this module, you will need to customize `orca/variables/*.tfvars` and `orca/secrets/*.tfvars` with appropriate values for each environment you're deploying this module to.  There is an `example.tfvars` file in each folder as a template for the values that are required, for all possible variable options consult the `orca/variables.tf` variables file and/or the ORCA documentation as the majority of these are passed through directly to the ORCA terraform module. 
+
+If using this module, you will need to configure the `cumulus` module's `use_orca` variable to true.  This will cause the `cumulus` module to read the `orca` module outputs to configure Cumulus to use ORCA.   No other configuration is required for Cumulus to use ORCA if using this module.
+
+This module _must_ be deployed _after_ the `daac` and `rds` submodules as it requires information from those modules to deploy, and _before_ the `cumulus` module.
+
+The Makefile supports the following actions for this module:
+
+* orca         - Init and deploy all `orca` stack resources
+* plan-orca    - Init and run a `terraform plan` on the `orca` stack to show the
+  intended change-set
+* destroy-orca - Init, and then destroy existing `orca` module resources.
+  Please note this will *not* configure any values derived from this module's
+  remote state in the `cumulus` or `orca_recovery_workflow` modules
+
+### orca_recovery_workflow module
+
+This module will deploy a basic granule recovery workflow for use with Cumulus.
+It makes use of remote state data from the `cumulus` module and `orca` module
+and must be deployed after both.   The deployed `OrcaRecoveryAdapterWorkflow`
+can be used via Cumulus collection configuration or Bulk Granule actions to
+trigger a recovery for granules as needed. The Makefile supports the following
+actions for this module:
+
+* orca_recovery_workflow         - Init and deploy all `orca_recovery_workflow`
+  stack resources
+* plan-orca_recovery_workflow    - Init and run a `terraform plan` on the
+  `orca_recovery_workflow` stack to show the intended change-set
+* destroy-orca_recovery_workflow - Init, and then destroy existing
+  `orca_recovery_workflow` module resources.
 
 ## Deploying Cumulus
 
