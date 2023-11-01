@@ -1,6 +1,9 @@
 
 # CHANGELOG
 
+## v18.0.0.0
+* Upgrade to [Cumulus v18.0.0](https://github.com/nasa/cumulus/releases/tag/v18.0.0)
+
 ## v17.0.0.0
 * Upgrade to [Cumulus v17.0.0](https://github.com/nasa/cumulus/releases/tag/v17.0.0)
 * Upgrade terraform modules to use AWS provider version 5.0
