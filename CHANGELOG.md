@@ -1,6 +1,11 @@
 
 # CHANGELOG
 
+## v18.0.0.0
+* Upgrade to [Cumulus v18.0.0](https://github.com/nasa/cumulus/releases/tag/v18.0.0)
+* This new version of Cumulus uses Terraform v1.5.3, it's possible that DAAC terraform
+code may need to be updated.
+
 ## v17.0.0.0
 * Upgrade to [Cumulus v17.0.0](https://github.com/nasa/cumulus/releases/tag/v17.0.0)
 * Upgrade terraform modules to use AWS provider version 5.0
