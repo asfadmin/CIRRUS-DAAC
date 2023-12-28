@@ -1,3 +1,11 @@
+output "cirrus_core_version" {
+  value = var.CIRRUS_CORE_VERSION
+}
+
+output "cirrus_daac_version" {
+  value = var.CIRRUS_DAAC_VERSION
+}
+
 output "cma_layer_arn" {
   value = aws_lambda_layer_version.cma_layer.arn
 }

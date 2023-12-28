@@ -1,3 +1,11 @@
+output "cirrus_core_version" {
+  value = var.CIRRUS_CORE_VERSION
+}
+
+output "cirrus_daac_version" {
+  value = var.CIRRUS_DAAC_VERSION
+}
+
 output "rds_security_group_id" {
   value = module.rds_cluster.security_group_id
 }
