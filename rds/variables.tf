@@ -17,10 +17,16 @@ variable "MATURITY" {
   default = "dev"
 }
 
-variable "db_admin_username" {
-  description = "Username for RDS database authentication"
+variable "backup_retention_period" {
+  description = "Number of backup periods to retain"
+  type        = number
+  default     = 1
+}
+
+variable "backup_window" {
+  description = "Preferred database backup window (UTC)"
   type        = string
-  default     = "cumulus_admin"
+  default     = "07:00-09:00"
 }
 
 variable "db_admin_password" {
@@ -29,16 +35,16 @@ variable "db_admin_password" {
   default     = ""
 }
 
+variable "db_admin_username" {
+  description = "Username for RDS database authentication"
+  type        = string
+  default     = "cumulus_admin"
+}
+
 variable "deletion_protection" {
   description = "Flag to prevent terraform from making changes that delete the database in CI"
   type        = bool
   default     = true
-}
-
-variable "snapshot_identifier" {
-  description = "Optional database snapshot for restoration"
-  type        = string
-  default     = null
 }
 
 variable "engine_version" {
@@ -60,19 +66,14 @@ variable "provision_user_database" {
   default     = true
 }
 
+
 variable "rds_user_password" {
   type    = string
   default = ""
 }
 
-variable "backup_retention_period" {
-  description = "Number of backup periods to retain"
-  type        = number
-  default     = 1
-}
-
-variable "backup_window" {
-  description = "Preferred database backup window (UTC)"
+variable "snapshot_identifier" {
+  description = "Optional database snapshot for restoration"
   type        = string
-  default     = "07:00-09:00"
+  default     = null
 }

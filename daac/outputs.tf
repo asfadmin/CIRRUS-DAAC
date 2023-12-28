@@ -1,3 +1,11 @@
+output "bucket_map" {
+  value = local.bucket_map
+}
+
+output "bucket_map_key" {
+  value = ""
+}
+
 output "cirrus_core_version" {
   value = var.CIRRUS_CORE_VERSION
 }
@@ -8,14 +16,6 @@ output "cirrus_daac_version" {
 
 output "cma_layer_arn" {
   value = aws_lambda_layer_version.cma_layer.arn
-}
-
-output "bucket_map" {
-  value = local.bucket_map
-}
-
-output "bucket_map_key" {
-  value = ""
 }
 
 /* export bucket_map_key if defined so it can be used in the cumulus step

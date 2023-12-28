@@ -21,9 +21,19 @@ variable "cma_version" {
   type = string
 }
 
-variable "standard_bucket_names" {
+variable "dashboard_cloudfront_oai_id" {
+  type    = string
+  default = null
+}
+
+variable "distribution_bucket_oais" {
+  type    = map(any)
+  default = {}
+}
+
+variable "partner_bucket_names" {
   type    = list(string)
-  default = ["private"]
+  default = []
 }
 
 variable "protected_bucket_names" {
@@ -36,21 +46,6 @@ variable "public_bucket_names" {
   default = ["public"]
 }
 
-variable "workflow_bucket_names" {
-  type    = list(string)
-  default = []
-}
-
-variable "partner_bucket_names" {
-  type    = list(string)
-  default = []
-}
-
-variable "distribution_bucket_oais" {
-  type    = map(any)
-  default = {}
-}
-
 variable "s3_replicator_target_bucket" {
   type    = string
   default = null
@@ -61,7 +56,12 @@ variable "s3_replicator_target_prefix" {
   default = null
 }
 
-variable "dashboard_cloudfront_oai_id" {
-  type    = string
-  default = null
+variable "standard_bucket_names" {
+  type    = list(string)
+  default = ["private"]
+}
+
+variable "workflow_bucket_names" {
+  type    = list(string)
+  default = []
 }
