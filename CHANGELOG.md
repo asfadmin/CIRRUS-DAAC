@@ -1,6 +1,11 @@
 
 # CHANGELOG
 
+## v18.2.0.0
+* Upgrade to [Cumulus v18.2.0](https://github.com/nasa/cumulus/releases/tag/v18.2.0)
+* This new version of Cumulus uses Terraform v1.5.3, it's possible that DAAC terraform
+code may need to be updated.
+
 ## v18.0.0.0
 * Upgrade to [Cumulus v18.0.0](https://github.com/nasa/cumulus/releases/tag/v18.0.0)
 * This new version of Cumulus uses Terraform v1.5.3, it's possible that DAAC terraform
