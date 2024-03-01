@@ -11,13 +11,14 @@ resource "random_string" "user_db_pass" {
 }
 
 module "rds_cluster" {
-  source                   = "https://github.com/nasa/cumulus/releases/download/v18.0.0/terraform-aws-cumulus-rds.zip"
+  source                   = "https://github.com/nasa/cumulus/releases/download/v18.2.0/terraform-aws-cumulus-rds.zip"
   db_admin_username        = var.db_admin_username
   db_admin_password        = var.db_admin_password == "" ? random_string.admin_db_pass.result : var.db_admin_password
   region                   = data.aws_region.current.name
   vpc_id                   = data.aws_vpc.application_vpcs.id
   subnets                  = data.aws_subnets.subnet_ids.ids
   engine_version           = var.engine_version
+  enable_upgrade           = var.enable_upgrade
   parameter_group_family   = var.parameter_group_family
   deletion_protection      = var.deletion_protection
   backup_retention_period  = var.backup_retention_period

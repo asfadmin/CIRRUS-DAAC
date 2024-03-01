@@ -48,9 +48,9 @@ variable "deletion_protection" {
 }
 
 variable "engine_version" {
-  description = "Postgres engine version for Serverless cluster"
+  description = "Postgres engine version for serverless cluster"
   type        = string
-  default     = "11.13"
+  default     = "13.12"
 }
 
 variable "parameter_group_family" {
@@ -59,13 +59,18 @@ variable "parameter_group_family" {
   default     = "aurora-postgresql11"
 }
 
+variable "parameter_group_family_v13" {
+  description = "Database family to use for creating database parameter group under postgres 13 upgrade conditions"
+  type        = string
+  default     = "aurora-postgresql13"
+}
+
 ### Required for user/database provisioning
 variable "provision_user_database" {
   description = "true/false flag to configure if the module should provision a user and database using default settings"
   type        = bool
   default     = true
 }
-
 
 variable "rds_user_password" {
   type    = string
@@ -76,4 +81,10 @@ variable "snapshot_identifier" {
   description = "Optional database snapshot for restoration"
   type        = string
   default     = null
+}
+
+variable "enable_upgrade" {
+  description = "Flag to enable use of updated parameter group for postgres v13"
+  type        = bool
+  default     = true
 }
