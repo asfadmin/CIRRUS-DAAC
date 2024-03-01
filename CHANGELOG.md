@@ -3,8 +3,13 @@
 
 ## v18.2.0.0
 * Upgrade to [Cumulus v18.2.0](https://github.com/nasa/cumulus/releases/tag/v18.2.0)
-* This new version of Cumulus uses Terraform v1.5.3, it's possible that DAAC terraform
-code may need to be updated.
+* update required terraform version to `>= 1.5` in all CIRRUS modules matching the requirements
+from the Cumulus application.
+* Add `DAR=YES/NO` tags as appropriate for s3 buckets
+* expose `enable_upgrade` variable in RDS module to allow for changes required for RDS
+upgrade
+* updates to RDS for PostgreSQL version 13.12
+* update requirements.txt to latest versions of cumulus python modules
 
 ## v18.0.0.0
 * Upgrade to [Cumulus v18.0.0](https://github.com/nasa/cumulus/releases/tag/v18.0.0)
