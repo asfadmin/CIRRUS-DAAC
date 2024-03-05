@@ -2,8 +2,17 @@ locals {
   prefix = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
 
   default_tags = {
-    Deployment = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
+    Deployment = local.prefix
   }
+
+  dar_yes_tags = {
+    DAR        = "YES"
+  }
+
+  dar_no_tags = {
+    DAR        = "NO"
+  }
+
 
   standard_bucket_names  = [for n in var.standard_bucket_names : "${local.prefix}-${n}"]
   protected_bucket_names = [for n in var.protected_bucket_names : "${local.prefix}-${n}"]
