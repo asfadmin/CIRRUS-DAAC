@@ -6,12 +6,10 @@ locals {
   }
 
   dar_yes_tags = {
-    Deployment = local.prefix,
     DAR        = "YES"
   }
 
   dar_no_tags = {
-    Deployment = local.prefix,
     DAR        = "NO"
   }
 
