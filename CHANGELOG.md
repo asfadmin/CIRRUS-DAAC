@@ -1,6 +1,9 @@
 
 # CHANGELOG
 
+## unreleased
+* Snyk fixes for dev-requirements.txt
+
 ## v18.2.0.0
 * Upgrade to [Cumulus v18.2.0](https://github.com/nasa/cumulus/releases/tag/v18.2.0)
 * update required terraform version to `>= 1.5` in all CIRRUS modules matching the requirements
