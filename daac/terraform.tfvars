@@ -1,4 +1,4 @@
-cma_version = "v1.3.0"
+cma_version = "v2.0.3"
 
 # default bucket lists are:
 # standard_bucket_names = ["private"]
