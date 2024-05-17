@@ -31,4 +31,5 @@ resource "aws_lambda_function" "nop_lambda" {
   source_code_hash = filebase64sha256("${var.DIST_DIR}/lambdas.zip")
 
   runtime = "python3.7"
+  tags    = local.default_tags
 }
