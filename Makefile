@@ -218,7 +218,7 @@ pcrs: workflows/providers/* workflows/collections/* workflows/rules/*
 
 # We could get more granular with the dependencies here, but using the
 # dashboard directory is probably fine since we aren't developing it.
-${DASHBOARD_DIR}/dist: cumulus-dashboard cumulus-init
+${DASHBOARD_DIR}/dist: ${DASHBOARD_DIR} cumulus-init
 	if [ "${MATURITY}" = "dev" ]; then
 		export SERVED_BY_CUMULUS_API=true
 	fi
@@ -238,7 +238,7 @@ ${DASHBOARD_DIR}/dist: cumulus-dashboard cumulus-init
 	@echo "LABELS='$$LABELS'"
 	@echo "AUTH_METHOD='$$AUTH_METHOD'"
 	@echo "APIROOT='$$APIROOT'"
-	npm install --no-optional --cache ../.npm
+	npm install --no-optional --cache $(DASHBOARD_DIR)/.npm
 	npm run build
 
 .PHONY: dashboard
