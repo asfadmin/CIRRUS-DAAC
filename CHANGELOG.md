@@ -3,6 +3,7 @@
 
 ## unreleased
 * Snyk fixes for dev-requirements.txt
+* Add descriptions to daac variables
 
 ## v18.2.0.0
 * Upgrade to [Cumulus v18.2.0](https://github.com/nasa/cumulus/releases/tag/v18.2.0)
