@@ -27,19 +27,19 @@ jobs:
     - uses: terraform-linters/setup-tflint@v1
       name: Setup TFLint
       with:
-        tflint_version: v0.21.0
+        tflint_version: v0.51.1
 
     - name: Show version
       run: tflint --version
 
     - name: TFLint - daac module
-      run:  tflint daac
+      run:  tflint --chdir=daac
 
     - name: TFLint - dashboard module
-      run:  tflint dashboard
+      run:  tflint --chdir=dashboard
 
     - name: TFLint - rds module
-      run:  tflint rds
+      run:  tflint --chdir=rds
 
     - name: TFLint - workflows module
-      run:  tflint workflows
+      run:  tflint --chdir=workflows

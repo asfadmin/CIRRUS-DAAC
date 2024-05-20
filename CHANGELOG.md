@@ -6,6 +6,7 @@
 * Add descriptions to daac variables
 * Update default CMA version to 2.0.3
 * Update example workflow lambda to use python3.8
+* Update tflint to [v0.51.1](https://github.com/terraform-linters/tflint/releases/tag/v0.51.1)
 
 ## v18.2.0.0
 * Upgrade to [Cumulus v18.2.0](https://github.com/nasa/cumulus/releases/tag/v18.2.0)
