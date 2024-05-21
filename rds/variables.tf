@@ -47,6 +47,12 @@ variable "deletion_protection" {
   default     = true
 }
 
+variable "enable_upgrade" {
+  description = "Flag to enable use of updated parameter group for postgres v13"
+  type        = bool
+  default     = true
+}
+
 variable "engine_version" {
   description = "Postgres engine version for serverless cluster"
   type        = string
@@ -81,10 +87,4 @@ variable "snapshot_identifier" {
   description = "Optional database snapshot for restoration"
   type        = string
   default     = null
-}
-
-variable "enable_upgrade" {
-  description = "Flag to enable use of updated parameter group for postgres v13"
-  type        = bool
-  default     = true
 }
