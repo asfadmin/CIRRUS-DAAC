@@ -3,6 +3,11 @@
 
 ## unreleased
 * Snyk fixes for dev-requirements.txt
+* Refactored bucket configuration variables to use a single map. You will need
+  to merge your `standard_bucket_names`, `protected_bucket_names`,
+  `public_bucket_names`, and `workflow_bucket_names` into the new combined
+  `bucket_config_base` variable and add maturity specific config to
+  `bucket_config`.
 * Add descriptions to daac variables
 * Update default CMA version to 2.0.3
 * Update example workflow lambda to use python3.8
