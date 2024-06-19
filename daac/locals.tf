@@ -22,10 +22,10 @@ locals {
   bucket_config = merge(var.bucket_config, local.partial_bucket_config)
 
   # Bucket types. These lists should not overlap
-  standard_bucket_names  = [for n, cfg in local.bucket_config : "${local.prefix}-${n}" if cfg.type == "standard"]
-  protected_bucket_names = [for n, cfg in local.bucket_config : "${local.prefix}-${n}" if cfg.type == "protected"]
-  public_bucket_names    = [for n, cfg in local.bucket_config : "${local.prefix}-${n}" if cfg.type == "public"]
-  workflow_bucket_names  = [for n, cfg in local.bucket_config : "${local.prefix}-${n}" if cfg.type == "workflow"]
+  standard_bucket_names  = toset([for n, cfg in local.bucket_config : "${local.prefix}-${n}" if cfg.type == "standard"])
+  protected_bucket_names = toset([for n, cfg in local.bucket_config : "${local.prefix}-${n}" if cfg.type == "protected"])
+  public_bucket_names    = toset([for n, cfg in local.bucket_config : "${local.prefix}-${n}" if cfg.type == "public"])
+  workflow_bucket_names  = toset([for n, cfg in local.bucket_config : "${local.prefix}-${n}" if cfg.type == "workflow"])
 
   # Bucket attributes. These will enable additional configuration on some bucket
   # in one of the lists above.
