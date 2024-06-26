@@ -19,7 +19,9 @@ variable "MATURITY" {
 
 variable "bucket_config" {
   type = map(object({
-    type = string
+    # NOTE: Type cannot be overridden for buckets. It only exists here to allow
+    # additional buckets to be defined for a specific maturity only.
+    type = optional(string)
     oai  = optional(string)
   }))
   default     = {}
