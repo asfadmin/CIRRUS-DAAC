@@ -14,12 +14,24 @@ locals {
   }
 
   # Merge the bucket_config with base
-  # First, merge any configs that would override the base
-  partial_bucket_config = {
-    for n, cfg in var.bucket_config_base : n => merge(cfg, lookup(var.bucket_config, n, cfg))
+  # Any new keys options that have maturity specific overrides need to be added here.
+  bucket_config = {
+    for k in setunion(keys(var.bucket_config_base), keys(var.bucket_config)) : k => {
+      # If a new bucket is defined in the maturity specific overrides without
+      # a `type` attribute, then `coalesce` will throw a null error.
+      type = coalesce(
+        try(var.bucket_config[k].type, null),
+        try(var.bucket_config_base[k].type, null),
+      )
+      oai = try(
+        coalesce(
+          try(var.bucket_config[k].oai, null),
+          try(var.bucket_config_base[k].oai, null),
+        ),
+        null,
+      )
+    }
   }
-  # Then combine the override map with the merged base to capture additions
-  bucket_config = merge(var.bucket_config, local.partial_bucket_config)
 
   # Bucket types. These lists should not overlap
   standard_bucket_names  = toset([for n, cfg in local.bucket_config : "${local.prefix}-${n}" if cfg.type == "standard"])
