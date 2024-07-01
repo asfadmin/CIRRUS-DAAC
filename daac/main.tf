@@ -5,7 +5,7 @@ resource "aws_s3_bucket" "standard-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  tags = merge(local.default_tags, local.dar_yes_tags)
+  tags = local.dar_yes_tags
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "standard_bucket_encryption_configuration" {
@@ -31,7 +31,7 @@ resource "aws_s3_bucket" "internal-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  tags = merge(local.default_tags, local.dar_yes_tags)
+  tags = local.dar_yes_tags
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "internal_bucket_encryption_configuration" {
@@ -65,7 +65,7 @@ resource "aws_s3_bucket" "protected-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  tags = merge(local.default_tags, local.dar_no_tags)
+  tags = local.dar_no_tags
 }
 
 resource "aws_s3_bucket_logging" "protected_bucket_logging" {
@@ -95,7 +95,7 @@ resource "aws_s3_bucket" "public-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  tags = merge(local.default_tags, local.dar_no_tags)
+  tags = local.dar_no_tags
 }
 
 resource "aws_s3_bucket_logging" "public_bucket_logging" {
@@ -124,7 +124,7 @@ resource "aws_s3_bucket" "workflow-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  tags = merge(local.default_tags, local.dar_yes_tags)
+  tags = local.dar_yes_tags
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "workflow_bucket_encryption_configuration" {
@@ -144,7 +144,7 @@ resource "aws_s3_bucket" "artifacts-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  tags = merge(local.default_tags, local.dar_yes_tags)
+  tags = local.dar_yes_tags
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts_bucket_encryption_configuration" {
