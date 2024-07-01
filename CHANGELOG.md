@@ -1,6 +1,9 @@
 
 # CHANGELOG
 
+## Unreleased
+* Tag resources using the aws provider level `default_tags` configuration
+
 ## v18.3.1.0
 * Snyk fixes for dev-requirements.txt
 * Add descriptions to daac variables
