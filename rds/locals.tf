@@ -2,7 +2,7 @@ locals {
   prefix = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
 
   default_tags = {
-    Deployment = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
+    Deployment = local.prefix
   }
 
   cluster_identifier = "${local.prefix}-rds-cluster"
