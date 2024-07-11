@@ -38,6 +38,9 @@ RUN \
         echo "user:x:${USER}:0:root:/:/bin/bash" >> /etc/passwd
 
 # Install Requirements
-COPY workflows/dev-requirements.txt /opt/app/requirements.txt
-WORKDIR /opt/app
+COPY workflows/dev-requirements.txt /dev-requirements.txt
+COPY workflows/requirements.txt /requirements.txt
 RUN python3 -m pip install -r requirements.txt
+RUN python3 -m pip install -r dev-requirements.txt
+
+WORKDIR /CIRRUS-DAAC
