@@ -23,7 +23,8 @@ Cumulus.
 
 ## Development Setup
 
-You can run tests inside of a Docker container:
+You can run tests inside of a Docker container [defined](https://github.com/asfadmin/CIRRUS-core/blob/master/Dockerfile)
+in CIRRUS-core:
 
         $ make image
         $ make container-shell

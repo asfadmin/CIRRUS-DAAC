@@ -32,8 +32,8 @@ clean:
 	find workflows -name __pycache__ -type d -delete
 
 # ---------------------------
-image: Dockerfile
-	docker build -f Dockerfile -t cirrus-daac .
+image: tests.Dockerfile
+	docker build -f tests.Dockerfile -t cirrus-daac .
 
 container-shell:
 	docker run -it --rm \
