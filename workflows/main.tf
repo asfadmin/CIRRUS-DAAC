@@ -18,7 +18,7 @@ resource "aws_lambda_layer_version" "lambda_dependencies" {
   layer_name       = "${local.prefix}-lambda_dependencies"
   source_code_hash = filebase64sha256("${var.DIST_DIR}/lambda_dependencies_layer.zip")
 
-  compatible_runtimes = ["python3.10"]
+  compatible_runtimes = ["python3.8"]
 }
 
 resource "aws_lambda_function" "nop_lambda" {
@@ -30,6 +30,6 @@ resource "aws_lambda_function" "nop_lambda" {
   timeout          = 10
   source_code_hash = filebase64sha256("${var.DIST_DIR}/lambdas.zip")
 
-  runtime = local.python_version
+  runtime = "python3.8"
   tags    = local.default_tags
 }
