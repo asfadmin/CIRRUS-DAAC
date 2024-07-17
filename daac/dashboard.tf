@@ -5,7 +5,7 @@ resource "aws_s3_bucket" "dashboard_bucket" {
     prevent_destroy = true
   }
 
-  tags = local.default_tags
+  tags = merge(local.default_tags, local.dar_yes_tags)
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "dashboard_encryption_configuration" {
