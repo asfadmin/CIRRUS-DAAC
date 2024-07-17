@@ -9,9 +9,9 @@ FROM amazonlinux:2
 #   * Yarn
 #   * Application Python dependencies
 
-ENV NODE_VERSION "16.x"
-ENV TERRAFORM_VERSION "1.5.3"
-ENV AWS_CLI_VERSION "2.13.25"
+ENV NODE_VERSION="20.x"
+ENV TERRAFORM_VERSION="1.9.2"
+ENV AWS_CLI_VERSION="2.17.13"
 
 # Add NodeJS and Yarn repos & update package index
 RUN \
