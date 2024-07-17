@@ -65,11 +65,14 @@ resource "aws_s3_bucket" "protected-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  logging {
-    target_bucket = "${local.prefix}-internal"
-    target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
-  }
   tags = merge(local.default_tags, local.dar_no_tags)
+}
+
+resource "aws_s3_bucket_logging" "protected_bucket_logging" {
+  for_each = toset(local.protected_bucket_names)
+  bucket = each.key
+  target_bucket = "${local.prefix}-internal"
+  target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "protected_bucket_encryption_configuration" {
@@ -92,11 +95,14 @@ resource "aws_s3_bucket" "public-bucket" {
   lifecycle {
     prevent_destroy = true
   }
-  logging {
-    target_bucket = "${local.prefix}-internal"
-    target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
-  }
   tags = merge(local.default_tags, local.dar_no_tags)
+}
+
+resource "aws_s3_bucket_logging" "public_bucket_logging" {
+  for_each = toset(local.public_bucket_names)
+  bucket = each.key
+  target_bucket = "${local.prefix}-internal"
+  target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "public_bucket_encryption_configuration" {
