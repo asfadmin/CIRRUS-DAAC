@@ -1,4 +1,4 @@
-FROM amazonlinux:2
+FROM amazonlinux:2023
 
 # This image can be used to do Python 3 & NodeJS tests.
 # It contains:
@@ -13,24 +13,19 @@ ENV NODE_VERSION="20.x"
 ENV TERRAFORM_VERSION="1.9.2"
 ENV AWS_CLI_VERSION="2.17.13"
 
-# Add NodeJS and Yarn repos & update package index
-RUN \
-        yum install https://rpm.nodesource.com/pub_${NODE_VERSION}/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y && \
-        yum install nodejs -y --setopt=nodesource-nodejs.module_hotfixes=1 && \
-        curl -sL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
-        yum update -y
+# Install NodeJS
+RUN curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION} | bash -
+RUN dnf install -y nodejs
 
 # CLI utilities
-RUN yum install -y gcc gcc-c++ git make openssl unzip wget zip jq
+RUN dnf install -y gcc gcc-c++ git make openssl unzip wget zip jq
 
 
-# Python 3 & NodeJS
+# Python 3
 RUN \
-        amazon-linux-extras install python3.8 && \
-        ln -s /usr/bin/python3.8 /usr/bin/python3 && \
-        ln -s /usr/bin/pip3.8 /usr/bin/pip3 && \
-        python3 -m pip install boto3 && \
-        yum install -y nodejs yarn \
+        dnf install -y python3-devel && \
+        dnf install -y python3-pip && \
+        python3 -m pip install setuptools
 
 
 ARG USER
