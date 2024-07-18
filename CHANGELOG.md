@@ -1,13 +1,22 @@
 
 # CHANGELOG
 
-## unreleased
+## v18.3.1.0
 * Snyk fixes for dev-requirements.txt
 * Add descriptions to daac variables
 * Update default CMA version to 2.0.3
 * Update example workflow lambda to use python3.8
 * Update tflint to [v0.51.1](https://github.com/terraform-linters/tflint/releases/tag/v0.51.1)
 * Update Dockerfile to be used for tests only
+* Update `daac/s3-replicator`, `rds/rds_cluster`, and `workflows/acme_workflow` source to v18.3.1
+* Update Dockerfile:
+  * NODE_VERSION="20.x"
+  * TERRAFORM_VERSION="1.9.2"
+  * AWS_CLI_VERSION="2.17.13"
+  * Upgrade to amazonlinux:2023 from amazonlinux:2
+  * Use `dnf` instead of `yum`
+* Remove `jenkins/`, `scripts/`, and `src/` directories and their contents
+* Fix deprecation issues in daac module by using `aws_s3_bucket_logging` resources
 
 ## v18.2.0.0
 * Upgrade to [Cumulus v18.2.0](https://github.com/nasa/cumulus/releases/tag/v18.2.0)
