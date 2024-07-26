@@ -1,6 +1,9 @@
 
 # CHANGELOG
 
+## Unreleased
+* Update Lambda runtime to Python3.9
+
 ## v18.3.1.0
 * Snyk fixes for dev-requirements.txt
 * Add descriptions to daac variables
