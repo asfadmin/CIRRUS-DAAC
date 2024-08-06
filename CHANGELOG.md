@@ -3,6 +3,11 @@
 
 ## Unreleased
 * Tag resources using the aws provider level `default_tags` configuration
+* Refactored bucket configuration variables to use a single map. You will need
+  to merge your `standard_bucket_names`, `protected_bucket_names`,
+  `public_bucket_names`, and `workflow_bucket_names` into the new combined
+  `bucket_config_base` variable and add maturity specific config to
+  `bucket_config`.
 
 ## v18.3.1.0
 * Snyk fixes for dev-requirements.txt
