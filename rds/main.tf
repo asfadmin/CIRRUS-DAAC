@@ -25,7 +25,6 @@ module "rds_cluster" {
   backup_retention_period    = var.backup_retention_period
   backup_window              = var.backup_window
   cluster_identifier         = local.cluster_identifier
-  tags                       = local.default_tags
   snapshot_identifier        = var.snapshot_identifier
   provision_user_database    = var.provision_user_database
   prefix                     = local.prefix
