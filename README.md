@@ -21,9 +21,9 @@ Cumulus.
 * One or more NGAP accounts (sandbox, SIT, ...)
 * AWS credentials for those account(s)
 
-## Development Setup
+## Testing Setup
 
-You can run tests inside of a Docker container [defined](https://github.com/asfadmin/CIRRUS-core/blob/master/Dockerfile)
+You can run tests inside of the CIRRUS-DAAC [Docker container](https://github.com/asfadmin/CIRRUS-DAAC/blob/master/Dockerfile)
 in CIRRUS-core:
 
         $ make image
