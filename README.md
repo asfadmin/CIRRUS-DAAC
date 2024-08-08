@@ -21,10 +21,14 @@ Cumulus.
 * One or more NGAP accounts (sandbox, SIT, ...)
 * AWS credentials for those account(s)
 
-## Testing Setup
+## Deployment
+CIRRUS-DAAC is deployed through [CIRRUS-core](https://github.com/asfadmin/CIRRUS-core) and its [Docker container](https://github.com/asfadmin/CIRRUS-core/blob/master/Dockerfile). For more information,
+read the CIRRUS-core [README](https://github.com/asfadmin/CIRRUS-core/blob/master/README.md)
+
+## Testing
 
 You can run tests inside of the CIRRUS-DAAC [Docker container](https://github.com/asfadmin/CIRRUS-DAAC/blob/master/Dockerfile)
-in CIRRUS-core:
+in CIRRUS-DAAC:
 
         $ make image
         $ make container-shell
