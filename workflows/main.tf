@@ -6,7 +6,6 @@ module "acme_workflow" {
   name            = "ACMEWorkflow"
   workflow_config = data.terraform_remote_state.cumulus.outputs.workflow_config
   system_bucket   = local.system_bucket
-  tags            = local.default_tags
 
   state_machine_definition = templatefile("./acme.json", {
     task_arn = aws_lambda_function.nop_lambda.arn

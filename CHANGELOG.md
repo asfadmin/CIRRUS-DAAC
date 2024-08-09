@@ -3,6 +3,7 @@
 
 ## Unreleased
 * Update Lambda runtime to Python3.9
+* Tag resources using the aws provider level `default_tags` configuration
 
 ## v18.3.1.0
 * Snyk fixes for dev-requirements.txt
