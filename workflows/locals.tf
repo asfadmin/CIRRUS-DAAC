@@ -10,4 +10,6 @@ locals {
     key    = "cumulus/terraform.tfstate"
     region = data.aws_region.current.name
   }
+
+  python_version = "python3.9"
 }
