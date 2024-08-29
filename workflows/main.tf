@@ -1,6 +1,5 @@
 module "acme_workflow" {
-
-  source = "https://github.com/nasa/cumulus/releases/download/v18.3.1/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v18.3.3/terraform-aws-cumulus-workflow.zip"
 
   prefix          = local.prefix
   name            = "ACMEWorkflow"
