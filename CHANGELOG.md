@@ -3,6 +3,10 @@
 
 ## Unreleased
 
+## v18.3.3.1
+* Add `auto_pause` and `seconds_until_auto_pause` variables from Cumulus 18.3.2
+  to `rds` module.
+
 ## v18.3.3.0
 * Upgrade to [Cumulus v18.3.3](https://github.com/nasa/cumulus/releases/tag/v18.3.3)
 * Update Lambda runtime to Python3.9
