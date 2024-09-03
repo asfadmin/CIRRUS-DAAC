@@ -17,6 +17,12 @@ variable "MATURITY" {
   default = "dev"
 }
 
+variable "auto_pause" {
+  description = "Determines if the RDS cluster should automatically pause after a period of inactivity"
+  type        = bool
+  default     = true
+}
+
 variable "backup_retention_period" {
   description = "Number of backup periods to retain"
   type        = number
@@ -81,6 +87,12 @@ variable "provision_user_database" {
 variable "rds_user_password" {
   type    = string
   default = ""
+}
+
+variable "seconds_until_auto_pause" {
+  description = "Number of seconds of inactivity before RDS cluster is paused"
+  type        = number
+  default     = 300
 }
 
 variable "snapshot_identifier" {
