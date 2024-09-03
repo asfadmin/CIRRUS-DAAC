@@ -69,8 +69,8 @@ resource "aws_s3_bucket" "protected-bucket" {
 }
 
 resource "aws_s3_bucket_logging" "protected_bucket_logging" {
-  for_each = toset(local.protected_bucket_names)
-  bucket = each.key
+  for_each      = toset(local.protected_bucket_names)
+  bucket        = each.key
   target_bucket = "${local.prefix}-internal"
   target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
 }
@@ -99,8 +99,8 @@ resource "aws_s3_bucket" "public-bucket" {
 }
 
 resource "aws_s3_bucket_logging" "public_bucket_logging" {
-  for_each = toset(local.public_bucket_names)
-  bucket = each.key
+  for_each      = toset(local.public_bucket_names)
+  bucket        = each.key
   target_bucket = "${local.prefix}-internal"
   target_prefix = "${local.prefix}/ems-distribution/s3-server-access-logs/"
 }
