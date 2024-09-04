@@ -13,6 +13,8 @@ resource "random_string" "user_db_pass" {
 module "rds_cluster" {
   source = "https://github.com/nasa/cumulus/releases/download/v18.3.3/terraform-aws-cumulus-rds.zip"
 
+  auto_pause                 = var.auto_pause
+  seconds_until_auto_pause   = var.seconds_until_auto_pause
   db_admin_username          = var.db_admin_username
   db_admin_password          = var.db_admin_password == "" ? random_string.admin_db_pass.result : var.db_admin_password
   region                     = data.aws_region.current.name
