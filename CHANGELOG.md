@@ -7,6 +7,7 @@
   `public_bucket_names`, and `workflow_bucket_names` into the new combined
   `bucket_config_base` variable and add maturity specific config to
   `bucket_config`.
+* Re-Add manual passing of tags to RDS cumulus module. [CUMULUS-3896](https://bugs.earthdata.nasa.gov/browse/CUMULUS-3896)
 
 ## v18.3.3.1
 * Add `auto_pause` and `seconds_until_auto_pause` variables from Cumulus 18.3.2
