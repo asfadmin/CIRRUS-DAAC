@@ -2,6 +2,12 @@
 # CHANGELOG
 
 ## Unreleased
+* Refactored bucket configuration variables to use a single map. You will need
+  to merge your `standard_bucket_names`, `protected_bucket_names`,
+  `public_bucket_names`, and `workflow_bucket_names` into the new combined
+  `bucket_config_base` variable and add maturity specific config to
+  `bucket_config`.
+* Re-Add manual passing of tags to RDS cumulus module. [CUMULUS-3896](https://bugs.earthdata.nasa.gov/browse/CUMULUS-3896)
 
 ## v18.3.3.1
 * Add `auto_pause` and `seconds_until_auto_pause` variables from Cumulus 18.3.2
@@ -11,11 +17,6 @@
 * Upgrade to [Cumulus v18.3.3](https://github.com/nasa/cumulus/releases/tag/v18.3.3)
 * Update Lambda runtime to Python3.9
 * Tag resources using the aws provider level `default_tags` configuration
-* Refactored bucket configuration variables to use a single map. You will need
-  to merge your `standard_bucket_names`, `protected_bucket_names`,
-  `public_bucket_names`, and `workflow_bucket_names` into the new combined
-  `bucket_config_base` variable and add maturity specific config to
-  `bucket_config`.
 
 ## v18.3.1.0
 * Upgrade to [Cumulus v18.3.1](https://github.com/nasa/cumulus/releases/tag/v18.3.1)
