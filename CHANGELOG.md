@@ -2,6 +2,16 @@
 # CHANGELOG
 
 ## Unreleased
+
+## v18.4.0.0
+* Upgrade to [Cumulus v18.4.0](https://github.com/nasa/cumulus/releases/tag/v18.4.0)
+
+  *NOTE: This release may require manual execution of the database migrations
+  for production environments. The bootstrap lambda will run the migrations
+  during deployment automatically, however, if there is too much data in the
+  database (as is likely the case in production), the migrations will take
+  longer than 15 minutes to run, exceeding the lambda timeout. See the release
+  notes for manual migration instructions.*
 * Refactored bucket configuration variables to use a single map. You will need
   to merge your `standard_bucket_names`, `protected_bucket_names`,
   `public_bucket_names`, and `workflow_bucket_names` into the new combined
