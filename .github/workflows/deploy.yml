@@ -1,0 +1,4 @@
+name: Deploy DAAC
+
+on:
+  workflow_dispatch:
