@@ -207,6 +207,158 @@ destroy-rds: rds-init
 				-auto-approve"
 	eval $$TF_CMD
 
+orca_recovery_workflow: orca_recovery_workflow-init
+	$(banner)
+	cd $@
+	if [ -f "secrets/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export SECRETS_OPT="-var-file=secrets/${MATURITY}.tfvars"
+		echo "Found maturity-specific secrets: $$SECRETS_OPT"
+		echo "***************************************************************"
+	fi
+	if [ -f "variables/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export VARIABLES_OPT="-var-file=variables/${MATURITY}.tfvars"
+		echo "Found maturity-specific variables: $$VARIABLES_OPT"
+		echo "***************************************************************"
+	fi
+	terraform apply \
+		$$SECRETS_OPT \
+		$$VARIABLES_OPT \
+		-input=false \
+		-auto-approve \
+		-no-color
+
+
+plan-orca_recovery_workflow: orca_recovery_workflow-init
+	$(banner)
+	cd orca_recovery_workflow
+	if [ -f "secrets/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export SECRETS_OPT="-var-file=secrets/${MATURITY}.tfvars"
+		echo "Found maturity-specific secrets: $$SECRETS_OPT"
+		echo "***************************************************************"
+	fi
+	if [ -f "variables/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export VARIABLES_OPT="-var-file=variables/${MATURITY}.tfvars"
+		echo "Found maturity-specific variables: $$VARIABLES_OPT"
+		echo "***************************************************************"
+	fi
+	terraform plan \
+		$$SECRETS_OPT \
+		$$VARIABLES_OPT \
+		-input=false \
+		-no-color
+
+
+destroy-orca_recovery_workflow: orca_recovery_workflow-init
+	$(banner)
+	cd orca_recovery_workflow
+	if [ -f "secrets/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export SECRETS_OPT="-var-file=secrets/${MATURITY}.tfvars"
+		echo "Found maturity-specific secrets: $$SECRETS_OPT"
+		echo "***************************************************************"
+	fi
+	if [ -f "variables/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export VARIABLES_OPT="-var-file=variables/${MATURITY}.tfvars"
+		echo "Found maturity-specific variables: $$VARIABLES_OPT"
+		echo "***************************************************************"
+	fi
+	terraform destroy \
+		$$SECRETS_OPT \
+		$$VARIABLES_OPT \
+		-input=false \
+		-auto-approve \
+		-no-color
+
+
+
+# ---------------------------
+orca: orca-init
+	$(banner)
+	cd $@
+	if [ -f "secrets/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export SECRETS_OPT="-var-file=secrets/${MATURITY}.tfvars"
+		echo "Found maturity-specific secrets: $$SECRETS_OPT"
+		echo "***************************************************************"
+	fi
+	if [ -f "variables/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export VARIABLES_OPT="-var-file=variables/${MATURITY}.tfvars"
+		echo "Found maturity-specific variables: $$VARIABLES_OPT"
+		echo "***************************************************************"
+	fi
+	terraform apply \
+		$$SECRETS_OPT \
+		$$VARIABLES_OPT \
+		-input=false \
+		-auto-approve \
+		-no-color
+
+# ---------------------------
+destroy-orca: orca-init
+	$(banner)
+	cd orca
+	if [ -f "secrets/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export SECRETS_OPT="-var-file=secrets/${MATURITY}.tfvars"
+		echo "Found maturity-specific secrets: $$SECRETS_OPT"
+		echo "***************************************************************"
+	fi
+	if [ -f "variables/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export VARIABLES_OPT="-var-file=variables/${MATURITY}.tfvars"
+		echo "Found maturity-specific variables: $$VARIABLES_OPT"
+		echo "***************************************************************"
+	fi
+	terraform destroy \
+		$$SECRETS_OPT \
+		$$VARIABLES_OPT \
+		-input=false \
+		-auto-approve \
+		-no-color
+
+# ---------------------------
+plan-orca: orca-init
+	$(banner)
+	cd orca
+	if [ -f "secrets/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export SECRETS_OPT="-var-file=secrets/${MATURITY}.tfvars"
+		echo "Found maturity-specific secrets: $$SECRETS_OPT"
+		echo "***************************************************************"
+	fi
+	if [ -f "variables/${MATURITY}.tfvars" ]
+	then
+		echo "***************************************************************"
+		export VARIABLES_OPT="-var-file=variables/${MATURITY}.tfvars"
+		echo "Found maturity-specific variables: $$VARIABLES_OPT"
+		echo "***************************************************************"
+	fi
+	terraform plan \
+		$$SECRETS_OPT \
+		$$VARIABLES_OPT \
+		-input=false \
+		-no-color
+
+
+
+
 # ---------------------------
 pcrs: workflows/providers/* workflows/collections/* workflows/rules/*
 	if [ -z ${cumulus_id_rsa+x} ];  then echo "Env Var \$cumulus_id_rsa is not set, using ~/.ssh/id_rsa"; fi
