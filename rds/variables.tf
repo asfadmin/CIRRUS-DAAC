@@ -14,7 +14,7 @@ variable "DEPLOY_NAME" {
 
 variable "MATURITY" {
   type    = string
-  default = "dev"
+  default = "sbx"
 }
 
 

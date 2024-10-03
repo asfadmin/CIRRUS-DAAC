@@ -10,10 +10,10 @@ on:
     inputs:
       MATURITY:
         description: Maturity to build
-        default: dev
+        default: sbx
         type: choice
         options:
-          - dev
+          - sbx
       DEPLOY_NAME:
         description: Prefix for stack
         default: daac
@@ -74,7 +74,7 @@ concurrency:
   # the <deploy-name> section should always evaluate to a string like:
   #   'deploy/<DEPLOY_NAME>'
   #
-  group: ${{ github.workflow }}-${{ github.event.inputs.DEPLOY_NAME && format('deploy/{0}', github.event.inputs.DEPLOY_NAME) || github.ref_name == 'master' && 'deploy/asf' || github.ref_name }}-${{ github.event.inputs.MATURITY || 'dev' }}
+  group: ${{ github.workflow }}-${{ github.event.inputs.DEPLOY_NAME && format('deploy/{0}', github.event.inputs.DEPLOY_NAME) || github.ref_name == 'master' && 'deploy/asf' || github.ref_name }}-dev
   cancel-in-progress: false
 
 jobs:
@@ -94,7 +94,7 @@ jobs:
       CORE_REF: ${{ github.event.inputs.CORE_REF || 'v18.4.0.0' }}
       MAKE_TARGET: ${{ github.event.inputs.MAKE_TARGET || 'workflows' }}
       API_ROOT: ${{ github.event.inputs.DASHBOARD_API_ROOT || '' }}
-      MATURITY: ${{ github.event.inputs.MATURITY || 'dev' }}
+      MATURITY: ${{ github.event.inputs.MATURITY || 'sbx' }}
       ENABLE_RDS_UPGRADE: ${{ github.event.inputs.ENABLE_RDS_UPGRADE || false }}
       # GitHub Vars
       WORKSPACE: ${{ github.workspace }}
@@ -138,18 +138,18 @@ jobs:
         continue-on-error: true
         uses: 1password/load-secrets-action@v2
         env:
-          AWS_ACCOUNT_ID: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-${{ env.MATURITY }}/AccountId
-          AWS_ACCESS_KEY_ID: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-${{ env.MATURITY }}/username
-          AWS_SECRET_ACCESS_KEY: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-${{ env.MATURITY }}/credential
-          DB_CREDS_PSWD: op://pofyirc2x46fxc4rjpno4k2ghm/asf-cumulus-db_creds/ASF-${{ env.MATURITY }}
+          AWS_ACCOUNT_ID: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/AccountId
+          AWS_ACCESS_KEY_ID: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/username
+          AWS_SECRET_ACCESS_KEY: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/credential
+          DB_CREDS_PSWD: op://pofyirc2x46fxc4rjpno4k2ghm/asf-cumulus-db_creds/ASF-dev
           LAUNCHPAD_PASSPHRASE: op://pofyirc2x46fxc4rjpno4k2ghm/LaunchPad-Token-API-Access-2023/credential
           LAUNCHPAD_TOKEN: op://pofyirc2x46fxc4rjpno4k2ghm/LaunchPad-Token-API-Access-2023/username
-          CMR_USR: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-${{ env.MATURITY }}/CMR_USR
-          CMR_CREDS_PSWD: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-${{ env.MATURITY }}/CMR_CREDS_PSWD
-          URS_CLIENT_ID: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-${{ env.MATURITY }}/URS_CLIENT_ID
-          URS_CLIENT_PSWD: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-${{ env.MATURITY }}/URS_CLIENT_PSWD
-          TOKEN_SECRET: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-${{ env.MATURITY }}/TOKEN_SECRET
-          METS_PASSWORD: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-${{ env.MATURITY }}/METS_PASSWORD
+          CMR_USR: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/CMR_USR
+          CMR_CREDS_PSWD: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/CMR_CREDS_PSWD
+          URS_CLIENT_ID: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/URS_CLIENT_ID
+          URS_CLIENT_PSWD: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/URS_CLIENT_PSWD
+          TOKEN_SECRET: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/TOKEN_SECRET
+          METS_PASSWORD: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/METS_PASSWORD
 
       - name: Checkout ASF
         if: ${{ success() }}

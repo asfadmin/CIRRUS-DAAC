@@ -20,5 +20,5 @@ variable "DIST_DIR" {
 
 variable "MATURITY" {
   type    = string
-  default = "dev"
+  default = "sbx"
 }
