@@ -1,5 +1,5 @@
 {
-    "Comment": "ACME Dataset Ingest Workflow",
+    "Comment": "Example Dataset Ingest Workflow",
     "StartAt": "NOP",
     "States": {
         "NOP": {

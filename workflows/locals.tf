@@ -1,5 +1,6 @@
 locals {
   prefix        = "${var.DEPLOY_NAME}-cumulus-${var.MATURITY}"
+  module_prefix = "${local.prefix}-example"
   system_bucket = "${local.prefix}-internal"
   default_tags = {
     Deployment = local.prefix
