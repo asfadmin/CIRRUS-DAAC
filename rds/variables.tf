@@ -17,11 +17,6 @@ variable "MATURITY" {
   default = "dev"
 }
 
-variable "auto_pause" {
-  description = "Determines if the RDS cluster should automatically pause after a period of inactivity"
-  type        = bool
-  default     = true
-}
 
 variable "backup_retention_period" {
   description = "Number of backup periods to retain"
@@ -53,22 +48,10 @@ variable "deletion_protection" {
   default     = true
 }
 
-variable "enable_upgrade" {
-  description = "Flag to enable use of updated parameter group for postgres v13"
-  type        = bool
-  default     = true
-}
-
 variable "engine_version" {
   description = "Postgres engine version for serverless cluster"
   type        = string
   default     = "13.12"
-}
-
-variable "parameter_group_family" {
-  description = "Database family to use for creating database parameter group"
-  type        = string
-  default     = "aurora-postgresql11"
 }
 
 variable "parameter_group_family_v13" {
@@ -87,12 +70,6 @@ variable "provision_user_database" {
 variable "rds_user_password" {
   type    = string
   default = ""
-}
-
-variable "seconds_until_auto_pause" {
-  description = "Number of seconds of inactivity before RDS cluster is paused"
-  type        = number
-  default     = 300
 }
 
 variable "snapshot_identifier" {
