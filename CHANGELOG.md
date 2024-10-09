@@ -3,6 +3,17 @@
 
 ## Unreleased
 
+## v18.5.0.0
+* Upgrade to [Cumulus v18.5.0](https://github.com/nasa/cumulus/releases/tag/v18.5.0)
+  * NOTE: This release may require manual execution per the v2 serverless RDS upgrade
+  * RDS V2 migration [instructions](https://nasa.github.io/cumulus/docs/next/upgrade-notes/serverless-v2-upgrade/)
+* RDS module updates. 
+  * Removal of the following variables: 
+    * `enable_upgrade` upgrade flag that was used for Aurora v13 migration
+    * `parameter_group_family` original parameter group family used for v13 migration
+    * `auto_pause` No longer a variable
+    * `seconds_until_auto_pause` No longer a variable
+
 ## v18.4.0.0
 * Upgrade to [Cumulus v18.4.0](https://github.com/nasa/cumulus/releases/tag/v18.4.0)
 
