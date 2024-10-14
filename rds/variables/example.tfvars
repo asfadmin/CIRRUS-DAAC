@@ -2,4 +2,3 @@
 # to false
 deletion_protection     = true
 provision_user_database = true
-enable_upgrade          = true
