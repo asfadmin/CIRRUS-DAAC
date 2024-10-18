@@ -1,8 +1,6 @@
 {
     "name": "EXAMPLE",
     "version": "001",
-    "dataType": "EXAMPLE",
-    "process": "rtc",
     "duplicateHandling": "replace",
     "granuleId": "^EXAMPLE.*.zip$",
     "granuleIdExtraction": "(.+)",
