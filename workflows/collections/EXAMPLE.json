@@ -1,0 +1,17 @@
+{
+    "name": "EXAMPLE",
+    "version": "001",
+    "dataType": "EXAMPLE",
+    "process": "rtc",
+    "duplicateHandling": "replace",
+    "granuleId": "^EXAMPLE.*.zip$",
+    "granuleIdExtraction": "(.+)",
+    "sampleFileName": "EXAMPLE-001.zip",
+    "files": [
+        {
+            "bucket": "protected",
+            "regex": "^EXAMPLE.*.zip$",
+            "sampleFileName": "EXAMPLE-001.zip"
+        }
+    ]
+}

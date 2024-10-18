@@ -1,15 +1,15 @@
 {
-    "name": "ACME_sqsRule",
-    "workflow": "ACMEWorkflow",
+    "name": "EXAMPLE_sqsRule",
+    "workflow": "ExampleWorkflow",
     "state": "ENABLED",
     "collection": {
-        "name": "ACME",
+        "name": "EXAMPLE",
         "version": "001"
     },
     "provider": "DAAC",
     "rule": {
         "type": "sqs",
-        "value": "https://sqs.$AWS_REGION.amazonaws.com/$AWS_ACCOUNT_ID/$DEPLOY_NAME-cumulus-$MATURITY-acme-workflow-queue"
+        "value": "https://sqs.$AWS_REGION.amazonaws.com/$AWS_ACCOUNT_ID/$DEPLOY_NAME-cumulus-$MATURITY-example-workflow-queue"
     },
     "meta": {
         "retries": 3,

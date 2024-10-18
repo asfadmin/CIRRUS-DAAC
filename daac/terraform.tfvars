@@ -10,6 +10,9 @@ cma_version = "v2.0.3"
 #   "acme-browse"   = { type = "workflow" }
 #   "acme-landing"  = { type = "workflow" }
 #   "acme-products" = { type = "workflow" }
+#   "example-browse"   = { type = "workflow" }
+#   "example-landing"  = { type = "workflow" }
+#   "example-products" = { type = "workflow" }
 # }
 
 # Example partner bucket list. These ARE NOT prefixed
