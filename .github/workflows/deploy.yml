@@ -1,4 +1,266 @@
 name: Deploy DAAC
 
 on:
+  push:
+    branches:
+      - 'deploy/**'
+      - master
+
   workflow_dispatch:
+    inputs:
+      MATURITY:
+        description: Maturity to build
+        default: sbx
+        type: choice
+        options:
+          - sbx
+      DEPLOY_NAME:
+        description: Prefix for stack
+        default: daac
+        type: choice
+        options:
+          - daac
+      MAKE_TARGET:
+        type: choice
+        description: Make target
+        options:
+          - all
+          - tf
+          - daac
+          - data-persistence
+          - cumulus
+          - workflows
+          - rds
+      DEPLOY_DASHBOARD:
+        type: boolean
+        description: True or False to deploy the cumulus-dashboard
+        default: false
+      DASHBOARD_REPO:
+        description: Repo that contains cumulus-dashboard
+        default: nasa/cumulus-dashboard
+      DASHBOARD_REF:
+        description: The cumulus-dashboard git ref to checkout
+        default: v12.2.0
+      DASHBOARD_API_ROOT:
+        description: Override for the dashboard APIROOT variable
+        default: ""
+      CORE_REPO:
+        description: Repo that contains CIRRUS-core
+        default: asfadmin/CIRRUS-core
+      CORE_REF:
+        description: The CIRRUS-core git ref to checkout
+        default: v18.5.0.0
+
+concurrency:
+  # group: <workflow>-<deploy-name>-<maturity>
+  #
+  # Since we are very limited in what syntax we can use in this expression we
+  # need to do some logical operator magic to ensure that manually triggered
+  # deployments don't overlap with auto-deploy ones. We use the following
+  # pattern to simulate a ternary operator expression:
+  #
+  #   conditional && 'true_value' || 'false_value'
+  #
+  # This is equivalent to the following JavaScript expression:
+  #
+  #   conditional ? 'true_value' : 'false_value'
+  #
+  # Assuming the current workflow config of these branch triggers:
+  #   ['deploy/**', 'master']
+  # the <deploy-name> section should always evaluate to a string like:
+  #   'deploy/<DEPLOY_NAME>'
+  #
+  group: ${{ github.workflow }}-${{ github.event.inputs.DEPLOY_NAME && format('deploy/{0}', github.event.inputs.DEPLOY_NAME) || github.ref_name == 'master' && 'deploy/asf' || github.ref_name }}-dev
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Defaults without overrides
+      AWS_REGION: us-west-2
+      DASHBOARD_TARGET: ''
+      JOB_NAME: CIRRUS-DAAC
+      PYTHON_VER: 'python3'
+      # Defaults with overrides
+      DASHBOARD_REPO: ${{ github.event.inputs.DASHBOARD_REPO || 'nasa/cumulus-dashboard' }}
+      DASHBOARD_REF : ${{ github.event.inputs.DASHBOARD_REF || 'v12.2.0' }}
+      DEPLOY_NAME: ${{ github.event.inputs.DEPLOY_NAME || 'daac' }}
+      CORE_REPO: ${{ github.event.inputs.CORE_REPO || 'asfadmin/CIRRUS-core' }}
+      CORE_REF: ${{ github.event.inputs.CORE_REF || 'v18.5.0.0' }}
+      MAKE_TARGET: ${{ github.event.inputs.MAKE_TARGET || 'workflows' }}
+      API_ROOT: ${{ github.event.inputs.DASHBOARD_API_ROOT || '' }}
+      MATURITY: ${{ github.event.inputs.MATURITY || 'sbx' }}
+      # GitHub Vars
+      WORKSPACE: ${{ github.workspace }}
+      CONTAINER_NAME_PREFIX: ${{ github.run_id }}
+      BUILD_NUMBER: ${{ github.run_number }}
+      EVENT_TYPE: ${{ github.event_name }}
+      BRANCH: ${{ github.ref_name }}
+      # Mattermost Config
+      MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+      MATTERMOST_CHANNEL: rain-cicd-notifications
+
+    steps:
+      - name: Update Docker.sock permissions
+        run: |
+          sudo chmod 666 /var/run/docker.sock
+          ls -lah /var/run/docker.sock
+
+      - name: Override DEPLOY_NAME with regex
+        if: ${{ !github.event.inputs.DEPLOY_NAME && contains(env.BRANCH, 'deploy/') }}
+        id: deploy_name
+        run: |
+          [[ $BRANCH =~ ^deploy\/([^\/]*) ]]
+          echo "DEPLOY_NAME=${BASH_REMATCH[1]}" >> $GITHUB_ENV
+
+      - name: Notify Mattermost
+        uses: asfadmin/action-notify-mattermost@v1
+        with:
+          webhook-url: ${{ env.MATTERMOST_WEBHOOK_URL }}
+          channel: ${{ env.MATTERMOST_CHANNEL }}
+          text: 'started deploying to `${{ env.DEPLOY_NAME }}-cumulus-${{ env.MATURITY }}`'
+
+      - name: Configure 1Password Connect
+        id: onepassword-connnection
+        uses: 1password/load-secrets-action/configure@v2
+        with:
+          connect-host: ${{ secrets.OP_HOST }}
+          connect-token: ${{ secrets.OP_CONNECT_TOKEN }}
+
+      - name: Load secret
+        id: load-secrets
+        continue-on-error: true
+        uses: 1password/load-secrets-action@v2
+        env:
+          AWS_ACCOUNT_ID: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/AccountId
+          AWS_ACCESS_KEY_ID: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/username
+          AWS_SECRET_ACCESS_KEY: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/credential
+          DB_CREDS_PSWD: op://ksy6w5owdiliwep2uc52dkmfny/asf-cumulus-db_creds/ASF-dev
+          LAUNCHPAD_PASSPHRASE: op://ksy6w5owdiliwep2uc52dkmfny/LaunchPad-Token-API-Access-2023/credential
+          LAUNCHPAD_TOKEN: op://ksy6w5owdiliwep2uc52dkmfny/LaunchPad-Token-API-Access-2023/username
+          CMR_USR: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/CMR_USR
+          CMR_CREDS_PSWD: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/CMR_CREDS_PSWD
+          URS_CLIENT_ID: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/URS_CLIENT_ID
+          URS_CLIENT_PSWD: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/URS_CLIENT_PSWD
+          TOKEN_SECRET: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/TOKEN_SECRET
+          METS_PASSWORD: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/METS_PASSWORD
+
+      - name: Checkout ASF
+        if: ${{ success() }}
+        uses: actions/checkout@v4
+
+      - name: Checkout CORE
+        if: ${{ success() }}
+        uses: actions/checkout@v4
+        with:
+          path: CIRRUS-core
+          repository: ${{ env.CORE_REPO }}
+          ref: ${{ env.CORE_REF }}
+
+      - name: Checkout Cumulus Dashboard
+        if: ${{ github.event.inputs.DEPLOY_DASHBOARD == 'true' && success() }}
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.WORKSPACE }}/cumulus-dashboard
+          repository: ${{ env.DASHBOARD_REPO }}
+          ref:  ${{ env.DASHBOARD_REF }}
+
+      - name: Set Dashboard Env Var
+        if: ${{ github.event.inputs.DEPLOY_DASHBOARD == 'true' && success() }}
+        run: |
+          echo "DASHBOARD_TARGET=dashboard" >> $GITHUB_ENV
+
+      - name: Start Cumulus Deployment
+        if: ${{ success() }}
+        run: |
+          echo "MATURITY: ${{ env.MATURITY }}"
+          echo "DEPLOY_NAME: ${{ env.DEPLOY_NAME }}"
+          echo "CORE_REPO: ${{ env.CORE_REPO }}"
+          echo "CORE_REF: ${{ env.CORE_REF }}"
+          echo "AWS_REGION: ${{ env.AWS_REGION }}"
+          echo "MATTERMOST_CHANNEL: ${{ env.MATTERMOST_CHANNEL }}"
+          echo "MAKE_TARGET: ${{ env.MAKE_TARGET }}"
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker container
+        if: ${{ success() }}
+        id: docker
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          builder: ${{ steps.buildx.outputs.name }}
+          file: ${{ env.WORKSPACE }}/CIRRUS-core/Dockerfile
+          target: ${{ env.PYTHON_VER }}
+          push: false
+          tags: cirrus-core:${{ env.CORE_REF }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy to AWS
+        id: aws
+        if: steps.docker.outcome == 'success'
+        run: |
+          echo "Starting to deploy to AWS"
+          echo $ENABLE_RDS_UPGRADE
+          export AWS_ACCOUNT_ID_LAST4=$(echo -n $AWS_ACCOUNT_ID | tail -c 4)
+
+          export CIRRUS_CORE_VERSION=$(git -C $WORKSPACE/CIRRUS-core tag --points-at HEAD | head -n1)
+          if [ -z "$CIRRUS_CORE_VERSION" ]; then
+              export CIRRUS_CORE_VERSION=$(git -C $WORKSPACE/CIRRUS-core rev-parse --short HEAD)
+          fi
+          echo "CIRRUS_CORE_VERSION: $CIRRUS_CORE_VERSION"
+
+          export CIRRUS_DAAC_VERSION=$(git tag --points-at HEAD | head -n1)
+          if [ -z "$CIRRUS_DAAC_VERSION" ]; then
+              export CIRRUS_DAAC_VERSION=$(git rev-parse --short HEAD)
+          fi
+          echo "CIRRUS_DAAC_VERSION: $CIRRUS_DAAC_VERSION"
+
+          docker run --rm   --user `id -u` \
+                            --env DAAC_DIR="/CIRRUS-DAAC" \
+                            --env DASHBOARD_DIR="cumulus-dashboard" \
+                            --env BUILD_NUM="$BUILD_NUMBER" \
+                            --env DEPLOY_NAME="$DEPLOY_NAME" \
+                            --env MATURITY="$MATURITY" \
+                            --env AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+                            --env AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
+                            --env AWS_REGION="$AWS_REGION" \
+                            --env AWS_ACCOUNT_ID_LAST4="$AWS_ACCOUNT_ID_LAST4" \
+                            --env APIROOT="$API_ROOT" \
+                            --env TF_VAR_cmr_username="$CMR_USR" \
+                            --env TF_VAR_cmr_password="$CMR_CREDS_PSWD" \
+                            --env TF_VAR_urs_client_id="$URS_CLIENT_ID" \
+                            --env TF_VAR_urs_client_password="$URS_CLIENT_PSWD" \
+                            --env TF_VAR_CIRRUS_CORE_VERSION="$CIRRUS_CORE_VERSION" \
+                            --env TF_VAR_CIRRUS_DAAC_VERSION="$CIRRUS_DAAC_VERSION" \
+                            --env TF_VAR_token_secret="$TOKEN_SECRET" \
+                            --env TF_VAR_db_admin_password="$DB_CREDS_PSWD" \
+                            --env TF_VAR_launchpad_token="${LAUNCHPAD_TOKEN}" \
+                            --env TF_VAR_launchpad_passphrase="${LAUNCHPAD_PASSPHRASE}" \
+                            --env TF_VAR_metrics_es_password="${METS_PASSWORD}" \
+                            -v "$WORKSPACE/CIRRUS-core":/CIRRUS-core \
+                            -v "$WORKSPACE/":/CIRRUS-DAAC \
+                            -v /var/run/docker.sock:/var/run/docker.sock \
+                            --name=$CONTAINER_NAME_PREFIX-cirrus-daac \
+                            cirrus-core:$CORE_REF \
+                            /bin/bash -c "make $MAKE_TARGET $DASHBOARD_TARGET"
+
+      - name: Notify Mattermost Finished
+        if: ${{ always() }}
+        uses: asfadmin/action-notify-mattermost@v1
+        with:
+          webhook-url: ${{ env.MATTERMOST_WEBHOOK_URL }}
+          channel: ${{ env.MATTERMOST_CHANNEL }}
+          text: 'finished deploying to `${{ env.DEPLOY_NAME }}-cumulus-${{ env.MATURITY }}`'
+          statuses: >
+            [
+              {"name": "1Password Connection", "status": "${{ steps.onepassword-connnection.outcome }}"},
+              {"name": "1Password Secrets", "status": "${{ steps.load-secrets.outcome }}"},
+              {"name": "Core Build", "status": "${{ steps.docker.outcome }}"},
+              {"name": "AWS Deployment", "status": "${{ steps.aws.outcome }}"}
+            ]
