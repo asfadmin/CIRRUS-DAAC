@@ -138,18 +138,18 @@ jobs:
         continue-on-error: true
         uses: 1password/load-secrets-action@v2
         env:
-          AWS_ACCOUNT_ID: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/AccountId
-          AWS_ACCESS_KEY_ID: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/username
-          AWS_SECRET_ACCESS_KEY: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/credential
-          DB_CREDS_PSWD: op://pofyirc2x46fxc4rjpno4k2ghm/asf-cumulus-db_creds/ASF-dev
-          LAUNCHPAD_PASSPHRASE: op://pofyirc2x46fxc4rjpno4k2ghm/LaunchPad-Token-API-Access-2023/credential
-          LAUNCHPAD_TOKEN: op://pofyirc2x46fxc4rjpno4k2ghm/LaunchPad-Token-API-Access-2023/username
-          CMR_USR: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/CMR_USR
-          CMR_CREDS_PSWD: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/CMR_CREDS_PSWD
-          URS_CLIENT_ID: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/URS_CLIENT_ID
-          URS_CLIENT_PSWD: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/URS_CLIENT_PSWD
-          TOKEN_SECRET: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/TOKEN_SECRET
-          METS_PASSWORD: op://pofyirc2x46fxc4rjpno4k2ghm/ASF-dev/METS_PASSWORD
+          AWS_ACCOUNT_ID: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/AccountId
+          AWS_ACCESS_KEY_ID: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/username
+          AWS_SECRET_ACCESS_KEY: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/credential
+          DB_CREDS_PSWD: op://ksy6w5owdiliwep2uc52dkmfny/asf-cumulus-db_creds/ASF-dev
+          LAUNCHPAD_PASSPHRASE: op://ksy6w5owdiliwep2uc52dkmfny/LaunchPad-Token-API-Access-2023/credential
+          LAUNCHPAD_TOKEN: op://ksy6w5owdiliwep2uc52dkmfny/LaunchPad-Token-API-Access-2023/username
+          CMR_USR: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/CMR_USR
+          CMR_CREDS_PSWD: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/CMR_CREDS_PSWD
+          URS_CLIENT_ID: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/URS_CLIENT_ID
+          URS_CLIENT_PSWD: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/URS_CLIENT_PSWD
+          TOKEN_SECRET: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/TOKEN_SECRET
+          METS_PASSWORD: op://ksy6w5owdiliwep2uc52dkmfny/ASF-dev/METS_PASSWORD
 
       - name: Checkout ASF
         if: ${{ success() }}
