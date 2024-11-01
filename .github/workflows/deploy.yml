@@ -44,6 +44,9 @@ on:
       DASHBOARD_API_ROOT:
         description: Override for the dashboard APIROOT variable
         default: ""
+      SNAPSHOT_IDENTIFIER:
+        description: Snapshot to use when upgrading the RDS to serverless v2
+        default: ""
       CORE_REPO:
         description: Repo that contains CIRRUS-core
         default: asfadmin/CIRRUS-core
@@ -91,6 +94,7 @@ jobs:
       MAKE_TARGET: ${{ github.event.inputs.MAKE_TARGET || 'workflows' }}
       API_ROOT: ${{ github.event.inputs.DASHBOARD_API_ROOT || '' }}
       MATURITY: ${{ github.event.inputs.MATURITY || 'sbx' }}
+      SNAPSHOT_IDENTIFIER: ${{ github.event.inputs.SNAPSHOT_IDENTIFIER || '' }}
       # GitHub Vars
       WORKSPACE: ${{ github.workspace }}
       CONTAINER_NAME_PREFIX: ${{ github.run_id }}
@@ -243,6 +247,7 @@ jobs:
                             --env TF_VAR_launchpad_token="${LAUNCHPAD_TOKEN}" \
                             --env TF_VAR_launchpad_passphrase="${LAUNCHPAD_PASSPHRASE}" \
                             --env TF_VAR_metrics_es_password="${METS_PASSWORD}" \
+                            --env TF_VAR_snapshot_identifier="$SNAPSHOT_IDENTIFIER" \
                             -v "$WORKSPACE/CIRRUS-core":/CIRRUS-core \
                             -v "$WORKSPACE/":/CIRRUS-DAAC \
                             -v /var/run/docker.sock:/var/run/docker.sock \
