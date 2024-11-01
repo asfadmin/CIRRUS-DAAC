@@ -9,7 +9,9 @@
 
 ## v18.5.0.0
 * Upgrade to [Cumulus v18.5.0](https://github.com/nasa/cumulus/releases/tag/v18.5.0)
-  * NOTE: This release may require manual execution per the v2 serverless RDS upgrade
+  * NOTE: This release may require manual execution per the v2 serverless RDS
+  upgrade. You must also update your `cumulus_rds_db_cluster` secret to include `"rejectUnauthorized": false` BEFORE applying the terraform changes otherwise
+  the provision-database lambda will fail to connect to the new RDS.
   * RDS V2 migration [instructions](https://nasa.github.io/cumulus/docs/next/upgrade-notes/serverless-v2-upgrade/)
 * RDS module updates.
   * Removal of the following variables:
