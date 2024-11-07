@@ -29,6 +29,8 @@ module "rds_cluster" {
   prefix                     = local.prefix
   permissions_boundary_arn   = local.permissions_boundary_arn
   rds_user_password          = var.rds_user_password == "" ? random_string.user_db_pass.result : var.rds_user_password
+  disableSSL                 = var.disableSSL
+  rejectUnauthorized         = var.rejectUnauthorized
 
   # The RDS module defines a legacy provider configuration which preempts our
   # configuration and stops the default_tags from being applied:

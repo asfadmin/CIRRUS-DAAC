@@ -77,3 +77,15 @@ variable "snapshot_identifier" {
   type        = string
   default     = null
 }
+
+variable "disableSSL" {
+  description = "If set to true, disable use of SSL with Core database connections."
+  type        = bool
+  default     = true
+}
+
+variable "rejectUnauthorized" {
+  description = "If disableSSL is false or not set, set to false to allow self-signed certificates or non-supported CAs."
+  type        = bool
+  default     = false
+}
