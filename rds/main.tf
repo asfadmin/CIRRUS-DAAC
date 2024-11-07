@@ -11,24 +11,26 @@ resource "random_string" "user_db_pass" {
 }
 
 module "rds_cluster" {
-  source = "https://github.com/nasa/cumulus/releases/download/v18.5.0/terraform-aws-cumulus-rds.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v18.5.1/terraform-aws-cumulus-rds.zip"
 
-  db_admin_username          = var.db_admin_username
-  db_admin_password          = var.db_admin_password == "" ? random_string.admin_db_pass.result : var.db_admin_password
-  region                     = data.aws_region.current.name
-  vpc_id                     = data.aws_vpc.application_vpcs.id
-  subnets                    = data.aws_subnets.subnet_ids.ids
-  engine_version             = var.engine_version
-  parameter_group_family_v13 = var.parameter_group_family_v13
-  deletion_protection        = var.deletion_protection
   backup_retention_period    = var.backup_retention_period
   backup_window              = var.backup_window
   cluster_identifier         = local.cluster_identifier
-  snapshot_identifier        = var.snapshot_identifier
-  provision_user_database    = var.provision_user_database
-  prefix                     = local.prefix
+  db_admin_password          = var.db_admin_password == "" ? random_string.admin_db_pass.result : var.db_admin_password
+  db_admin_username          = var.db_admin_username
+  deletion_protection        = var.deletion_protection
+  disableSSL                 = var.disableSSL
+  engine_version             = var.engine_version
+  parameter_group_family_v13 = var.parameter_group_family_v13
   permissions_boundary_arn   = local.permissions_boundary_arn
+  prefix                     = local.prefix
+  provision_user_database    = var.provision_user_database
   rds_user_password          = var.rds_user_password == "" ? random_string.user_db_pass.result : var.rds_user_password
+  region                     = data.aws_region.current.name
+  rejectUnauthorized         = var.rejectUnauthorized
+  snapshot_identifier        = var.snapshot_identifier
+  subnets                    = data.aws_subnets.subnet_ids.ids
+  vpc_id                     = data.aws_vpc.application_vpcs.id
 
   # The RDS module defines a legacy provider configuration which preempts our
   # configuration and stops the default_tags from being applied:

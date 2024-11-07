@@ -52,7 +52,7 @@ on:
         default: asfadmin/CIRRUS-core
       CORE_REF:
         description: The CIRRUS-core git ref to checkout
-        default: v18.5.0.0
+        default: v18.5.1.0
 
 concurrency:
   # group: <workflow>-<deploy-name>-<maturity>
@@ -90,7 +90,7 @@ jobs:
       DASHBOARD_REF : ${{ github.event.inputs.DASHBOARD_REF || 'v12.2.0' }}
       DEPLOY_NAME: ${{ github.event.inputs.DEPLOY_NAME || 'daac' }}
       CORE_REPO: ${{ github.event.inputs.CORE_REPO || 'asfadmin/CIRRUS-core' }}
-      CORE_REF: ${{ github.event.inputs.CORE_REF || 'v18.5.0.0' }}
+      CORE_REF: ${{ github.event.inputs.CORE_REF || 'v18.5.1.0' }}
       MAKE_TARGET: ${{ github.event.inputs.MAKE_TARGET || 'workflows' }}
       API_ROOT: ${{ github.event.inputs.DASHBOARD_API_ROOT || '' }}
       MATURITY: ${{ github.event.inputs.MATURITY || 'sbx' }}

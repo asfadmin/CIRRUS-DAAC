@@ -3,6 +3,11 @@
 
 ## Unreleased
 
+## v18.5.1.0
+* Upgrade to [Cumulus v18.5.1](https://github.com/nasa/cumulus/releases/tag/v18.5.1)
+  * NOTE: Follow the v2 serverless RDS instructions in the v18.5.0.0 change log
+  entry if you have not already upgraded to v2 serverless RDS
+
 ## v18.5.0.1
 * Add GitHub Actions pipeline for deploying to ASF's Sandbox account
 * Add SNAPSHOT_IDENTIFIER to GitHub Actions pipeline for the v18.5.0 upgrade
