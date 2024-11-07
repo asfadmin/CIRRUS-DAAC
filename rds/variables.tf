@@ -48,6 +48,12 @@ variable "deletion_protection" {
   default     = true
 }
 
+variable "disableSSL" {
+  description = "If set to true, disable use of SSL with Core database connections."
+  type        = bool
+  default     = true
+}
+
 variable "engine_version" {
   description = "Postgres engine version for serverless cluster"
   type        = string
@@ -72,20 +78,14 @@ variable "rds_user_password" {
   default = ""
 }
 
-variable "snapshot_identifier" {
-  description = "Optional database snapshot for restoration"
-  type        = string
-  default     = null
-}
-
-variable "disableSSL" {
-  description = "If set to true, disable use of SSL with Core database connections."
-  type        = bool
-  default     = true
-}
-
 variable "rejectUnauthorized" {
   description = "If disableSSL is false or not set, set to false to allow self-signed certificates or non-supported CAs."
   type        = bool
   default     = false
+}
+
+variable "snapshot_identifier" {
+  description = "Optional database snapshot for restoration"
+  type        = string
+  default     = null
 }
