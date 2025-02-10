@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+## v20.0.0.0
+* Upgrade to [Cumulus v20.0.0](https://github.com/nasa/cumulus/releases/tag/v20.0.0)
+
 ## v18.5.2.0
 * Upgrade to [Cumulus v18.5.2](https://github.com/nasa/cumulus/releases/tag/v18.5.2)
 * ECS cluster upgraded to Amazon Linux 2023

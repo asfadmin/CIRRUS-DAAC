@@ -1,4 +1,4 @@
-cma_version = "v2.0.3"
+cma_version = "v2.0.4"
 
 # Set up the maturity agnostic part of your bucket configuration here.
 # For Example:
