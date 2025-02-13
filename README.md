@@ -33,6 +33,13 @@ in CIRRUS-DAAC:
         $ make image
         $ make container-shell
 
+
+You can alternatively deploy directly from your host machine. This will require
+you to have all the necessary dependencies installed on your system e.g. make,
+terraform, etc.
+
+        $ make shell
+
 1. To run linter (flake8) & unit tests (pytest) once:
 
         $ make test
