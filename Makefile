@@ -63,7 +63,7 @@ test-watch:
 		-backend-config "bucket=${DEPLOY_NAME}-cumulus-${MATURITY}-tf-state-${AWS_ACCOUNT_ID_LAST4}" \
 		-backend-config "key=$*/terraform.tfstate" \
 		-backend-config "dynamodb_table=${DEPLOY_NAME}-cumulus-${MATURITY}-tf-locks"
-	terraform workspace new ${DEPLOY_NAME} 2>/dev/null || terraform workspace select ${DEPLOY_NAME}
+	terraform workspace select -or-create ${DEPLOY_NAME}
 
 modules = daac workflows rds
 init-modules := $(modules:%-init=%)
