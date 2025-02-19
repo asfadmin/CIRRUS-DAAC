@@ -3,6 +3,8 @@
 
 ## Unreleased
 * Remove `figlet` and `banner` from the `Making ...` banner.
+* Remove unused providers `null` and `archive` and bump pinned version of `null`
+in `daac` module.
 
 ## v20.0.0.0
 * Upgrade to [Cumulus v20.0.0](https://github.com/nasa/cumulus/releases/tag/v20.0.0)
