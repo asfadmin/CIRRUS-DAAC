@@ -2,6 +2,7 @@
 # CHANGELOG
 
 ## Unreleased
+* Remove `figlet` and `banner` from the `Making ...` banner.
 
 ## v20.0.0.0
 * Upgrade to [Cumulus v20.0.0](https://github.com/nasa/cumulus/releases/tag/v20.0.0)
