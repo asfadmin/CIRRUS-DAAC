@@ -5,6 +5,12 @@
 * Remove `figlet` and `banner` from the `Making ...` banner.
 * Remove unused providers `null` and `archive` and bump pinned version of `null`
 in `daac` module.
+* Add variables to `rds` module:
+  * `cluster_instance_count`
+  * `lambda_memory_sizes`
+  * `lambda_timeouts`
+  * `max_capacity`
+  * `min_capacity`
 
 ## v20.0.0.0
 * Upgrade to [Cumulus v20.0.0](https://github.com/nasa/cumulus/releases/tag/v20.0.0)

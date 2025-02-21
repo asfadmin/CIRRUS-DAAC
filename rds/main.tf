@@ -16,11 +16,16 @@ module "rds_cluster" {
   backup_retention_period    = var.backup_retention_period
   backup_window              = var.backup_window
   cluster_identifier         = local.cluster_identifier
+  cluster_instance_count     = var.cluster_instance_count
   db_admin_password          = var.db_admin_password == "" ? random_string.admin_db_pass.result : var.db_admin_password
   db_admin_username          = var.db_admin_username
   deletion_protection        = var.deletion_protection
   disableSSL                 = var.disableSSL
   engine_version             = var.engine_version
+  lambda_memory_sizes        = var.lambda_memory_sizes
+  lambda_timeouts            = var.lambda_timeouts
+  max_capacity               = var.max_capacity
+  min_capacity               = var.min_capacity
   parameter_group_family_v13 = var.parameter_group_family_v13
   permissions_boundary_arn   = local.permissions_boundary_arn
   prefix                     = local.prefix

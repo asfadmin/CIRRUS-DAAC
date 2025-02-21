@@ -30,6 +30,12 @@ variable "backup_window" {
   default     = "07:00-09:00"
 }
 
+variable "cluster_instance_count" {
+  description = "Number of instances to create inside of the cluster"
+  type        = number
+  default     = 1
+}
+
 variable "db_admin_password" {
   description = "Password for RDS database authentication"
   type        = string
@@ -58,6 +64,28 @@ variable "engine_version" {
   description = "Postgres engine version for serverless cluster"
   type        = string
   default     = "13.12"
+}
+
+variable "lambda_memory_sizes" {
+  description = "Configurable map of memory sizes for lambdas"
+  type        = map(number)
+  default     = {}
+}
+
+variable "lambda_timeouts" {
+  description = "Configurable map of timeouts for lambdas"
+  type        = map(number)
+  default     = {}
+}
+
+variable "max_capacity" {
+  type    = number
+  default = 4
+}
+
+variable "min_capacity" {
+  type    = number
+  default = 2
 }
 
 variable "parameter_group_family_v13" {
