@@ -6,11 +6,7 @@ terraform {
     }
     null = {
       source  = "hashicorp/null"
-      version = "~> 2.1"
-    }
-    archive = {
-      source  = "hashicorp/archive"
-      version = "~> 2.2.0"
+      version = "~> 3.0"
     }
   }
   backend "s3" {}
