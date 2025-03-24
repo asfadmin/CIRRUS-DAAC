@@ -2,3 +2,6 @@
 # to false
 deletion_protection     = true
 provision_user_database = true
+
+# Set min_capacity to the lowest possible value in sandbox to lower idle cost.
+min_capacity = 0.5
