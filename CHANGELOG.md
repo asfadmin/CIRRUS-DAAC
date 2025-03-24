@@ -2,6 +2,7 @@
 # CHANGELOG
 
 ## Unreleased
+* Bump dashboard version to minimum required 13.0.0 in deploy.yml
 
 ## v20.0.1.0
 * Upgrade to [Cumulus v20.0.1](https://github.com/nasa/cumulus/releases/tag/v20.0.1)

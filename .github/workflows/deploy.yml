@@ -40,7 +40,7 @@ on:
         default: nasa/cumulus-dashboard
       DASHBOARD_REF:
         description: The cumulus-dashboard git ref to checkout
-        default: v12.2.0
+        default: v13.0.0
       DASHBOARD_API_ROOT:
         description: Override for the dashboard APIROOT variable
         default: ""
