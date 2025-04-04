@@ -22,12 +22,12 @@ Cumulus.
 * AWS credentials for those account(s)
 
 ## Deployment
-CIRRUS-DAAC is deployed through [CIRRUS-core](https://github.com/asfadmin/CIRRUS-core) and its [Docker container](https://github.com/asfadmin/CIRRUS-core/blob/master/Dockerfile). For more information,
-read the CIRRUS-core [README](https://github.com/asfadmin/CIRRUS-core/blob/master/README.md)
+CIRRUS-DAAC is deployed through [CIRRUS-core](https://github.com/asfadmin/CIRRUS-core) and its [Docker container](https://github.com/asfadmin/CIRRUS-core/blob/main/Dockerfile). For more information,
+read the CIRRUS-core [README](https://github.com/asfadmin/CIRRUS-core/blob/main/README.md)
 
 ## Testing
 
-You can run tests inside of the CIRRUS-DAAC [Docker container](https://github.com/asfadmin/CIRRUS-DAAC/blob/master/Dockerfile)
+You can run tests inside of the CIRRUS-DAAC [Docker container](https://github.com/asfadmin/CIRRUS-DAAC/blob/main/Dockerfile)
 in CIRRUS-DAAC:
 
         $ make image
@@ -98,7 +98,7 @@ by this module. Most workflow development work will be done here.
 
 ## Deploying Cumulus
 
-See [CIRRUS-core README](https://github.com/asfadmin/CIRRUS-core/blob/master/README.md).
+See [CIRRUS-core README](https://github.com/asfadmin/CIRRUS-core/blob/main/README.md).
 
 ## Developing Cumulus Workflows
 
