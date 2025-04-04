@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'deploy/**'
-      - master
+      - main
 
   workflow_dispatch:
     inputs:
@@ -69,11 +69,11 @@ concurrency:
   #   conditional ? 'true_value' : 'false_value'
   #
   # Assuming the current workflow config of these branch triggers:
-  #   ['deploy/**', 'master']
+  #   ['deploy/**', 'main']
   # the <deploy-name> section should always evaluate to a string like:
   #   'deploy/<DEPLOY_NAME>'
   #
-  group: ${{ github.workflow }}-${{ github.event.inputs.DEPLOY_NAME && format('deploy/{0}', github.event.inputs.DEPLOY_NAME) || github.ref_name == 'master' && 'deploy/asf' || github.ref_name }}-dev
+  group: ${{ github.workflow }}-${{ github.event.inputs.DEPLOY_NAME && format('deploy/{0}', github.event.inputs.DEPLOY_NAME) || github.ref_name == 'main' && 'deploy/asf' || github.ref_name }}-dev
   cancel-in-progress: false
 
 jobs:
