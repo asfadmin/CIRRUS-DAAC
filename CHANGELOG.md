@@ -1,7 +1,10 @@
 
 # CHANGELOG
 
-## Unreleased
+# v20.1.1.0
+* Upgrade to [Cumulus v20.1.1](https://github.com/nasa/cumulus/releases/tag/v20.1.1)
+* Added throttled_queues variable to cumulus
+* **NOTE** This version of Cumulus completely removes Elastic Search including ec2 instances. See release notes for more info.
 * Bump dashboard version to minimum required 13.0.0 in deploy.yml
 
 ## v20.0.1.0
