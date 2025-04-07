@@ -2,6 +2,7 @@
 # CHANGELOG
 
 ## Unreleased
+* Update default GitHub branch name to 'main'
 
 ## v20.1.1.0
 * Upgrade to [Cumulus v20.1.1](https://github.com/nasa/cumulus/releases/tag/v20.1.1)
