@@ -11,7 +11,7 @@ resource "random_string" "user_db_pass" {
 }
 
 module "rds_cluster" {
-  source = "https://github.com/nasa/cumulus/releases/download/v20.1.1/terraform-aws-cumulus-rds.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v20.1.2/terraform-aws-cumulus-rds.zip"
 
   backup_retention_period    = var.backup_retention_period
   backup_window              = var.backup_window
