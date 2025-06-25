@@ -1,6 +1,11 @@
 
 # CHANGELOG
 
+## Unreleased
+
+## v20.1.2.1
+* Update Lambda runtime to Python3.11
+
 ## v20.1.2.0
 * Upgrade to [Cumulus v20.1.2](https://github.com/nasa/cumulus/releases/tag/v20.1.2)
 * Update default GitHub branch name to 'main'
