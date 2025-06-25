@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+## v20.1.1.1
+* Update Lambda runtime to Python3.11
+
 ## v20.1.1.0
 * Upgrade to [Cumulus v20.1.1](https://github.com/nasa/cumulus/releases/tag/v20.1.1)
 * **NOTE** This version of Cumulus completely removes Elastic Search including ec2 instances. See release notes for more info.

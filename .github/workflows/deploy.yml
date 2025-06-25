@@ -52,7 +52,7 @@ on:
         default: asfadmin/CIRRUS-core
       CORE_REF:
         description: The CIRRUS-core git ref to checkout
-        default: v20.1.1.0
+        default: v20.1.1.1
 
 concurrency:
   # group: <workflow>-<deploy-name>-<maturity>
@@ -84,13 +84,13 @@ jobs:
       AWS_REGION: us-west-2
       DASHBOARD_TARGET: ''
       JOB_NAME: CIRRUS-DAAC
-      PYTHON_VER: 'python3'
+      PYTHON_VER: 'python3.11'
       # Defaults with overrides
       DASHBOARD_REPO: ${{ github.event.inputs.DASHBOARD_REPO || 'nasa/cumulus-dashboard' }}
       DASHBOARD_REF : ${{ github.event.inputs.DASHBOARD_REF || 'v13.1.0' }}
       DEPLOY_NAME: ${{ github.event.inputs.DEPLOY_NAME || 'daac' }}
       CORE_REPO: ${{ github.event.inputs.CORE_REPO || 'asfadmin/CIRRUS-core' }}
-      CORE_REF: ${{ github.event.inputs.CORE_REF || 'v20.1.1.0' }}
+      CORE_REF: ${{ github.event.inputs.CORE_REF || 'v20.1.1.1' }}
       MAKE_TARGET: ${{ github.event.inputs.MAKE_TARGET || 'workflows' }}
       API_ROOT: ${{ github.event.inputs.DASHBOARD_API_ROOT || '' }}
       MATURITY: ${{ github.event.inputs.MATURITY || 'sbx' }}
