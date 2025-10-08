@@ -10,7 +10,7 @@ FROM amazonlinux:2023
 #   * Application Python dependencies
 
 ENV NODE_VERSION="20.x"
-ENV TERRAFORM_VERSION="1.9.2"
+ENV TERRAFORM_VERSION="1.12.2"
 ENV AWS_CLI_VERSION="2.17.13"
 
 # Install NodeJS
