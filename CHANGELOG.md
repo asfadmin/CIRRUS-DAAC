@@ -3,10 +3,14 @@
 
 ## Unreleased
 
-# v20.2.1.0
+## v20.3.0.0
+* Upgrade to [Cumulus v20.3.0](https://github.com/nasa/cumulus/releases/tag/v20.3.0)
+* Bump dashboard version to [13.3.0](https://github.com/nasa/cumulus-dashboard/releases/tag/v13.3.0) in deploy.yml
+
+## v20.2.1.0
 * Upgrade to [Cumulus v20.2.1](https://github.com/nasa/cumulus/releases/tag/v20.2.1)
 
-# v20.2.0.0
+## v20.2.0.0
 * Upgrade to [Cumulus v20.2.0](https://github.com/nasa/cumulus/releases/tag/v20.2.0)
 * **NOTE** This version of Cumulus requires changes to the RDS database
 * For upgrading the db cluster to PostgreSQL v17 please see the cumulus [instructions](https://nasa.github.io/cumulus/docs/next/upgrade-notes/upgrade-rds-cluster-tf-postgres-17)
