@@ -3,6 +3,10 @@
 
 ## Unreleased
 
+## v21.0.1.0
+* Updrade to [Cumulus v21.0.1](https://github.com/nasa/cumulus/releases/tag/v21.0.1)
+* Bump dashboard version to [14.0.0](https://github.com/nasa/cumulus-dashboard/releases/tag/v14.0.0) in deploy.yml
+
 ## v20.3.0.0
 * Upgrade to [Cumulus v20.3.0](https://github.com/nasa/cumulus/releases/tag/v20.3.0)
 * Bump dashboard version to [13.3.0](https://github.com/nasa/cumulus-dashboard/releases/tag/v13.3.0) in deploy.yml
