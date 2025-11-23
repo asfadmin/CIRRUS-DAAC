@@ -67,3 +67,21 @@ variable "s3_replicator_target_prefix" {
   default     = null
   description = "Prefix that the S3 replicator will write logs to in the target bucket."
 }
+
+variable "consolidation_acct_id" {
+  type = string
+  description = "account id of relevant cumulus consolidation stack"
+  default = null
+}
+
+variable "consolidation_deploy_name" {
+  type = string
+  description = "deploy_name of relevant consolidation stack"
+  default = "willow"
+}
+
+variable "consolidation_maturity" {
+  type = string
+  description = "maturity of relevant consolidation stack"
+  default = null
+}
