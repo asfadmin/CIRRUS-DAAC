@@ -226,7 +226,7 @@ resource "aws_s3_bucket_policy" "workflow_bucket_cross_acoount_access" {
       },
       {
         Sid = "CrossAccountReadAccessEcs"
-        Effect = "allow"
+        Effect = "Allow"
         Principal = {
           AWS = "arn:aws:iam::${var.consolidation_acct_id}:role/${var.consolidation_deploy_name}-cumulus-${local.consolidation_maturity}-lambda-processing"
         }
