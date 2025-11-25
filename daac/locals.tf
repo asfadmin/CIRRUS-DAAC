@@ -71,7 +71,7 @@ locals {
   )
   # orchestrator crud acct roles
   orchestrator_crud_roles = [
-    "arn:aws:iam::${var.consolidation_acct_id}:role/${var.consolidation_deploy_name}-cumulus-${local.consolidation_maturity}_ecs_cluster_instance_role",
-    "arn:aws:iam::${var.consolidation_acct_id}:role/${var.consolidation_deploy_name}-cumulus-${local.consolidation_maturity}-lambda-processing"
+    var.consolidation_acct_id == null ? null : "arn:aws:iam::${var.consolidation_acct_id}:role/${var.consolidation_deploy_name}-cumulus-${local.consolidation_maturity}_ecs_cluster_instance_role",
+    var.consolidation_acct_id == null ? null : "arn:aws:iam::${var.consolidation_acct_id}:role/${var.consolidation_deploy_name}-cumulus-${local.consolidation_maturity}-lambda-processing"
   ]
 }
