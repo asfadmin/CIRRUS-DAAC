@@ -69,8 +69,8 @@ locals {
     local.internal_bucket_map,
     local.partner_bucket_map,
   )
-  # orchestrator crud acct roles
-  orchestrator_crud_roles = [
+  # consolidation crud acct roles
+  consolidation_crud_roles = [
     var.consolidation_acct_id == null ? null : "arn:aws:iam::${var.consolidation_acct_id}:role/${var.consolidation_deploy_name}-cumulus-${local.consolidation_maturity}_ecs_cluster_instance_role",
     var.consolidation_acct_id == null ? null : "arn:aws:iam::${var.consolidation_acct_id}:role/${var.consolidation_deploy_name}-cumulus-${local.consolidation_maturity}-lambda-processing"
   ]

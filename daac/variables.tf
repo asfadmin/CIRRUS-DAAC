@@ -85,3 +85,8 @@ variable "consolidation_maturity" {
   description = "maturity of relevant consolidation stack"
   default = null
 }
+variable legacy_account_id_bucket_mapping {
+  type = map(list(string))
+  description = "mapping of legacy daac account Ids to buckets in format {<daac_acct_id>: [<bucket_name>, ...]}"
+  default = null
+}

@@ -1,4 +1,4 @@
-resource "aws_s3_bucket_policy" "allow_crud_from_orchestrator" {
+resource "aws_s3_bucket_policy" "allow_crud_from_consolidation" {
   for_each = var.consolidation_acct_id != null ? merge(
     aws_s3_bucket.public-bucket,
     aws_s3_bucket.standard-bucket,
@@ -14,7 +14,7 @@ resource "aws_s3_bucket_policy" "allow_crud_from_orchestrator" {
         Sid = "${each.key}-CrossAccountReadAccess",
         Effect =  "Allow"
         Principal = {
-          AWS = local.orchestrator_crud_roles
+          AWS = local.consolidation_crud_roles
         },
 
         Action = [
@@ -37,7 +37,7 @@ resource "aws_s3_bucket_policy" "allow_crud_from_orchestrator" {
         Sid = "${each.key}-CrossAccountWriteAccess",
         Effect =  "Allow"
         Principal = {
-          AWS = local.orchestrator_crud_roles
+          AWS = local.consolidation_crud_roles
         },
 
         Action = [
