@@ -14,7 +14,7 @@ resource "aws_s3_bucket_policy" "allow_crud_from_consolidation" {
         Sid = "${each.key}-CrossAccountReadAccess",
         Effect =  "Allow"
         Principal = {
-          AWS = local.consolidation_crud_roles
+          AWS = "*"
         },
 
         Action = [
@@ -37,7 +37,7 @@ resource "aws_s3_bucket_policy" "allow_crud_from_consolidation" {
         Sid = "${each.key}-CrossAccountWriteAccess",
         Effect =  "Allow"
         Principal = {
-          AWS = local.consolidation_crud_roles
+          AWS = "*"
         },
 
         Action = [
