@@ -31,6 +31,23 @@ data "aws_iam_policy_document" "distribution_bucket_policy_document" {
       ]
     }
   }
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:GetObjectVersion",
+      "s3:ListBucket"
+    ]
+
+    resources = [
+      "arn:aws:s3:::${local.prefix}-${each.key}",
+      "arn:aws:s3:::${local.prefix}-${each.key}/*"
+    ]
+    principals {
+      type = "AWS"
+      identifiers = local.consolidation_crud_roles
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "distribution_bucket_policy" {
