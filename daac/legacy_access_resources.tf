@@ -14,7 +14,7 @@ resource "aws_s3_bucket_policy" "allow_crud_from_consolidation" {
         Sid = "${each.key}-CrossAccountReadAccess",
         Effect =  "Allow"
         Principal = {
-          AWS = "*"
+          AWS = local.consolidation_crud_roles
         },
 
         Action = [
@@ -26,18 +26,13 @@ resource "aws_s3_bucket_policy" "allow_crud_from_consolidation" {
         Resource = [
           "${each.value.arn}",
           "${each.value.arn}/*"
-        ],
-        Condition = {
-          StringEquals = {
-            "s3:DataAccessPointAccount" = var.consolidation_acct_id
-          }
-        }
+        ]
       },
       {
         Sid = "${each.key}-CrossAccountWriteAccess",
         Effect =  "Allow"
         Principal = {
-          AWS = "*"
+          AWS = local.consolidation_crud_roles
         },
 
         Action = [
@@ -48,12 +43,7 @@ resource "aws_s3_bucket_policy" "allow_crud_from_consolidation" {
 
         Resource = [
           "${each.value.arn}/*"
-        ],
-        Condition = {
-          StringEquals = {
-            "s3:DataAccessPointAccount" = var.consolidation_acct_id
-          }
-        }
+        ]
       },
     ]
   })
