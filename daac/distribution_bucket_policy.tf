@@ -9,7 +9,7 @@ resource "aws_s3_bucket_policy" "distribution_bucket_policy" {
   bucket = each.key
   policy = jsonencode({
     Version = "2012-10-17",
-    Statement = concat(jsondecode(aws_s3_bucket_policy.allow_crud_from_consolidation[each.key].policy).Statement, [
+    Statement = concat(try(jsondecode(aws_s3_bucket_policy.allow_crud_from_consolidation[each.key].policy).Statement, []), [
       {
         Sid = "${each.key}-DistributionPolicyGet"
         Effect = "Allow"
