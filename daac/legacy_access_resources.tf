@@ -24,7 +24,7 @@ resource "aws_s3_bucket_policy" "allow_crud_from_consolidation" {
         ],
 
         Resource = [
-          "${each.value.arn}",
+          each.value.arn,
           "${each.value.arn}/*"
         ]
       },
