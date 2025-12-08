@@ -43,5 +43,5 @@ data "aws_iam_policy_document" "consolidated_distribution_bucket_policy_document
 resource "aws_s3_bucket_policy" "distribution_bucket_policy" {
   for_each = local.distribution_bucket_oais
   bucket = each.key
-  policy = aws_iam_policy_document.consolidated_distribution_bucket_policy_document
+  policy = data.aws_iam_policy_document.consolidated_distribution_bucket_policy_document
 }
