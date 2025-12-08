@@ -4,32 +4,44 @@ data "aws_cloudfront_origin_access_identity" "distribution_cloudfront_oai" {
   id = each.key
 }
 
+data "aws_iam_policy_document" "distribution_bucket_policy_document" {
+  for_each = local.distribution_bucket_oais
+
+  statement {
+    actions   = ["s3:GetObject"]
+    resources = ["arn:aws:s3:::${local.prefix}-${each.key}/*"]
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        data.aws_cloudfront_origin_access_identity.distribution_cloudfront_oai[each.value].iam_arn
+      ]
+    }
+  }
+
+  # Need ListBucket permissions so that missing keys will return 404 errors instead of 403
+  statement {
+    actions   = ["s3:ListBucket"]
+    resources = ["arn:aws:s3:::${local.prefix}-${each.key}"]
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        data.aws_cloudfront_origin_access_identity.distribution_cloudfront_oai[each.value].iam_arn
+      ]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "consolidated_distribution_bucket_policy_document" {
+  source_policy_documents = flatten([
+    data.aws_iam_policy_document.distribution_bucket_policy_document.json,
+    try(aws_s3_bucket_policy.allow_crud_from_consolidation[each.key].policy.json, [])
+  ])
+}
+
 resource "aws_s3_bucket_policy" "distribution_bucket_policy" {
   for_each = local.distribution_bucket_oais
   bucket = each.key
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = concat(try(jsondecode(aws_s3_bucket_policy.allow_crud_from_consolidation[each.key].policy).Statement, []), [
-      {
-        Sid = "${each.key}-DistributionPolicyGet"
-        Effect = "Allow"
-        Action   = ["s3:GetObject"]
-        Resource = ["arn:aws:s3:::${each.key}/*"]
-
-        Principal =  {
-          AWS = data.aws_cloudfront_origin_access_identity.distribution_cloudfront_oai[each.value].iam_arn
-        }
-      },
-      {
-        Sid = "${each.key}-DistributionPolicyList"
-        Effect = "Allow"
-        Action   = ["s3:ListBucket"]
-        Resource = ["arn:aws:s3:::${each.key}"]
-
-        Principal =  {
-          AWS = data.aws_cloudfront_origin_access_identity.distribution_cloudfront_oai[each.value].iam_arn
-        }
-      }
-    ])
-  })
+  policy = aws_iam_policy_document.consolidated_distribution_bucket_policy_document
 }
