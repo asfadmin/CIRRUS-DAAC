@@ -41,8 +41,8 @@ data "aws_iam_policy_document" "consolidated_distribution_bucket_policy_document
   ])
 }
 
-resource "aws_s3_bucket_policy" "distribution_bucket_policy" {
-  for_each = data.aws_iam_policy_document.consolidated_distribution_bucket_policy_document
-  bucket = each.key
+resource "aws_s3_bucket_policy" "consolidated_distribution_bucket_policy_document" {
+  for_each = data.aws_iam_policy_document.distribution_bucket_policy_document
+  bucket = "${local.prefix}-${each.key}"
   policy = each.value.json
 }
