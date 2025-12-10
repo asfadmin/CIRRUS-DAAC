@@ -33,9 +33,16 @@ data "aws_iam_policy_document" "distribution_bucket_policy_document" {
   }
 }
 
-resource "aws_s3_bucket_policy" "distribution_bucket_policy" {
+data "aws_iam_policy_document" "consolidated_distribution_bucket_policy_document" {
   for_each = local.distribution_bucket_oais
+  source_policy_documents = flatten([
+    data.aws_iam_policy_document.distribution_bucket_policy_document[each.key].json,
+    try(aws_s3_bucket_policy.allow_crud_from_consolidation["${local.prefix}-${each.key}"].policy, [])
+  ])
+}
 
+resource "aws_s3_bucket_policy" "consolidated_distribution_bucket_policy" {
+  for_each = data.aws_iam_policy_document.consolidated_distribution_bucket_policy_document
   bucket = "${local.prefix}-${each.key}"
-  policy = try(data.aws_iam_policy_document.distribution_bucket_policy_document[each.key].json, null)
+  policy = each.value.json
 }
