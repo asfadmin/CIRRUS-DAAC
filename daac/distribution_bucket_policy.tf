@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "distribution_bucket_policy_document" {
 data "aws_iam_policy_document" "consolidated_distribution_bucket_policy_document" {
   for_each = local.distribution_bucket_oais
   source_policy_documents = flatten([
-    aws_s3_bucket_policy.distribution_bucket_policy[each.key].policy,
+    aws_iam_policy_document.distribution_bucket_policy_document[each.key].policy,
     try(aws_s3_bucket_policy.allow_crud_from_consolidation["${local.prefix}-${each.key}"].policy, [])
   ])
 }
