@@ -82,14 +82,35 @@ three specific things you should customize:
   specify the production url.
 
 * `cumulus/secrets/*.tfvars`: Like the variables above, these files
-  contains *secrets* which are specific to the 'maturity' or environment
+  contains _secrets_ which are specific to the 'maturity' or environment
   to which you are deploying. Create one file for each environment and
   populate it with secrets. See the example file in this directory for
   a starting point. For example, your `dev` `urs_client_password` is
   likely (hopefully!) different than your `prod` password.
 
-*Important Note*: The secrets files will *not* (and *should not*) be
+
+  _Important Note_: The secrets files will _not_ (and _should not_) be
 committed to git. The `.gitignore` file will ignore them by default.
+
+  Optionally, in Cirrus releases > 21.0.1.0, instead of including this secrets file and/or environment variables, you may opt to instead create an AWS Secrets Manager JSON secret, referenced in your `.tfvars`:
+
+      configuration_secret = "sit/cumulus"
+
+  The following values are currently supported:
+
+      archive_api_url
+      urs_client_password
+      metrics_es_password
+      cmr_password
+      cmr_username
+      launchpad_passphrase
+      lzards_launchpad_passphrase
+      token_secret
+      urs_client_id
+
+  If `configuration_secret` is specified, CIRRUS will use the value if specified in the secret store, and then fall back to terraform variable evaluation if a value is not provided in the secret.
+
+  If `configuration_secret` is not specified, CIRRUS will only terraform variables.
 
 ### workflows module
 
