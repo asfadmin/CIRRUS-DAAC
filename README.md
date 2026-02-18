@@ -94,7 +94,7 @@ committed to git. The `.gitignore` file will ignore them by default.
 
   Optionally, in Cirrus releases > 21.0.1.0, instead of including this secrets file and/or environment variables, you may opt to instead create an AWS Secrets Manager JSON secret, referenced in your `.tfvars`:
 
-      configuration_secret = "sit/cumulus"
+      configuration_secret = "<secret name>"
 
   The following values are currently supported:
 
