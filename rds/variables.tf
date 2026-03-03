@@ -120,6 +120,7 @@ variable "snapshot_identifier" {
 
 variable "db_log_min_duration_ms" {
   description = "The threshold (in ms) for logging slow queries in RDS. Default to -1 (disabled)"
+  type = number
   default     = -1
 }
 
