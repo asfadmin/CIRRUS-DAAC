@@ -117,3 +117,15 @@ variable "snapshot_identifier" {
   type        = string
   default     = null
 }
+
+variable "db_log_min_duration_ms" {
+  description = "The threshold (in ms) for logging slow queries in RDS. Default to -1 (disabled)"
+  type = number
+  default     = -1
+}
+
+variable "enabled_cloudwatch_logs_exports" {
+  description = "Set of log types to export to CloudWatch Logs. For Amazon Aurora PostgreSQL, the only valid value is [\"postgresql\"]."
+  type = list(string)
+  default = []
+}
