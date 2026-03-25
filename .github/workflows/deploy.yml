@@ -84,7 +84,7 @@ jobs:
       AWS_REGION: us-west-2
       DASHBOARD_TARGET: ''
       JOB_NAME: CIRRUS-DAAC
-      PYTHON_VER: 'python3.11'
+      PYTHON_VER: 'python3.12'
       # Defaults with overrides
       DASHBOARD_REPO: ${{ github.event.inputs.DASHBOARD_REPO || 'nasa/cumulus-dashboard' }}
       DASHBOARD_REF : ${{ github.event.inputs.DASHBOARD_REF || 'v13.1.0' }}
