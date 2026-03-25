@@ -3,12 +3,17 @@
 
 ## Unreleased
 
+## v21.3.1.0
+* Upgrade to [Cumulus v21.3.1](https://github.com/nasa/cumulus/releases/tag/v21.3.1)
+* Bump dashboard version to [14.2.0](https://github.com/nasa/cumulus-dashboard/releases/tag/v14.2.0) in deploy.yml
+* Bump Dockerfile Node version to v22 and AWS_CLI_VERSION 2.27.43
+
+## v21.2.0.0 
 * Upgrade to [Cumulus v21.2.0](https://github.com/nasa/cumulus/releases/tag/v21.2.0)
 * add rds variable db_log_min_duration_ms
 * add rds variable enabled_cloudwatch_logs_exports
 
 ## v21.0.1.0
-
 * Upgrade to [Cumulus v21.0.1](https://github.com/nasa/cumulus/releases/tag/v21.0.1)
 * Bump dashboard version to [14.0.0](https://github.com/nasa/cumulus-dashboard/releases/tag/v14.0.0) in deploy.yml
 * Update default CMA version to [2.0.5](https://github.com/nasa/cumulus-message-adapter/releases/tag/v2.0.5)

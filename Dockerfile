@@ -9,9 +9,9 @@ FROM amazonlinux:2023
 #   * Yarn
 #   * Application Python dependencies
 
-ENV NODE_VERSION="20.x"
+ENV NODE_VERSION="22.x"
 ENV TERRAFORM_VERSION="1.12.2"
-ENV AWS_CLI_VERSION="2.17.13"
+ENV AWS_CLI_VERSION="2.27.43"
 
 # Install NodeJS
 RUN curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION} | bash -
