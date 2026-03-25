@@ -3,6 +3,10 @@
 
 ## Unreleased
 
+## v21.3.2.0
+* Upgrade to [Cumulus v21.3.2](https://github.com/nasa/cumulus/releases/tag/v21.3.2)
+* Update to Python3.12
+
 ## v21.3.1.0
 * Upgrade to [Cumulus v21.3.1](https://github.com/nasa/cumulus/releases/tag/v21.3.1)
 * Bump dashboard version to [14.2.0](https://github.com/nasa/cumulus-dashboard/releases/tag/v14.2.0) in deploy.yml

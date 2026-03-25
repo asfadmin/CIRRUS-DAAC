@@ -12,5 +12,5 @@ locals {
     region = data.aws_region.current.name
   }
 
-  python_version = "python3.11"
+  python_version = "python3.12"
 }
