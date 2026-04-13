@@ -3,7 +3,7 @@ name: Deploy DAAC
 on:
   push:
     branches:
-      - 'deploy/**'
+      - "deploy/**"
       - main
 
   workflow_dispatch:
@@ -40,7 +40,7 @@ on:
         default: nasa/cumulus-dashboard
       DASHBOARD_REF:
         description: The cumulus-dashboard git ref to checkout
-        default: v14.2.0
+        default: v14.2.1
       DASHBOARD_API_ROOT:
         description: Override for the dashboard APIROOT variable
         default: ""
@@ -82,12 +82,12 @@ jobs:
     env:
       # Defaults without overrides
       AWS_REGION: us-west-2
-      DASHBOARD_TARGET: ''
+      DASHBOARD_TARGET: ""
       JOB_NAME: CIRRUS-DAAC
-      PYTHON_VER: 'python3.12'
+      PYTHON_VER: "python3.12"
       # Defaults with overrides
       DASHBOARD_REPO: ${{ github.event.inputs.DASHBOARD_REPO || 'nasa/cumulus-dashboard' }}
-      DASHBOARD_REF : ${{ github.event.inputs.DASHBOARD_REF || 'v13.1.0' }}
+      DASHBOARD_REF: ${{ github.event.inputs.DASHBOARD_REF || 'v14.2.1' }}
       DEPLOY_NAME: ${{ github.event.inputs.DEPLOY_NAME || 'daac' }}
       CORE_REPO: ${{ github.event.inputs.CORE_REPO || 'asfadmin/CIRRUS-core' }}
       CORE_REF: ${{ github.event.inputs.CORE_REF || 'v21.3.2.0' }}
@@ -123,7 +123,7 @@ jobs:
         with:
           webhook-url: ${{ env.MATTERMOST_WEBHOOK_URL }}
           channel: ${{ env.MATTERMOST_CHANNEL }}
-          text: 'started deploying to `${{ env.DEPLOY_NAME }}-cumulus-${{ env.MATURITY }}`'
+          text: "started deploying to `${{ env.DEPLOY_NAME }}-cumulus-${{ env.MATURITY }}`"
 
       - name: Configure 1Password Connect
         id: onepassword-connnection
@@ -168,7 +168,7 @@ jobs:
         with:
           path: ${{ env.WORKSPACE }}/cumulus-dashboard
           repository: ${{ env.DASHBOARD_REPO }}
-          ref:  ${{ env.DASHBOARD_REF }}
+          ref: ${{ env.DASHBOARD_REF }}
 
       - name: Set Dashboard Env Var
         if: ${{ github.event.inputs.DEPLOY_DASHBOARD == 'true' && success() }}
@@ -261,7 +261,7 @@ jobs:
         with:
           webhook-url: ${{ env.MATTERMOST_WEBHOOK_URL }}
           channel: ${{ env.MATTERMOST_CHANNEL }}
-          text: 'finished deploying to `${{ env.DEPLOY_NAME }}-cumulus-${{ env.MATURITY }}`'
+          text: "finished deploying to `${{ env.DEPLOY_NAME }}-cumulus-${{ env.MATURITY }}`"
           statuses: >
             [
               {"name": "1Password Connection", "status": "${{ steps.onepassword-connnection.outcome }}"},
