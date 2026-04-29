@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+## v21.3.3.0
+* Upgrade to [Cumulus v21.3.3](https://github.com/nasa/cumulus/releases/tag/v21.3.3)
+
 ## v21.3.2.0
 * Upgrade to [Cumulus v21.3.2](https://github.com/nasa/cumulus/releases/tag/v21.3.2)
 * Update to Python3.12
