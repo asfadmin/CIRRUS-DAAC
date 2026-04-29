@@ -53,6 +53,10 @@ on:
       CORE_REF:
         description: The CIRRUS-core git ref to checkout
         default: v21.3.3.0
+      ENABLE_UPGRADE:
+        description: flag to control upgrade mode for RDS module
+        default: true
+        type: boolean
 
 concurrency:
   # group: <workflow>-<deploy-name>-<maturity>
@@ -95,6 +99,7 @@ jobs:
       API_ROOT: ${{ github.event.inputs.DASHBOARD_API_ROOT || '' }}
       MATURITY: ${{ github.event.inputs.MATURITY || 'sbx' }}
       SNAPSHOT_IDENTIFIER: ${{ github.event.inputs.SNAPSHOT_IDENTIFIER || '' }}
+      ENABLE_UPGRADE: ${{ github.event.inputs.ENABLE_UPGRADE || true }}
       # GitHub Vars
       WORKSPACE: ${{ github.workspace }}
       CONTAINER_NAME_PREFIX: ${{ github.run_id }}
@@ -237,6 +242,7 @@ jobs:
                             --env TF_VAR_launchpad_passphrase="${LAUNCHPAD_PASSPHRASE}" \
                             --env TF_VAR_metrics_es_password="${METS_PASSWORD}" \
                             --env TF_VAR_snapshot_identifier="$SNAPSHOT_IDENTIFIER" \
+                            --env TF_VAR_enable_upgrade="$ENABLE_UPGRADE" \
                             -v "$WORKSPACE/CIRRUS-core":/CIRRUS-core \
                             -v "$WORKSPACE/":/CIRRUS-DAAC \
                             -v /var/run/docker.sock:/var/run/docker.sock \
