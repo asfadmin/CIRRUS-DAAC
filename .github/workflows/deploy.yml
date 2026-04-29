@@ -101,9 +101,6 @@ jobs:
       BUILD_NUMBER: ${{ github.run_number }}
       EVENT_TYPE: ${{ github.event_name }}
       BRANCH: ${{ github.ref_name }}
-      # Mattermost Config
-      MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-      MATTERMOST_CHANNEL: rain-cicd-notifications
 
     steps:
       - name: Update Docker.sock permissions
@@ -117,13 +114,6 @@ jobs:
         run: |
           [[ $BRANCH =~ ^deploy\/([^\/]*) ]]
           echo "DEPLOY_NAME=${BASH_REMATCH[1]}" >> $GITHUB_ENV
-
-      - name: Notify Mattermost
-        uses: asfadmin/action-notify-mattermost@v1
-        with:
-          webhook-url: ${{ env.MATTERMOST_WEBHOOK_URL }}
-          channel: ${{ env.MATTERMOST_CHANNEL }}
-          text: "started deploying to `${{ env.DEPLOY_NAME }}-cumulus-${{ env.MATURITY }}`"
 
       - name: Configure 1Password Connect
         id: onepassword-connnection
@@ -183,7 +173,6 @@ jobs:
           echo "CORE_REPO: ${{ env.CORE_REPO }}"
           echo "CORE_REF: ${{ env.CORE_REF }}"
           echo "AWS_REGION: ${{ env.AWS_REGION }}"
-          echo "MATTERMOST_CHANNEL: ${{ env.MATTERMOST_CHANNEL }}"
           echo "MAKE_TARGET: ${{ env.MAKE_TARGET }}"
 
       - name: Set up Docker Buildx
@@ -254,18 +243,3 @@ jobs:
                             --name=$CONTAINER_NAME_PREFIX-cirrus-daac \
                             cirrus-core:$CORE_REF \
                             /bin/bash -c "make $MAKE_TARGET $DASHBOARD_TARGET"
-
-      - name: Notify Mattermost Finished
-        if: ${{ always() }}
-        uses: asfadmin/action-notify-mattermost@v1
-        with:
-          webhook-url: ${{ env.MATTERMOST_WEBHOOK_URL }}
-          channel: ${{ env.MATTERMOST_CHANNEL }}
-          text: "finished deploying to `${{ env.DEPLOY_NAME }}-cumulus-${{ env.MATURITY }}`"
-          statuses: >
-            [
-              {"name": "1Password Connection", "status": "${{ steps.onepassword-connnection.outcome }}"},
-              {"name": "1Password Secrets", "status": "${{ steps.load-secrets.outcome }}"},
-              {"name": "Core Build", "status": "${{ steps.docker.outcome }}"},
-              {"name": "AWS Deployment", "status": "${{ steps.aws.outcome }}"}
-            ]
