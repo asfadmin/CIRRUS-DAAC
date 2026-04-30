@@ -1,5 +1,5 @@
 module "example_workflow" {
-  source = "https://github.com/nasa/cumulus/releases/download/v21.3.2/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v21.3.3/terraform-aws-cumulus-workflow.zip"
 
   prefix          = local.prefix
   name            = "ExampleWorkflow"
